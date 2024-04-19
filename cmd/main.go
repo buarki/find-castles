@@ -39,17 +39,25 @@ func main() {
 					fmt.Printf("%v\n", result.Castle)
 					cb, err := json.Marshal(result.Castle)
 					if err != nil {
-						log.Fatal(err)
+						fmt.Println(err)
+						continue
 					}
-					fmt.Fprintf(w, "data: {\"message\": %s}\n\n", string(cb))
-					w.(http.Flusher).Flush()
+					if _, err := fmt.Fprintf(w, "data: {\"message\": %s}\n\n", string(cb)); err != nil {
+						fmt.Printf("failed to write to response, got %v\n", err)
+						continue
+					}
+
+					if flusher, ok := w.(http.Flusher); ok {
+						flusher.Flush()
+					} else {
+						fmt.Println("response writer does not support flushing")
+					}
 				}
 			}
 			close(collectResults)
 			fmt.Println("closed...")
 		}()
 		wg.Wait()
-		fmt.Println(">>>> FINISHED <<<")
 		fmt.Fprintf(w, "data: {\"finished\":\"finished\"}\n\n")
 	})
 
