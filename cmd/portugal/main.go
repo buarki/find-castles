@@ -107,12 +107,13 @@ func extractCastleInfo(c castle.Model, rawHTMLPage []byte) (castle.Model, error)
 	fmt.Println("Table Data:", tableData)
 	return castle.Model{
 		Name:             c.Name,
-		Country:          "portugal",
-		Link:             c.Link,
+		Country:          "Portugal",
+		Link:             fmt.Sprintf("%s/castelos/%s", castlesSource, strings.ReplaceAll(c.Link, "../", "")),
 		City:             tableData["Concelho"],
 		State:            tableData["Distrito"],
 		District:         tableData["Freguesia"],
 		YearOfFoundation: tableData["Construção"],
+		FlagLink:         "/pt-flag.webp",
 	}, nil
 }
 

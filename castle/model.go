@@ -7,5 +7,6 @@ type Model struct {
 	State            string `json:"state"`
 	City             string `json:"city"`
 	District         string `json:"district"`
-	YearOfFoundation string `json:"year_of_foundation"`
+	YearOfFoundation string `json:"yearOfFoundation"`
+	FlagLink         string `json:"flagLink"`
 }
