@@ -51,25 +51,27 @@
         const castlesArea = document.getElementById("country-castles");
         const searchButton = document.getElementById("searchButton");
 
-        const castleCard = ({ name, country, state, city }) => `
-            <div class="p-2 bg-red-300 my-3">
-                <p class="text-2xl">${name}</p>
-                <p>${country}</p>
-                <p>${state}</p>
-                <p>${city}</p>
+
+        const castleCard = ({ name, country, state, city, link }) => `
+            <div class="p-4 my-4 bg-gray-100 rounded-lg shadow-md transition-transform transform-gpu hover:scale-105">
+                <p class="text-xl font-bold mb-2">${name}</p>
+                <p class="text-gray-600">${city}, ${state}, ${country}</p>
+                <div class="mt-4">
+                    <a href="${link}" class="text-blue-500 hover:underline" target="_blank">See more</a>
+                </div>
             </div>
         `;
 
         function CountrySection({ id, flagLink }) {
             const countryDiv = document.createElement("div");
             countryDiv.innerHTML = `
-                <div id="${id}" class="flex-grow flex flex-col bg-gren-300">
-                    <div class="flex gap-3 items-center mb-3">
-                        <p class="text-2xl">${ id }</p>
-                        <img src="${flagLink}" class="w-10 h-auto"/>
+                <div id="${id}" class="flex-grow flex flex-col bg-green-300 p-4 rounded-lg shadow-md">
+                    <div class="flex items-center mb-3">
+                        <p class="text-2xl font-bold">${id}</p>
+                        <img src="${flagLink}" class="w-10 h-auto ml-3"/>
                     </div>
-                    <p>Found <span id="${id}-castles-counter">0</span> Castles</p>
-                    <ul id="${id}-list" class="flex flex-col gap-3">
+                    <p class="text-gray-600">Found <span id="${id}-castles-counter" class="font-bold">0</span> Castles</p>
+                    <ul id="${id}-list" class="flex flex-col gap-3 mt-4">
                     </ul>
                 </div>
             `;
@@ -78,10 +80,20 @@
 
         function handleSSE(event) {
             var data = JSON.parse(event.data);
+            console.log({data});
             if (data.finished) {
                 console.log(">>>CLOSED");
                 sse.close();
                 sse = null;
+
+                searchButton.disabled = true;
+                searchButton.textContent = "Search";
+                searchButton.onclick = search;
+                searchButton.classList.remove("bg-red-400");
+                searchButton.classList.remove("hover:bg-red-300");
+                searchButton.classList.add("bg-blue-400");
+                searchButton.classList.add("hover:bg-blue-300");
+                searchButton.disabled = false;
             } else {
                 const castleData = data.message;
 
@@ -130,9 +142,7 @@
             searchButton.classList.add("hover:bg-red-300");
             searchButton.onclick = cancelSearch;
             searchButton.disabled = false;
-            
 
-            console.log(">>> CALLED");
             sse = new EventSource("/sse");
     
             sse.addEventListener("message", handleSSE);
@@ -141,6 +151,10 @@
             sse.onerror = function(event) {
                 console.error("SSE error:", event);
             };
+
+            sse.onmessage = function(event) {
+                console.log(event);
+            }
     
             window.onunload = function() {
                 sse.close();
