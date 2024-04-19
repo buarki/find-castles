@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>castles</title>
+</head>
+<body>
+    <h1>Castles</h1>
+    <div id="sse-data"></div>
+
+    <button onclick="search()">Search</button>
+
+    <script>
+        let sse;
+        // Function to handle SSE events
+        function handleSSE(event) {
+            // Parse the data from the event
+            var data = JSON.parse(event.data);
+            if (data.finished) {
+                console.log(">>>CLOSED");
+                sse.close();
+                sse = null;
+            } else {
+                // Display the data in the HTML
+                var sseDataElement = document.getElementById("sse-data");
+                sseDataElement.innerHTML += "<p>" + JSON.stringify(data.message) + "</p>";
+            }
+
+        }
+
+        function onFinish(event) {
+            console.log("Search finished!");
+            sse.close();
+            sse = null;
+        }
+
+        function search() {
+            // Establish SSE connection
+            console.log(">>> CALLED");
+            sse = new EventSource("/sse");
+    
+            // Add event listener for SSE events
+            sse.addEventListener("message", handleSSE);
+            sse.addEventListener("finished", onFinish);
+    
+            // Handle SSE errors
+            sse.onerror = function(event) {
+                console.error("SSE error:", event);
+                // Reconnect or handle error as needed
+            };
+    
+            // Close SSE connection on page unload
+            window.onunload = function() {
+                sse.close();
+            };
+        }
+
+    </script>
+</body>
+</html>
