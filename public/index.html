@@ -1,28 +1,105 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>castles</title>
-</head>
-<body>
-    <h1>Castles</h1>
-    <div id="sse-data"></div>
+    <title>Find Castles</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <button onclick="search()">Search</button>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body
+    class="mx-8 min-h-screen flex flex-col p-3">
+    <header
+        class="
+            flex 
+            w-full
+            justify-between
+            items-center">
+        <a href="/">Castles Finder</a>
+        <nav>
+            <ul>
+                <li><a href="https://github.com/buarki/find-castles" target="_blank">Github</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="my-3">
+        <button
+            title="Search for castles"
+            class="
+                bg-blue-400
+                hover:bg-blue-300
+                text-white
+                p-1
+            "
+            onclick="search()">
+            Search
+        </button>
+    </div>
+
+    <div
+        class="w-full flex gap-5 flex-grow"
+        id="country-castles">
+        <!-- <div class="flex-grow bg-red-300">
+            <h1>red</h1>
+        </div>
+        <div class="flex-grow bg-blue-300">
+            <h2>oi</h2>
+        </div> -->
+    </div>
+
+    <footer class="flex items-center justify-center bg-white p-4 mt-3">
+        <p title="Visit author's site.">Made with love by <a target='_blank' class='underline hover:bg-blue-400 p-1 hover:text-white' href='https://buarki.com'>buarki.com.</a></p>
+    </footer>
+
 
     <script>
         let sse;
-        // Function to handle SSE events
+        const castlesArea = document.getElementById("country-castles");
+
+        const castleCard = ({ name, country, state, city }) => `
+            <div class="p-2 bg-red-300 my-3">
+                <p class="text-2xl">${name}</p>
+                <p>${country}</p>
+                <p>${state}</p>
+                <p>${city}</p>
+            </div>
+        `;
+
+        function CountrySection({ id, flagLink }) {
+            const countryDiv = document.createElement("div");
+            countryDiv.innerHTML = `
+                <div id="${id}" class="flex-grow flex flex-col bg-gren-300">
+                    <div class="flex gap-3 justify-center items-center">
+                        <p class="text-2xl">${ id }</p>
+                        <img src="${flagLink}" class="w-10 h-auto"/>
+                    </div>
+                    <p>Found <span id="${id}-castles-counter">0</span> Castles</p>
+                    <ul id="${id}-list" class="flex flex-col gap-3">
+                    </ul>
+                </div>
+            `;
+            return countryDiv;
+        }
+
         function handleSSE(event) {
-            // Parse the data from the event
             var data = JSON.parse(event.data);
             if (data.finished) {
                 console.log(">>>CLOSED");
                 sse.close();
                 sse = null;
             } else {
-                // Display the data in the HTML
-                var sseDataElement = document.getElementById("sse-data");
-                sseDataElement.innerHTML += "<p>" + JSON.stringify(data.message) + "</p>";
+                const castleData = data.message;
+
+                let countryDiv = document.getElementById(castleData.country);
+                if (!countryDiv) {
+                    countryDiv = CountrySection({ id: castleData.country, flagLink: castleData.flagLink, });
+                    castlesArea.appendChild(countryDiv);
+                }
+
+                const castlesList  = document.getElementById(`${castleData.country}-list`);
+                castlesList.innerHTML += castleCard({...castleData});
+
+                const castlesCounter  = document.getElementById(`${castleData.country}-castles-counter`);
+                castlesCounter.innerHTML = parseInt(castlesCounter.innerHTML, 10) + 1;
             }
 
         }
@@ -34,26 +111,20 @@
         }
 
         function search() {
-            // Establish SSE connection
             console.log(">>> CALLED");
             sse = new EventSource("/sse");
     
-            // Add event listener for SSE events
             sse.addEventListener("message", handleSSE);
             sse.addEventListener("finished", onFinish);
     
-            // Handle SSE errors
             sse.onerror = function(event) {
                 console.error("SSE error:", event);
-                // Reconnect or handle error as needed
             };
     
-            // Close SSE connection on page unload
             window.onunload = function() {
                 sse.close();
             };
         }
-
     </script>
 </body>
 </html>
