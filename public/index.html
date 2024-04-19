@@ -23,6 +23,7 @@
     </header>
     <div class="my-3">
         <button
+            id="searchButton"
             title="Search for castles"
             class="
                 bg-blue-400
@@ -48,6 +49,7 @@
     <script>
         let sse;
         const castlesArea = document.getElementById("country-castles");
+        const searchButton = document.getElementById("searchButton");
 
         const castleCard = ({ name, country, state, city }) => `
             <div class="p-2 bg-red-300 my-3">
@@ -104,7 +106,32 @@
             sse = null;
         }
 
+        function cancelSearch() {
+            sse.close();
+            sse = null;
+
+            searchButton.disabled = true;
+            searchButton.textContent = "Search";
+            searchButton.onclick = search;
+            searchButton.classList.remove("bg-red-400");
+            searchButton.classList.remove("hover:bg-red-300");
+            searchButton.classList.add("bg-blue-400");
+            searchButton.classList.add("hover:bg-blue-300");
+            searchButton.disabled = false;
+
+        }
+
         function search() {
+            searchButton.disabled = true;
+            searchButton.textContent = "Cancel";
+            searchButton.classList.remove("bg-blue-400");
+            searchButton.classList.remove("hover:bg-blue-300");
+            searchButton.classList.add("bg-red-400");
+            searchButton.classList.add("hover:bg-red-300");
+            searchButton.onclick = cancelSearch;
+            searchButton.disabled = false;
+            
+
             console.log(">>> CALLED");
             sse = new EventSource("/sse");
     

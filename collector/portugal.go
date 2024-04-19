@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"runtime"
 	"strings"
@@ -141,12 +140,16 @@ func CollectForPotugal(ctx context.Context, httpClient *http.Client, appWg *sync
 
 	homePage, err := collectHomePageHTML(ctx, castlesSource, httpClient)
 	if err != nil {
-		log.Fatal(err)
+		results <- CollectResult{
+			Err: err,
+		}
 	}
 
 	castles, err := collectCastleNameAndLinks(homePage)
 	if err != nil {
-		log.Fatal(err)
+		results <- CollectResult{
+			Err: err,
+		}
 	}
 	fmt.Println("collected castles", len(castles))
 
