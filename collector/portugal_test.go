@@ -1,7 +1,6 @@
 package collector
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"reflect"
@@ -16,27 +15,6 @@ const (
 	castlePageHTMLPath      = "../data/portugal-castle.html"
 )
 
-func loadHTMLHomePage() ([]byte, error) {
-	b, err := os.ReadFile(castlesHomePageHTMLPath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to load file with HTML page, got %v", err)
-	}
-	return b, nil
-}
-
-func loadJSONToCompare() ([]castle.Model, error) {
-	var castles []castle.Model
-	b, err := os.ReadFile(expectedCastlesAsJSON)
-	if err != nil {
-		return nil, fmt.Errorf("failed to open portuguese json, got %v", err)
-	}
-	err = json.Unmarshal(b, &castles)
-	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal JSON, got %v", err)
-	}
-	return castles, nil
-}
-
 func loadCastlePage() ([]byte, error) {
 	b, err := os.ReadFile(castlePageHTMLPath)
 	if err != nil {
@@ -46,7 +24,7 @@ func loadCastlePage() ([]byte, error) {
 }
 
 func TestCollectCastleNameAndLinks(t *testing.T) {
-	htmlToParse, err := loadHTMLHomePage()
+	htmlToParse, err := loadHTMLFile(castlesHomePageHTMLPath)
 	if err != nil {
 		t.Errorf("expected to have err nil, got %v", err)
 	}
@@ -55,7 +33,7 @@ func TestCollectCastleNameAndLinks(t *testing.T) {
 		t.Errorf("expected to have err nil, got %v", err)
 	}
 
-	expectedCastles, err := loadJSONToCompare()
+	expectedCastles, err := loadJSONToCompare(expectedCastlesAsJSON)
 	if err != nil {
 		t.Errorf("expected to have err nil, got %v", err)
 	}
