@@ -28,8 +28,9 @@ func main() {
 			close(collectResults)
 		}()
 
-		wg.Add(1)
+		wg.Add(2)
 		go collector.CollectForPotugal(r.Context(), httpClient, &wg, collectResults)
+		go collector.CollectForUk(r.Context(), httpClient, &wg, collectResults)
 
 		go func() {
 			wg.Wait()
