@@ -51,6 +51,29 @@
         const castlesArea = document.getElementById("country-castles");
         const searchButton = document.getElementById("searchButton");
 
+        function configureSearchButton(useForSearch = true) {
+            if (useForSearch) {
+                searchButton.disabled = true;
+                searchButton.textContent = "Search";
+                searchButton.onclick = search;
+                searchButton.classList.remove("bg-red-400");
+                searchButton.classList.remove("hover:bg-red-300");
+                searchButton.classList.add("bg-blue-400");
+                searchButton.classList.add("hover:bg-blue-300");
+                searchButton.disabled = false;
+                return;
+            }
+            searchButton.disabled = true;
+            searchButton.textContent = "Cancel";
+            searchButton.classList.remove("bg-blue-400");
+            searchButton.classList.remove("hover:bg-blue-300");
+            searchButton.classList.add("bg-red-400");
+            searchButton.classList.add("hover:bg-red-300");
+            searchButton.onclick = cancelSearch;
+
+            searchButton.disabled = false;
+        }
+
 
         const castleCard = ({ name, country, state, city, link }) => `
             <div class="p-4 my-4 bg-gray-100 rounded-lg shadow-md transition-transform transform-gpu hover:scale-105">
@@ -86,14 +109,7 @@
                 sse.close();
                 sse = null;
 
-                searchButton.disabled = true;
-                searchButton.textContent = "Search";
-                searchButton.onclick = search;
-                searchButton.classList.remove("bg-red-400");
-                searchButton.classList.remove("hover:bg-red-300");
-                searchButton.classList.add("bg-blue-400");
-                searchButton.classList.add("hover:bg-blue-300");
-                searchButton.disabled = false;
+                configureSearchButton(true);
             } else {
                 const castleData = data.message;
 
@@ -123,26 +139,12 @@
             sse.close();
             sse = null;
 
-            searchButton.disabled = true;
-            searchButton.textContent = "Search";
-            searchButton.onclick = search;
-            searchButton.classList.remove("bg-red-400");
-            searchButton.classList.remove("hover:bg-red-300");
-            searchButton.classList.add("bg-blue-400");
-            searchButton.classList.add("hover:bg-blue-300");
-            searchButton.disabled = false;
+            configureSearchButton(true);
         }
 
         function search() {
             console.log(">>> SEARCH");
-            searchButton.disabled = true;
-            searchButton.textContent = "Cancel";
-            searchButton.classList.remove("bg-blue-400");
-            searchButton.classList.remove("hover:bg-blue-300");
-            searchButton.classList.add("bg-red-400");
-            searchButton.classList.add("hover:bg-red-300");
-            searchButton.onclick = cancelSearch;
-            searchButton.disabled = false;
+            configureSearchButton(false);
 
             sse = new EventSource("/sse");
     
