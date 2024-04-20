@@ -119,6 +119,7 @@
         }
 
         function cancelSearch() {
+            console.log(">>> CANCELED");
             sse.close();
             sse = null;
 
@@ -130,10 +131,10 @@
             searchButton.classList.add("bg-blue-400");
             searchButton.classList.add("hover:bg-blue-300");
             searchButton.disabled = false;
-
         }
 
         function search() {
+            console.log(">>> SEARCH");
             searchButton.disabled = true;
             searchButton.textContent = "Cancel";
             searchButton.classList.remove("bg-blue-400");
