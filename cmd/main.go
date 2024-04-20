@@ -24,41 +24,55 @@ func main() {
 		var wg sync.WaitGroup
 		collectResults := make(chan collector.CollectResult)
 
+		defer func() {
+			close(collectResults)
+		}()
+
 		wg.Add(1)
 		go collector.CollectForPotugal(r.Context(), httpClient, &wg, collectResults)
 
-		wg.Add(1)
 		go func() {
-			defer wg.Done()
+			wg.Wait()
+			fmt.Fprintf(w, "data: {\"finished\":\"finished\"}\n\n")
+			if flusher, ok := w.(http.Flusher); ok {
+				flusher.Flush()
+			} else {
+				fmt.Println("response writer does not support flushing")
+			}
+		}()
 
-			fmt.Println("waiting...")
-			for result := range collectResults {
-				if result.Err != nil {
-					fmt.Printf("failed to collect info for castle [%s], got %v\n", result.Castle.Name, result.Err)
-				} else {
-					fmt.Printf("%v\n", result.Castle)
-					cb, err := json.Marshal(result.Castle)
-					if err != nil {
-						fmt.Println(err)
-						continue
-					}
-					if _, err := fmt.Fprintf(w, "data: {\"message\": %s}\n\n", string(cb)); err != nil {
-						fmt.Printf("failed to write to response, got %v\n", err)
-						continue
-					}
+		for result := range collectResults {
+			if result.Err != nil {
+				fmt.Printf("failed to collect info for castle [%s], got %v\n", result.Castle.Name, result.Err)
+			} else {
+				fmt.Printf("%v\n", result.Castle)
+				cb, err := json.Marshal(result.Castle)
+				if err != nil {
+					fmt.Println(err)
+					continue
+				}
 
-					if flusher, ok := w.(http.Flusher); ok {
-						flusher.Flush()
-					} else {
-						fmt.Println("response writer does not support flushing")
+				if cn, ok := w.(http.CloseNotifier); ok {
+					select {
+					case <-cn.CloseNotify():
+						fmt.Println("Client disconnected. Stopping.")
+						return
+					default: // Client still connected, continue processing
 					}
 				}
+
+				if _, err := fmt.Fprintf(w, "data: {\"message\": %s}\n\n", string(cb)); err != nil {
+					fmt.Printf("failed to write to response, got %v\n", err)
+					continue
+				}
+
+				if flusher, ok := w.(http.Flusher); ok {
+					flusher.Flush()
+				} else {
+					fmt.Println("response writer does not support flushing")
+				}
 			}
-			close(collectResults)
-			fmt.Println("closed...")
-		}()
-		wg.Wait()
-		fmt.Fprintf(w, "data: {\"finished\":\"finished\"}\n\n")
+		}
 	})
 
 	fmt.Println("Server listening on port 8080")
