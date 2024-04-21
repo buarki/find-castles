@@ -23,8 +23,7 @@ Then access http://localhost:8080 on your browser.
 ## What Is This Project?
 
 ### Summary
-This is a simple project made to experiment [Server-Sent Events (SSE)](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) interacting with a Go app.
-Once user access the Web client it sees a button called *Search*, that once pressed it triggers a **data pipeline** process in the Go server in which it does a [web scrapping](https://www.imperva.com/learn/application-security/web-scraping-attack/#:~:text=Web%20scraping%20is%20the%20process,replicate%20entire%20website%20content%20elsewhere.) in some sites to collect data about castles, like the name of it, the country and city it is based.
+This project demonstrates the use of [Server-Sent Events (SSE)](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events) to interact with a Go application. When users access the web client, they find a "Search" button that, when clicked, initiates a **data pipeline** on the Go server. This pipeline involves [web scraping](https://www.imperva.com/learn/application-security/web-scraping-attack/#:~:text=Web%20scraping%20is%20the%20process,replicate%20entire%20website%20content%20elsewhere.) from various sites to gather information about castles, including their names, and the country and city where they are located. The server sends these details back to the client in real time via SSE, allowing users to see the results as they are processed.
 
 ### The Data Pipeline
 
@@ -33,7 +32,7 @@ The search data pipeline is controlled by the [findCastles function](./cmd/find_
 - Enrich the collected castles;
 - Send the castles to frontend as they are enriched;
 
-The **collecting stage** by now collects castles from the United Kingdom and Portugal. We may thing about theses countries as **collecting sources**. The collecting process goes by: for each collecting source it access a web page having the list of castles and then it extracts a list of the castles with its respective link. The collected castles are merged into a single channel and are passed to next stage for enrichment, take a look at the [collector](./collector/collector.go).
+The **collecting stage** by now collects castles from the United Kingdom and Portugal. We may think about theses countries as **collecting sources**. The collecting process goes by: for each collecting source it access a web page having the list of castles and then it extracts a list of the castles with its respective link. The collected castles are merged into a single channel and are passed to next stage for enrichment, take a look at the [collector](./collector/collector.go).
 
 The **enrichment stage** receives the castles as they are sent by the collecting stage an access their info web page to extract detailed data, like the city, state and district. As this stage has more jobs to be done we scale the [enrichment job](./enricher/enricher.go) by the number of available CPUs on the machine. The enriched castles are then converged into a single channel to be consumed by the last stage.
 
