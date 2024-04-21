@@ -5,4 +5,4 @@ run:
 	go run --race cmd/*.go
 
 build:
-	go build cmd/
+	go build -o findcastles cmd/*.go
