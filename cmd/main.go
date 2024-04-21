@@ -5,11 +5,16 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/buarki/find-castles/httpclient"
 )
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("missing PORT env var")
+	}
 	httpClient := httpclient.New()
 
 	fs := http.FileServer(http.Dir("./public"))
@@ -60,6 +65,6 @@ func main() {
 		}
 	})
 
-	fmt.Println("Server listening on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	fmt.Println("Server listening on port ", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
