@@ -16,7 +16,7 @@ func TestExtractTheListOfCastlesInEngland(t *testing.T) {
 	if err != nil {
 		t.Errorf("expected to have err nil when loading HTML with the list of castles in england, got %v", err)
 	}
-	collectedCastles, err := extractTheListOfCastlesInEngland(htmlWithEnglandCastles)
+	collectedCastles, err := extractTheListOfCastlesFromPage(htmlWithEnglandCastles)
 	if err != nil {
 		t.Errorf("expected to have err nil when collecting the list of castles in england, got %v", err)
 	}

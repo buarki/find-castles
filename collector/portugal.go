@@ -53,7 +53,7 @@ func collectCastleNameAndLinks(rawHTML []byte) ([]castle.Model, error) {
 	return castles, nil
 }
 
-func collectForPotugal(ctx context.Context, httpClient *http.Client) (chan castle.Model, chan error) {
+func collectCastlesFromPortugal(ctx context.Context, httpClient *http.Client) (chan castle.Model, chan error) {
 	castlesToEnrich := make(chan castle.Model)
 	errChan := make(chan error)
 	go func() {
