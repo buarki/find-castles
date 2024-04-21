@@ -103,7 +103,6 @@
 
         function handleSSE(event) {
             var data = JSON.parse(event.data);
-            console.log({data});
             if (data.finished) {
                 console.log(">>>CLOSED");
                 sse.close();
@@ -155,9 +154,9 @@
                 console.error("SSE error:", event);
             };
 
-            sse.onmessage = function(event) {
-                console.log(event);
-            }
+            // sse.onmessage = function(event) {
+            //     console.log(event);
+            // }
     
             window.onunload = function() {
                 sse.close();

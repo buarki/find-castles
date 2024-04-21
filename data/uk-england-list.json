@@ -1,35 +1,5 @@
 [
     {
-        "name": "Newark Castle ",
-        "link": "https://medievalbritain.com/type/medieval-castles/newark-castle/",
-        "country": "UK",
-        "state": "",
-        "city": "",
-        "district": "",
-        "yearOfFoundation": "",
-        "flagLink": ""
-    },
-    {
-        "name": "Kirby Castle ",
-        "link": "https://medievalbritain.com/type/medieval-castles/kirby-castle/",
-        "country": "UK",
-        "state": "",
-        "city": "",
-        "district": "",
-        "yearOfFoundation": "",
-        "flagLink": ""
-    },
-    {
-        "name": "Ashby de la Zouch Castle ",
-        "link": "https://medievalbritain.com/type/medieval-castles/ashby-de-la-zouch-castle/",
-        "country": "UK",
-        "state": "",
-        "city": "",
-        "district": "",
-        "yearOfFoundation": "",
-        "flagLink": ""
-    },
-    {
         "name": "Lincoln Castle ",
         "link": "https://medievalbritain.com/type/medieval-castles/lincoln-castle/",
         "country": "UK",
@@ -37,87 +7,7 @@
         "city": "",
         "district": "",
         "yearOfFoundation": "",
-        "flagLink": ""
-    },
-    {
-        "name": "Framlingham Castle ",
-        "link": "https://medievalbritain.com/type/medieval-castles/framlingham-castle/",
-        "country": "UK",
-        "state": "",
-        "city": "",
-        "district": "",
-        "yearOfFoundation": "",
-        "flagLink": ""
-    },
-    {
-        "name": "Donnington Castle ",
-        "link": "https://medievalbritain.com/type/medieval-castles/donnington-castle/",
-        "country": "UK",
-        "state": "",
-        "city": "",
-        "district": "",
-        "yearOfFoundation": "",
-        "flagLink": ""
-    },
-    {
-        "name": "Norwich Castle ",
-        "link": "https://medievalbritain.com/type/medieval-castles/norwich-castle/",
-        "country": "UK",
-        "state": "",
-        "city": "",
-        "district": "",
-        "yearOfFoundation": "",
-        "flagLink": ""
-    },
-    {
-        "name": "Berkhamsted Castle ",
-        "link": "https://medievalbritain.com/type/medieval-castles/berkhamsted-castle/",
-        "country": "UK",
-        "state": "",
-        "city": "",
-        "district": "",
-        "yearOfFoundation": "",
-        "flagLink": ""
-    },
-    {
-        "name": "Windsor Castle ",
-        "link": "https://medievalbritain.com/type/medieval-castles/windsor-castle/",
-        "country": "UK",
-        "state": "",
-        "city": "",
-        "district": "",
-        "yearOfFoundation": "",
-        "flagLink": ""
-    },
-    {
-        "name": "Lindisfarne Castle ",
-        "link": "https://medievalbritain.com/type/medieval-castles/lindisfarne-castle/",
-        "country": "UK",
-        "state": "",
-        "city": "",
-        "district": "",
-        "yearOfFoundation": "",
-        "flagLink": ""
-    },
-    {
-        "name": "Berwick Upon Tweed Castle ",
-        "link": "https://medievalbritain.com/type/medieval-castles/berwick-upon-tweed-castle/",
-        "country": "UK",
-        "state": "",
-        "city": "",
-        "district": "",
-        "yearOfFoundation": "",
-        "flagLink": ""
-    },
-    {
-        "name": "Barnard Castle ",
-        "link": "https://medievalbritain.com/type/medieval-castles/barnard-castle/",
-        "country": "UK",
-        "state": "",
-        "city": "",
-        "district": "",
-        "yearOfFoundation": "",
-        "flagLink": ""
+        "flagLink": "/uk-flag.webp"
     },
     {
         "name": "Aydon Castle ",
@@ -127,7 +17,27 @@
         "city": "",
         "district": "",
         "yearOfFoundation": "",
-        "flagLink": ""
+        "flagLink": "/uk-flag.webp"
+    },
+    {
+        "name": "Donnington Castle ",
+        "link": "https://medievalbritain.com/type/medieval-castles/donnington-castle/",
+        "country": "UK",
+        "state": "",
+        "city": "",
+        "district": "",
+        "yearOfFoundation": "",
+        "flagLink": "/uk-flag.webp"
+    },
+    {
+        "name": "Ashby de la Zouch Castle ",
+        "link": "https://medievalbritain.com/type/medieval-castles/ashby-de-la-zouch-castle/",
+        "country": "UK",
+        "state": "",
+        "city": "",
+        "district": "",
+        "yearOfFoundation": "",
+        "flagLink": "/uk-flag.webp"
     },
     {
         "name": "Durham Castle ",
@@ -137,17 +47,67 @@
         "city": "",
         "district": "",
         "yearOfFoundation": "",
-        "flagLink": ""
+        "flagLink": "/uk-flag.webp"
     },
     {
-        "name": "Chester Castle ",
-        "link": "https://medievalbritain.com/type/medieval-castles/chester-castle/",
+        "name": "Berwick Upon Tweed Castle ",
+        "link": "https://medievalbritain.com/type/medieval-castles/berwick-upon-tweed-castle/",
         "country": "UK",
         "state": "",
         "city": "",
         "district": "",
         "yearOfFoundation": "",
-        "flagLink": ""
+        "flagLink": "/uk-flag.webp"
+    },
+    {
+        "name": "Windsor Castle ",
+        "link": "https://medievalbritain.com/type/medieval-castles/windsor-castle/",
+        "country": "UK",
+        "state": "",
+        "city": "",
+        "district": "",
+        "yearOfFoundation": "",
+        "flagLink": "/uk-flag.webp"
+    },
+    {
+        "name": "Newark Castle ",
+        "link": "https://medievalbritain.com/type/medieval-castles/newark-castle/",
+        "country": "UK",
+        "state": "",
+        "city": "",
+        "district": "",
+        "yearOfFoundation": "",
+        "flagLink": "/uk-flag.webp"
+    },
+    {
+        "name": "Norwich Castle ",
+        "link": "https://medievalbritain.com/type/medieval-castles/norwich-castle/",
+        "country": "UK",
+        "state": "",
+        "city": "",
+        "district": "",
+        "yearOfFoundation": "",
+        "flagLink": "/uk-flag.webp"
+    },
+    {
+        "name": "Framlingham Castle ",
+        "link": "https://medievalbritain.com/type/medieval-castles/framlingham-castle/",
+        "country": "UK",
+        "state": "",
+        "city": "",
+        "district": "",
+        "yearOfFoundation": "",
+        "flagLink": "/uk-flag.webp"
+    },
+    {
+        "name": "Berkhamsted Castle ",
+        "link": "https://medievalbritain.com/type/medieval-castles/berkhamsted-castle/",
+        "country": "UK",
+        "state": "",
+        "city": "",
+        "district": "",
+        "yearOfFoundation": "",
+        "flagLink": "/uk-flag.webp"
     },
     {
         "name": "Dover Castle ",
@@ -157,7 +117,27 @@
         "city": "",
         "district": "",
         "yearOfFoundation": "",
-        "flagLink": ""
+        "flagLink": "/uk-flag.webp"
+    },
+    {
+        "name": "Kirby Castle ",
+        "link": "https://medievalbritain.com/type/medieval-castles/kirby-castle/",
+        "country": "UK",
+        "state": "",
+        "city": "",
+        "district": "",
+        "yearOfFoundation": "",
+        "flagLink": "/uk-flag.webp"
+    },
+    {
+        "name": "Lindisfarne Castle ",
+        "link": "https://medievalbritain.com/type/medieval-castles/lindisfarne-castle/",
+        "country": "UK",
+        "state": "",
+        "city": "",
+        "district": "",
+        "yearOfFoundation": "",
+        "flagLink": "/uk-flag.webp"
     },
     {
         "name": "Bodiam Castle ",
@@ -167,7 +147,27 @@
         "city": "",
         "district": "",
         "yearOfFoundation": "",
-        "flagLink": ""
+        "flagLink": "/uk-flag.webp"
+    },
+    {
+        "name": "Barnard Castle ",
+        "link": "https://medievalbritain.com/type/medieval-castles/barnard-castle/",
+        "country": "UK",
+        "state": "",
+        "city": "",
+        "district": "",
+        "yearOfFoundation": "",
+        "flagLink": "/uk-flag.webp"
+    },
+    {
+        "name": "Chester Castle ",
+        "link": "https://medievalbritain.com/type/medieval-castles/chester-castle/",
+        "country": "UK",
+        "state": "",
+        "city": "",
+        "district": "",
+        "yearOfFoundation": "",
+        "flagLink": "/uk-flag.webp"
     },
     {
         "name": "Hedingham Castle ",
@@ -177,7 +177,7 @@
         "city": "",
         "district": "",
         "yearOfFoundation": "",
-        "flagLink": ""
+        "flagLink": "/uk-flag.webp"
     },
     {
         "name": "Leeds Castle ",
@@ -187,7 +187,7 @@
         "city": "",
         "district": "",
         "yearOfFoundation": "",
-        "flagLink": ""
+        "flagLink": "/uk-flag.webp"
     },
     {
         "name": "Corfe Castle ",
@@ -197,7 +197,7 @@
         "city": "",
         "district": "",
         "yearOfFoundation": "",
-        "flagLink": ""
+        "flagLink": "/uk-flag.webp"
     },
     {
         "name": "Tintagel Castle ",
@@ -207,7 +207,7 @@
         "city": "",
         "district": "",
         "yearOfFoundation": "",
-        "flagLink": ""
+        "flagLink": "/uk-flag.webp"
     },
     {
         "name": "Acton Burnell Castle ",
@@ -217,17 +217,7 @@
         "city": "",
         "district": "",
         "yearOfFoundation": "",
-        "flagLink": ""
-    },
-    {
-        "name": "Warwick Castle ",
-        "link": "https://medievalbritain.com/locations/england/west-midlands-england/warwick-castle/",
-        "country": "UK",
-        "state": "",
-        "city": "",
-        "district": "",
-        "yearOfFoundation": "",
-        "flagLink": ""
+        "flagLink": "/uk-flag.webp"
     },
     {
         "name": "York Castle ",
@@ -237,6 +227,16 @@
         "city": "",
         "district": "",
         "yearOfFoundation": "",
-        "flagLink": ""
+        "flagLink": "/uk-flag.webp"
+    },
+    {
+        "name": "Warwick Castle ",
+        "link": "https://medievalbritain.com/locations/england/west-midlands-england/warwick-castle/",
+        "country": "UK",
+        "state": "",
+        "city": "",
+        "district": "",
+        "yearOfFoundation": "",
+        "flagLink": "/uk-flag.webp"
     }
 ]

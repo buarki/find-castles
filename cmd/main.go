@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"sync"
 
-	"github.com/buarki/find-castles/collector"
-	"github.com/buarki/find-castles/htttpclient"
+	"github.com/buarki/find-castles/httpclient"
 )
 
 func main() {
-	httpClient := htttpclient.New()
+	httpClient := httpclient.New()
 
 	fs := http.FileServer(http.Dir("./public"))
 	http.Handle("/", fs)
@@ -21,56 +19,42 @@ func main() {
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Connection", "keep-alive")
 
-		var wg sync.WaitGroup
-		collectResults := make(chan collector.CollectResult)
+		enrichedCastles, enrichmentErrs := findCastles(r.Context(), httpClient)
 
-		defer func() {
-			close(collectResults)
-		}()
-
-		wg.Add(2)
-		go collector.CollectForPotugal(r.Context(), httpClient, &wg, collectResults)
-		go collector.CollectForUk(r.Context(), httpClient, &wg, collectResults)
-
-		go func() {
-			wg.Wait()
-			fmt.Fprintf(w, "data: {\"finished\":\"finished\"}\n\n")
-			if flusher, ok := w.(http.Flusher); ok {
-				flusher.Flush()
-			} else {
-				fmt.Println("response writer does not support flushing")
-			}
-		}()
-
-		for result := range collectResults {
-			if result.Err != nil {
-				fmt.Printf("failed to collect info for castle [%s], got %v\n", result.Castle.Name, result.Err)
-			} else {
-				fmt.Printf("%v\n", result.Castle)
-				cb, err := json.Marshal(result.Castle)
-				if err != nil {
-					fmt.Println(err)
-					continue
+		for {
+			select {
+			case <-r.Context().Done():
+				log.Println("request was canceled")
+				return
+			case err, ok := <-enrichmentErrs:
+				if ok {
+					log.Println("received error:", err)
 				}
-
-				if cn, ok := w.(http.CloseNotifier); ok {
-					select {
-					case <-cn.CloseNotify():
-						fmt.Println("Client disconnected. Stopping.")
-						return
-					default: // Client still connected, continue processing
+			case castle, ok := <-enrichedCastles:
+				if ok {
+					cb, err := json.Marshal(castle)
+					if err != nil {
+						log.Printf("failed to marshal castle [%s]: %v", castle.Name, err)
 					}
-				}
 
-				if _, err := fmt.Fprintf(w, "data: {\"message\": %s}\n\n", string(cb)); err != nil {
-					fmt.Printf("failed to write to response, got %v\n", err)
-					continue
-				}
+					if _, err := fmt.Fprintf(w, "data: {\"message\": %s}\n\n", string(cb)); err != nil {
+						log.Printf("failed to write to response: %v", err)
+					}
 
-				if flusher, ok := w.(http.Flusher); ok {
-					flusher.Flush()
+					if flusher, ok := w.(http.Flusher); ok {
+						flusher.Flush()
+					} else {
+						log.Println("response writer does not support flushing")
+					}
 				} else {
-					fmt.Println("response writer does not support flushing")
+					fmt.Fprintf(w, "data: {\"finished\":\"finished\"}\n\n")
+					if flusher, ok := w.(http.Flusher); ok {
+						flusher.Flush()
+					} else {
+						log.Println("response writer does not support flushing")
+					}
+					log.Println("finished processing castles")
+					return
 				}
 			}
 		}

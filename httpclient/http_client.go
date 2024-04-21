@@ -1,4 +1,4 @@
-package htttpclient
+package httpclient
 
 import (
 	"net/http"
