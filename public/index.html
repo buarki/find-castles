@@ -48,30 +48,61 @@
 
     <script>
         let sse;
+        const SEARCH = 1;
+        const CANCEL = 2;
+        const CLEAN = 3;
+
         const castlesArea = document.getElementById("country-castles");
         const searchButton = document.getElementById("searchButton");
 
-        function configureSearchButton(useForSearch = true) {
-            if (useForSearch) {
-                searchButton.disabled = true;
-                searchButton.textContent = "Search";
-                searchButton.onclick = search;
-                searchButton.classList.remove("bg-red-400");
-                searchButton.classList.remove("hover:bg-red-300");
-                searchButton.classList.add("bg-blue-400");
-                searchButton.classList.add("hover:bg-blue-300");
-                searchButton.disabled = false;
-                return;
+        function clean() {
+            configureSearchButton(SEARCH);
+            while (castlesArea.firstChild) {
+                castlesArea.removeChild(castlesArea.firstChild);
             }
-            searchButton.disabled = true;
-            searchButton.textContent = "Cancel";
-            searchButton.classList.remove("bg-blue-400");
-            searchButton.classList.remove("hover:bg-blue-300");
-            searchButton.classList.add("bg-red-400");
-            searchButton.classList.add("hover:bg-red-300");
-            searchButton.onclick = cancelSearch;
+            console.log("removed all chidlren");
+        }
 
-            searchButton.disabled = false;
+        function configureSearchButton(option = SEARCH) {
+            switch (option) {
+                case CANCEL:
+                    searchButton.disabled = true;
+                    searchButton.textContent = "Cancel";
+                    searchButton.classList.remove("bg-blue-400");
+                    searchButton.classList.remove("hover:bg-blue-300");
+                    searchButton.classList.remove("bg-yellow-400");
+                    searchButton.classList.remove("hover:bg-yellow-300");
+                    searchButton.classList.add("bg-red-400");
+                    searchButton.classList.add("hover:bg-red-300");
+                    searchButton.onclick = cancelSearch;
+                    searchButton.disabled = false;
+                    return;
+                case CLEAN:
+                    searchButton.disabled = true;
+                    searchButton.textContent = "Clean";
+                    searchButton.onclick = clean;
+                    searchButton.classList.remove("bg-blue-400");
+                    searchButton.classList.remove("hover:bg-blue-300");
+                    searchButton.classList.remove("bg-red-400");
+                    searchButton.classList.remove("hover:bg-red-300");
+                    searchButton.classList.add("bg-yellow-400");
+                    searchButton.classList.add("hover:bg-yellow-300");
+                    searchButton.disabled = false;
+                    return;
+                case SEARCH:
+                default:
+                    searchButton.disabled = true;
+                    searchButton.textContent = "Search";
+                    searchButton.onclick = search;
+                    searchButton.classList.remove("bg-red-400");
+                    searchButton.classList.remove("hover:bg-red-300");
+                    searchButton.classList.remove("bg-yellow-400");
+                    searchButton.classList.remove("hover:bg-yellow-300");
+                    searchButton.classList.add("bg-blue-400");
+                    searchButton.classList.add("hover:bg-blue-300");
+                    searchButton.disabled = false;
+                    return;
+            }
         }
 
 
@@ -108,7 +139,7 @@
                 sse.close();
                 sse = null;
 
-                configureSearchButton(true);
+                configureSearchButton(CLEAN);
             } else {
                 const castleData = data.message;
 
@@ -138,12 +169,12 @@
             sse.close();
             sse = null;
 
-            configureSearchButton(true);
+            configureSearchButton(CLEAN);
         }
 
         function search() {
             console.log(">>> SEARCH");
-            configureSearchButton(false);
+            configureSearchButton(CANCEL);
 
             sse = new EventSource("/sse");
     
@@ -153,10 +184,6 @@
             sse.onerror = function(event) {
                 console.error("SSE error:", event);
             };
-
-            // sse.onmessage = function(event) {
-            //     console.log(event);
-            // }
     
             window.onunload = function() {
                 sse.close();
