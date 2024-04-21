@@ -1,750 +1,1124 @@
 [
     {
         "name": "Abrantes",
-        "link": "../CastelosSECXII/abrantes.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/abrantes.html"
     },
     {
         "name": "Aguiar Sousa",
-        "link": "../Castelos(pre)SECXII/aguiarSousa.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/aguiarSousa.html"
     },
     {
         "name": "Alandroal",
-        "link": "../CastelosSECXIII/alandroal.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/alandroal.html"
     },
     {
         "name": "Albufeira",
-        "link": "../CastelosSECXIII/albufeira.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/albufeira.html"
     },
     {
         "name": "Alcácer do Sal",
-        "link": "../CastelosSECXII/alcacerSal.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/alcacerSal.html"
     },
     {
         "name": "Alcanede",
-        "link": "../Castelos(pre)SECXII/alcanede.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/alcanede.html"
     },
     {
         "name": "Alcantarilha",
-        "link": "../CastelosSECXII/alcantarilha.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/alcantarilha.html"
     },
     {
         "name": "Alcobaça",
-        "link": "../Castelos(pre)SECXII/alcobaca.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/alcobaca.html"
     },
     {
         "name": "Alcoutim",
-        "link": "../CastelosSECXIII/alcoutim.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/alcoutim.html"
     },
     {
         "name": "Alegrete",
-        "link": "../CastelosSECXIII/alegrete.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/alegrete.html"
     },
     {
         "name": "Alenquer",
-        "link": "../CastelosSECXII/alenquer.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/alenquer.html"
     },
     {
         "name": "Alfaiates",
-        "link": "../CastelosSECXII/alfaiates.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/alfaiates.html"
     },
     {
         "name": "Alfeizerão",
-        "link": "../CastelosSECXII/alfeizerao.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/alfeizerao.html"
     },
     {
         "name": "Algoso",
-        "link": "../CastelosSECXII/algoso.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/algoso.html"
     },
     {
         "name": "Aljezur",
-        "link": "../Castelos(pre)SECXII/aljezur.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/aljezur.html"
     },
     {
         "name": "Aljustrel",
-        "link": "../CastelosSECXII/aljustrel.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/aljustrel.html"
     },
     {
         "name": "Almada",
-        "link": "../CastelosSECXII/almada.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/almada.html"
     },
     {
         "name": "Almeida",
-        "link": "../CastelosSECXIII/almeida.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/almeida.html"
     },
     {
         "name": "Almourol",
-        "link": "../CastelosSECXII/almourol.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/almourol.html"
     },
     {
         "name": "Alter do Chão",
-        "link": "../Castelos(pos)SECXIII/alterChao.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pos)SECXIII/alterChao.html"
     },
     {
         "name": "Alter Pedroso",
-        "link": "../CastelosSECXIII/alterPedroso.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/alterPedroso.html"
     },
     {
         "name": "Alva",
-        "link": "../Castelos(pre)SECXII/alva.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/alva.html"
     },
     {
         "name": "Alvito",
-        "link": "../Castelos(pos)SECXIII/alvito.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pos)SECXIII/alvito.html"
     },
     {
         "name": "Alvor",
-        "link": "../Castelos(pre)SECXII/alvor.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/alvor.html"
     },
     {
         "name": "Alpalhão",
-        "link": "../CastelosSECXII/alpalhao.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/alpalhao.html"
     },
     {
         "name": "Amieira",
-        "link": "../Castelos(pos)SECXIII/amieira.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pos)SECXIII/amieira.html"
     },
     {
         "name": "Arraiolos",
-        "link": "../Castelos(pos)SECXIII/arraiolos.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pos)SECXIII/arraiolos.html"
     },
     {
         "name": "Ansiães",
-        "link": "../Castelos(pre)SECXII/ansiaes.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/ansiaes.html"
     },
     {
         "name": "Atouguia da Baleia",
-        "link": "../Castelos(pre)SECXII/atouguiaBaleia.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/atouguiaBaleia.html"
     },
     {
         "name": "Avis",
-        "link": "../CastelosSECXIII/avis.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/avis.html"
     },
     {
         "name": "Avô",
-        "link": "../CastelosSECXII/avo.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/avo.html"
     },
     {
         "name": "Barbacena",
-        "link": "../CastelosSECXIII/barbacena.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/barbacena.html"
     },
     {
         "name": "Barcelos",
-        "link": "../Castelos(pre)SECXII/barcelos.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/barcelos.html"
     },
     {
         "name": "Beja",
-        "link": "../Castelos(pos)SECXIII/beja.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pos)SECXIII/beja.html"
     },
     {
         "name": "Belmonte",
-        "link": "../CastelosSECXIII/belmonte.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/belmonte.html"
     },
     {
         "name": "Belver",
-        "link": "../CastelosSECXIII/belver.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/belver.html"
     },
     {
         "name": "Borba",
-        "link": "../CastelosSECXIII/borba.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/borba.html"
     },
     {
         "name": "Braga",
-        "link": "../CastelosSECXIII/braga.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/braga.html"
     },
     {
         "name": "Bragança",
-        "link": "../CastelosSECXIII/braganca.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/braganca.html"
     },
     {
         "name": "Cabeço de Vide",
-        "link": "../CastelosSECXII/cabecoVide.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/cabecoVide.html"
     },
     {
         "name": "Cacela",
-        "link": "../Castelos(pre)SECXII/cacela.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/cacela.html"
     },
     {
         "name": "Caminha",
-        "link": "../Castelos(pre)SECXII/caminha.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/caminha.html"
     },
     {
         "name": "Carrapatoso",
-        "link": "../Castelos(pre)SECXII/carrapatoso.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/carrapatoso.html"
     },
     {
         "name": "Castelo Bom",
-        "link": "../CastelosSECXIII/casteloBom.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/casteloBom.html"
     },
     {
         "name": "Castelo Branco",
-        "link": "../CastelosSECXIII/casteloBranco.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/casteloBranco.html"
     },
     {
         "name": "Castelo Melhor",
-        "link": "../Castelos(pre)SECXII/casteloMelhor.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/casteloMelhor.html"
     },
     {
         "name": "Castelo Mendo",
-        "link": "../CastelosSECXIII/casteloMendo.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/casteloMendo.html"
     },
     {
         "name": "Castelo Novo",
-        "link": "../CastelosSECXII/casteloNovo.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/casteloNovo.html"
     },
     {
         "name": "Castelo Rodrigo",
-        "link": "../CastelosSECXII/casteloRodrigo.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/casteloRodrigo.html"
     },
     {
         "name": "Castro Marim",
-        "link": "../Castelos(pre)SECXII/castroMarim.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/castroMarim.html"
     },
     {
         "name": "Castro Laboreiro",
-        "link": "../Castelos(pre)SECXII/castroLaboreiro.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/castroLaboreiro.html"
     },
     {
         "name": "Celorico da Beira",
-        "link": "../CastelosSECXII/celoricoBeira.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/celoricoBeira.html"
     },
     {
         "name": "Ceras",
-        "link": "../Castelos(pre)SECXII/ceras.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/ceras.html"
     },
     {
         "name": "Chaves",
-        "link": "../Castelos(pre)SECXII/chaves.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/chaves.html"
     },
     {
         "name": "Coimbra",
-        "link": "../CastelosSECXII/coimbra.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/coimbra.html"
     },
     {
         "name": "Cola",
-        "link": "../Castelos(pre)SECXII/cola.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/cola.html"
     },
     {
         "name": "Covilhã",
-        "link": "../CastelosSECXII/covilha.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/covilha.html"
     },
     {
         "name": "Crato",
-        "link": "../CastelosSECXIII/crato.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/crato.html"
     },
     {
         "name": "Elvas",
-        "link": "../CastelosSECXIII/elvas.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/elvas.html"
     },
     {
         "name": "Estremoz",
-        "link": "../CastelosSECXII/estremoz.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/estremoz.html"
     },
     {
         "name": "Évora",
-        "link": "../Castelos(pos)SECXIII/evora.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pos)SECXIII/evora.html"
     },
     {
         "name": "Évora Monte",
-        "link": "../CastelosSECXII/evoraMonte.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/evoraMonte.html"
     },
     {
         "name": "Faria",
-        "link": "../Castelos(pre)SECXII/faria.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/faria.html"
     },
     {
         "name": "Faro",
-        "link": "../Castelos(pre)SECXII/faro.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/faro.html"
     },
     {
         "name": "Ferreira de Aves",
-        "link": "../CastelosSECXII/ferreiraAves.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/ferreiraAves.html"
     },
     {
         "name": "Folgosinho",
-        "link": "../Castelos(pre)SECXII/folgosinho.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/folgosinho.html"
     },
     {
         "name": "Freixo de Espada à Cinta",
-        "link": "../CastelosSECXII/freixoEspada.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/freixoEspada.html"
     },
     {
         "name": "Gaia",
-        "link": "../Castelos(pre)SECXII/gaia.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/gaia.html"
     },
     {
         "name": "Germanelo",
-        "link": "../CastelosSECXII/germanelo.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/germanelo.html"
     },
     {
         "name": "Giraldo",
-        "link": "../Castelos(pre)SECXII/giraldo.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/giraldo.html"
     },
     {
         "name": "Gouveia",
-        "link": "../Castelos(pre)SECXII/gouveia.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/gouveia.html"
     },
     {
         "name": "Guarda",
-        "link": "../CastelosSECXII/guarda.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/guarda.html"
     },
     {
         "name": "Guimarães",
-        "link": "../Castelos(pre)SECXII/guimaraes.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/guimaraes.html"
     },
     {
         "name": "Idanha-a-Nova",
-        "link": "../CastelosSECXII/idanhaNova.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/idanhaNova.html"
     },
     {
         "name": "Idanha-a-Velha",
-        "link": "../CastelosSECXII/idanhaVelha.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/idanhaVelha.html"
     },
     {
         "name": "Lagos",
-        "link": "../Castelos(pre)SECXII/lagos.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/lagos.html"
     },
     {
         "name": "Lamego",
-        "link": "../Castelos(pre)SECXII/lamego.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/lamego.html"
     },
     {
         "name": "Lanhoso",
-        "link": "../Castelos(pre)SECXII/lanhoso.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/lanhoso.html"
     },
     {
         "name": "Leiria",
-        "link": "../CastelosSECXII/leiria.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/leiria.html"
     },
     {
         "name": "Lindoso",
-        "link": "../CastelosSECXIII/lindoso.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/lindoso.html"
     },
     {
         "name": "Linhares da Beira",
-        "link": "../CastelosSECXII/linharesBeira.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/linharesBeira.html"
     },
     {
         "name": "Longroiva",
-        "link": "../Castelos(pre)SECXII/longroiva.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/longroiva.html"
     },
     {
         "name": "Loulé",
-        "link": "../Castelos(pre)SECXII/loule.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/loule.html"
     },
     {
         "name": "Lourinhã",
-        "link": "../CastelosSECXII/lourinha.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/lourinha.html"
     },
     {
         "name": "Lousã",
-        "link": "../Castelos(pre)SECXII/lousa.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/lousa.html"
     },
     {
         "name": "Marialva",
-        "link": "../CastelosSECXII/marialva.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/marialva.html"
     },
     {
         "name": "Marvão",
-        "link": "../CastelosSECXIII/marvao.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/marvao.html"
     },
     {
         "name": "Mau Vizinho",
-        "link": "../Castelos(pre)SECXII/mauVizinho.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/mauVizinho.html"
     },
     {
         "name": "Mau Vizinho(Évora)",
-        "link": "../Castelos(pre)SECXII/mauVizinhoEvora.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/mauVizinhoEvora.html"
     },
     {
         "name": "Melgaço",
-        "link": "../CastelosSECXII/melgaco.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/melgaco.html"
     },
     {
         "name": "Mértola",
-        "link": "../Castelos(pre)SECXII/mertola.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/mertola.html"
     },
     {
         "name": "Messejana",
-        "link": "../Castelos(pre)SECXII/messejana.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/messejana.html"
     },
     {
         "name": "Miranda do Douro",
-        "link": "../Castelos(pre)SECXII/mirandaDouro.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/mirandaDouro.html"
     },
     {
         "name": "Mirandela",
-        "link": "../CastelosSECXIII/mirandela.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/mirandela.html"
     },
     {
         "name": "Mogadouro",
-        "link": "../CastelosSECXII/mogadouro.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/mogadouro.html"
     },
     {
         "name": "Monção",
-        "link": "../CastelosSECXIII/moncao.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/moncao.html"
     },
     {
         "name": "Monforte",
-        "link": "../CastelosSECXII/monforte.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/monforte.html"
     },
     {
         "name": "Monforte (Fig.C.Rodrigo)",
-        "link": "../CastelosSECXII/monforteFigRodrigo.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/monforteFigRodrigo.html"
     },
     {
         "name": "Monsanto",
-        "link": "../CastelosSECXII/monsanto.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/monsanto.html"
     },
     {
         "name": "Monsaraz",
-        "link": "../CastelosSECXII/monsaraz.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/monsaraz.html"
     },
     {
         "name": "Montalegre",
-        "link": "../CastelosSECXIII/montalegre.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/montalegre.html"
     },
     {
         "name": "Montalvão",
-        "link": "../CastelosSECXIII/montalvao.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/montalvao.html"
     },
     {
         "name": "Montel",
-        "link": "../Castelos(pre)SECXII/montel.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/montel.html"
     },
     {
         "name": "Montemor-o-Novo",
-        "link": "../CastelosSECXIII/montemorNovo.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/montemorNovo.html"
     },
     {
         "name": "Montemor-o-Velho",
-        "link": "../Castelos(pre)SECXII/montemorVelho.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/montemorVelho.html"
     },
     {
         "name": "Moreira de Rei",
-        "link": "../CastelosSECXII/moreiraRei.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/moreiraRei.html"
     },
     {
         "name": "Moura",
-        "link": "../Castelos(pos)SECXIII/moura.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pos)SECXIII/moura.html"
     },
     {
         "name": "Mourão",
-        "link": "../CastelosSECXIII/mourao.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/mourao.html"
     },
     {
         "name": "Neiva",
-        "link": "../Castelos(pre)SECXII/neiva.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/neiva.html"
     },
     {
         "name": "Nisa",
-        "link": "../CastelosSECXIII/nisa.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/nisa.html"
     },
     {
         "name": "Noudar",
-        "link": "../Castelos(pos)SECXIII/noudar.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pos)SECXIII/noudar.html"
     },
     {
         "name": "Numão",
-        "link": "../CastelosSECXII/numao.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/numao.html"
     },
     {
         "name": "Odemira",
-        "link": "../CastelosSECXIII/odemira.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/odemira.html"
     },
     {
         "name": "Oleiros",
-        "link": "../Castelos(pre)SECXII/oleiros.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/oleiros.html"
     },
     {
         "name": "Ouguela",
-        "link": "../CastelosSECXIII/ouguela.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/ouguela.html"
     },
     {
         "name": "Ourém",
-        "link": "../CastelosSECXII/ourem.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/ourem.html"
     },
     {
         "name": "Outeiro de Miranda",
-        "link": "../CastelosSECXIII/outeiroMiranda.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/outeiroMiranda.html"
     },
     {
         "name": "Paderne",
-        "link": "../Castelos(pre)SECXII/paderne.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/paderne.html"
     },
     {
         "name": "Palmela",
-        "link": "../CastelosSECXII/palmela.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/palmela.html"
     },
     {
         "name": "Paranho",
-        "link": "../CastelosSECXIII/paranho.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/paranho.html"
     },
     {
         "name": "Pena de Aguiar",
-        "link": "../Castelos(pre)SECXII/penaAguiar.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/penaAguiar.html"
     },
     {
         "name": "Penacova",
-        "link": "../Castelos(pre)SECXII/penacova.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/penacova.html"
     },
     {
         "name": "Penamacor",
-        "link": "../CastelosSECXII/penamacor.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/penamacor.html"
     },
     {
         "name": "Penas Róias",
-        "link": "../CastelosSECXII/penasRoias.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/penasRoias.html"
     },
     {
         "name": "Penha Garcia",
-        "link": "../CastelosSECXIII/penhaGarcia.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/penhaGarcia.html"
     },
     {
         "name": "Penedono",
-        "link": "../Castelos(pre)SECXII/penedono.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/penedono.html"
     },
     {
         "name": "Penela",
-        "link": "../CastelosSECXII/penela.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/penela.html"
     },
     {
         "name": "Piconha",
-        "link": "../Castelos(pre)SECXII/piconha.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/piconha.html"
     },
     {
         "name": "Pinhel",
-        "link": "../CastelosSECXIII/pinhel.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/pinhel.html"
     },
     {
         "name": "Pombal",
-        "link": "../CastelosSECXII/pombal.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/pombal.html"
     },
     {
         "name": "Portalegre",
-        "link": "../CastelosSECXIII/portalegre.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/portalegre.html"
     },
     {
         "name": "Portel",
-        "link": "../CastelosSECXIII/portel.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/portel.html"
     },
     {
         "name": "Portelo",
-        "link": "../Castelos(pre)SECXII/portelo.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/portelo.html"
     },
     {
         "name": "Porto de Mós",
-        "link": "../Castelos(pre)SECXII/portoMos.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/portoMos.html"
     },
     {
         "name": "Proença-a-Velha",
-        "link": "../Castelos(pre)SECXII/proencaVelha.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/proencaVelha.html"
     },
     {
         "name": "Óbidos",
-        "link": "../CastelosSECXII/obidos.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/obidos.html"
     },
     {
         "name": "Ranhados",
-        "link": "../CastelosSECXIII/ranhados.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/ranhados.html"
     },
     {
         "name": "Rebordãos",
-        "link": "../CastelosSECXIII/rebordaos.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/rebordaos.html"
     },
     {
         "name": "Relíquias",
-        "link": "../Castelos(pre)SECXII/reliquias.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/reliquias.html"
     },
     {
         "name": "Ródão",
-        "link": "../CastelosSECXII/rodao.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/rodao.html"
     },
     {
         "name": "Romano da Lousa",
-        "link": "../Castelos(pre)SECXII/romanoLousa.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/romanoLousa.html"
     },
     {
         "name": "Roqueiro de Coruto",
-        "link": "../Castelos(pre)SECXII/roqueiroCoruto.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/roqueiroCoruto.html"
     },
     {
         "name": "Rosmaninhal",
-        "link": "../CastelosSECXIII/rosmaninhal.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/rosmaninhal.html"
     },
     {
         "name": "Sabugal",
-        "link": "../CastelosSECXII/sabugal.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/sabugal.html"
     },
     {
         "name": "Santa Maria da Feira",
-        "link": "../Castelos(pre)SECXII/santaMaria.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/santaMaria.html"
     },
     {
         "name": "Salir",
-        "link": "../Castelos(pre)SECXII/salir.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/salir.html"
     },
     {
         "name": "Salvaterra do Extremo",
-        "link": "../CastelosSECXII/salvaterraExtremo.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/salvaterraExtremo.html"
     },
     {
         "name": "Santarém",
-        "link": "../Castelos(pre)SECXII/santarem.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/santarem.html"
     },
     {
         "name": "Santiago do Cacém",
-        "link": "../Castelos(pre)SECXII/santiagoCacem.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/santiagoCacem.html"
     },
     {
         "name": "São Jorge",
-        "link": "../Castelos(pre)SECXII/sJorge.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/sJorge.html"
     },
     {
         "name": "São Martinho de Mouros ",
-        "link": "../Castelos(pre)SECXII/martinhoMouros.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/martinhoMouros.html"
     },
     {
         "name": "Santo Estêvão",
-        "link": "../CastelosSECXII/santoEstevao.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/santoEstevao.html"
     },
     {
         "name": "Seia",
-        "link": "../Castelos(pre)SECXII/seia.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/seia.html"
     },
     {
         "name": "Segura",
-        "link": "../CastelosSECXIII/segura.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/segura.html"
     },
     {
         "name": "Sernancelhe",
-        "link": "../Castelos(pre)SECXII/sernancelhe.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/sernancelhe.html"
     },
     {
         "name": "Serpa",
-        "link": "../CastelosSECXIII/serpa.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/serpa.html"
     },
     {
         "name": "Sertã",
-        "link": "../CastelosSECXII/serta.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/serta.html"
     },
     {
         "name": "Sesimbra",
-        "link": "../CastelosSECXIII/sesimbra.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/sesimbra.html"
     },
     {
         "name": "Silves",
-        "link": "../Castelos(pre)SECXII/silves.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/silves.html"
     },
     {
         "name": "Sines",
-        "link": "../Castelos(pos)SECXIII/sines.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pos)SECXIII/sines.html"
     },
     {
         "name": "Sintra",
-        "link": "../Castelos(pre)SECXII/sintra.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/sintra.html"
     },
     {
         "name": "Soure",
-        "link": "../Castelos(pre)SECXII/soure.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/soure.html"
     },
     {
         "name": "Sortelha",
-        "link": "../CastelosSECXIII/sortelha.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/sortelha.html"
     },
     {
         "name": "Tarouca",
-        "link": "../Castelos(pre)SECXII/tarouca.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/tarouca.html"
     },
     {
         "name": "Tavira",
-        "link": "../Castelos(pre)SECXII/tavira.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/tavira.html"
     },
     {
         "name": "Terena",
-        "link": "../CastelosSECXIII/terena.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/terena.html"
     },
     {
         "name": "Tomar",
-        "link": "../CastelosSECXII/tomar.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/tomar.html"
     },
     {
         "name": "Torre de Moncorvo",
-        "link": "../CastelosSECXIII/torreMoncorvo.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/torreMoncorvo.html"
     },
     {
         "name": "Torres Novas",
-        "link": "../Castelos(pre)SECXII/torresNovas.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/torresNovas.html"
     },
     {
         "name": "Torres Vedras",
-        "link": "../Castelos(pre)SECXII/torresVedras.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/torresVedras.html"
     },
     {
         "name": "Trancoso",
-        "link": "../Castelos(pre)SECXII/trancoso.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/trancoso.html"
     },
     {
         "name": "Valença",
-        "link": "../CastelosSECXIII/valenca.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/valenca.html"
     },
     {
         "name": "Veiros",
-        "link": "../CastelosSECXIII/veiros.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/veiros.html"
     },
     {
         "name": "Velho de Alcoutim",
-        "link": "../Castelos(pre)SECXII/velhoAlcoutim.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/velhoAlcoutim.html"
     },
     {
         "name": "Velho do Degebe",
-        "link": "../Castelos(pre)SECXII/velhoDegebe.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/velhoDegebe.html"
     },
     {
         "name": "Vermoim",
-        "link": "../Castelos(pre)SECXII/vermoim.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/vermoim.html"
     },
     {
         "name": "Viana do Alentejo",
-        "link": "../Castelos(pos)SECXIII/vianaAlentejo.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pos)SECXIII/vianaAlentejo.html"
     },
     {
         "name": "Vidigueira",
-        "link": "../CastelosSECXII/vidigueira.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/vidigueira.html"
     },
     {
         "name": "Vila Flor",
-        "link": "../CastelosSECXIII/vilaFlor.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/vilaFlor.html"
     },
     {
         "name": "Vila Nova de Cerveira",
-        "link": "../CastelosSECXIII/vilaNovaCerveira.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/vilaNovaCerveira.html"
     },
     {
         "name": "Vila do Touro",
-        "link": "../CastelosSECXIII/vilaTouro.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/vilaTouro.html"
     },
     {
         "name": "Vila Verde dos Francos",
-        "link": "../Castelos(pre)SECXII/verdeFrancos.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/verdeFrancos.html"
     },
     {
         "name": "Vila Viçosa",
-        "link": "../Castelos(pos)SECXIII/vilaVicosa.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pos)SECXIII/vilaVicosa.html"
     },
     {
         "name": "Vilar Maior",
-        "link": "../Castelos(pre)SECXII/vilarMaior.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/vilarMaior.html"
     },
     {
         "name": "Vinhais",
-        "link": "../Castelos(pre)SECXII/vinhais.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/vinhais.html"
     },
     {
         "name": "Viseu",
-        "link": "../Castelos(pre)SECXII/viseu.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/viseu.html"
     },
     {
         "name": "Zêzere",
-        "link": "../CastelosSECXII/zezere.html"
+        "country":"Portugal",
+        "flagLink":"/pt-flag.webp",
+        "link": "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/zezere.html"
     }
 ]
