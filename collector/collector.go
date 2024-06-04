@@ -9,7 +9,9 @@ import (
 )
 
 func CollectCastlesToEnrich(ctx context.Context, httpClient *http.Client) (<-chan castle.Model, <-chan error) {
-	portugueseCastlesToEnrich, errCollectingPortugueseCastles := collectCastlesFromPortugal(ctx, httpClient)
+	// IoC please
 	ukCastlesToEnrich, errCollectingEnglishCastles := collectCastlesFromUK(ctx, httpClient)
-	return fanin.Merge(ctx, portugueseCastlesToEnrich, ukCastlesToEnrich), fanin.Merge(ctx, errCollectingEnglishCastles, errCollectingPortugueseCastles)
+	irishCastlesToEnrich, errCollectingIrishCastles := collectCastlesFromIreland(ctx, httpClient)
+	portugueseCastlesToEnrich, errCollectingPortugueseCastles := collectCastlesFromPortugal(ctx, httpClient)
+	return fanin.Merge(ctx, portugueseCastlesToEnrich, ukCastlesToEnrich, irishCastlesToEnrich), fanin.Merge(ctx, errCollectingEnglishCastles, errCollectingPortugueseCastles, errCollectingIrishCastles)
 }
