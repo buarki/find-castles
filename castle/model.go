@@ -5,7 +5,6 @@ type Country string
 const (
 	Portugal Country = "Portugal"
 	UK       Country = "UK"
-	Ireland  Country = "Ireland"
 )
 
 type Model struct {
@@ -17,8 +16,4 @@ type Model struct {
 	District         string  `json:"district"`
 	YearOfFoundation string  `json:"yearOfFoundation"`
 	FlagLink         string  `json:"flagLink"`
-}
-
-func (c Model) DisplayName() string {
-	return ""
 }

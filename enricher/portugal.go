@@ -29,6 +29,7 @@ func enrichCastleFromPortugal(
 	if err != nil {
 		return castle.Model{}, err
 	}
+	fmt.Println("finished castle", enrichedCastled)
 	return enrichedCastled, nil
 }
 
