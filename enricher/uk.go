@@ -138,7 +138,6 @@ func enrichCastleFromUK(
 	if err != nil {
 		return castle.Model{}, err
 	}
-	fmt.Println("finished castle", enrichedCastled)
 	return enrichedCastled, nil
 }
 
@@ -155,6 +154,5 @@ func EnrichCastleFromUK(
 	if err != nil {
 		return castle.Model{}, err
 	}
-	fmt.Println("finished castle", enrichedCastled)
 	return enrichedCastled, nil
 }

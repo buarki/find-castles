@@ -18,6 +18,7 @@ var (
 	enrichers = map[castle.Country]Enricher{
 		castle.Portugal: enrichCastleFromPortugal,
 		castle.UK:       enrichCastleFromUK,
+		castle.Ireland:  enrichCastleFromIreland,
 	}
 )
 
