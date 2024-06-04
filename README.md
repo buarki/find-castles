@@ -46,5 +46,6 @@ Bellow image illustrates how it works:
 
 |Country|Source web site|
 |--|--|
-|United Kingdom|https://medievalbritain.com/category/type/medieval-castles/|
-|Portugal|https://www.castelosdeportugal.pt/|
+|<img width=20 src="./public/uk-flag.webp"/> United Kingdom|https://medievalbritain.com/category/type/medieval-castles/|
+|<img width=20 src="./public/pt-flag.webp"/> Portugal|https://www.castelosdeportugal.pt/|
+|<img width=20 src="./public/ir-flag.jpeg"/> Ireland|https://heritageireland.ie/visit/castles/|
