@@ -48,3 +48,4 @@ Bellow image illustrates how it works:
 |--|--|
 |United Kingdom|https://medievalbritain.com/category/type/medieval-castles/|
 |Portugal|https://www.castelosdeportugal.pt/|
+|Ireland|https://heritageireland.ie/visit/castles/|
