@@ -2,7 +2,7 @@ name: scheduled castles collecting and enrichment
 
 on:
   schedule:
-    - cron: '0 0 * * 1'  # every Monday at 00:00 GMT-0
+    - cron: '*/1 * * * *'  #'0 0 * * 1'  # every Monday at 00:00 GMT-0
 
 jobs:
   enrich:
@@ -13,8 +13,11 @@ jobs:
       with:
         go-version: 1.22
 
-    - name: go get
-      run: go get all
+    - name: build
+      run: ls
+
+    - name: build
+      run: go build cmd/enricher/*
 
     - name: run enricher
       env:
