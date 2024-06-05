@@ -14,7 +14,7 @@ make run
 Directly using go:
 
 ```sh
-PORT=8080 go run --race cmd/*.go
+PORT=8080 go run --race cmd/standalone/*.go
 ```
 
 Then access http://localhost:8080 on your browser.
