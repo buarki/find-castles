@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	databaseName   = "castles"
+	databaseName   = "find-castles"
 	collectionName = "castles"
 	bufferSize     = 10
 )
