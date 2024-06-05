@@ -1,10 +1,13 @@
 package enricher
 
 import (
+	"context"
+	"net/http"
 	"testing"
 
 	"github.com/buarki/find-castles/castle"
 	"github.com/buarki/find-castles/fileloader"
+	"github.com/buarki/find-castles/httpclient"
 )
 
 const (
@@ -13,38 +16,49 @@ const (
 	jsonWithEnglandCastlePagePath = "../data/uk-england-castle.html"
 )
 
-func TestExtractUkState(t *testing.T) {
-	castleHTMLPage, err := fileloader.LoadHTMLFile(jsonWithEnglandCastlePagePath)
+func TestCollectBritishCastlesToEnrich(t *testing.T) {
+	htmlFetcher := func(ctx context.Context, link string, httpClient *http.Client) ([]byte, error) {
+		return fileloader.LoadHTMLFile(htmlWithEnglandCastlesPath)
+	}
+	expectedCastles, err := fileloader.LoadCastlesAsJSONList(jsonWithEnglandCastlesPath)
 	if err != nil {
-		t.Errorf("expected to have err nil when loading HTML with the list of castles in england, got %v", err)
+		t.Fatalf("expected to have err nil, got %v", err)
 	}
-	expectedCaste := castle.Model{
-		State: "Berkshire, GreaterLondon",
-		City:  "",
-	}
-	receivedState, err := extractUkState(castleHTMLPage, expectedCaste)
+
+	britishCollector := NewBritishEnricher(httpclient.New(), htmlFetcher)
+
+	foundCastles, err := britishCollector.CollectCastlesToEnrich(context.Background())
 	if err != nil {
-		t.Errorf("expected err nil when getting data of UK castle, got %v", err)
+		t.Fatal(err)
 	}
-	if receivedState != expectedCaste.State {
-		t.Errorf("expected state to be [%s], got [%s]", expectedCaste.State, receivedState)
+
+	if !slicesWithSameContent(foundCastles, expectedCastles) {
+		t.Errorf("parsed castles do not match expected castles")
 	}
 }
 
-func TestExtractUkCity(t *testing.T) {
-	castleHTMLPage, err := fileloader.LoadHTMLFile(jsonWithEnglandCastlePagePath)
+func TestExtractBritishCastleInfo(t *testing.T) {
+	htmlFetcher := func(ctx context.Context, link string, httpClient *http.Client) ([]byte, error) {
+		return fileloader.LoadHTMLFile(jsonWithEnglandCastlePagePath)
+	}
+
+	expectedCastle := castle.Model{
+		Country: castle.UK,
+		City:    "Windsor SL4 1NJ",
+		State:   "Berkshire, GreaterLondon",
+	}
+
+	britishCollector := NewBritishEnricher(httpclient.New(), htmlFetcher)
+
+	receivedCastle, err := britishCollector.EnrichCastle(context.Background(), expectedCastle)
 	if err != nil {
-		t.Errorf("expected to have err nil when loading HTML with the list of castles in england, got %v", err)
+		t.Errorf("expected err nil, got %v", err)
 	}
-	expectedCaste := castle.Model{
-		State: "Berkshire, GreaterLondon",
-		City:  "Windsor SL4 1NJ",
+
+	if receivedCastle.City != expectedCastle.City {
+		t.Errorf("expected city to be [%s], got [%s]", expectedCastle.City, receivedCastle.City)
 	}
-	receivedCity, err := extractUkCity(castleHTMLPage, expectedCaste)
-	if err != nil {
-		t.Errorf("expected err nil when getting data of UK castle, got %v", err)
-	}
-	if receivedCity != expectedCaste.City {
-		t.Errorf("expected city to be [%s], got [%s]", expectedCaste.City, receivedCity)
+	if receivedCastle.State != expectedCastle.State {
+		t.Errorf("expected State to be [%s], got [%s]", expectedCastle.State, receivedCastle.State)
 	}
 }
