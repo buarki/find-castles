@@ -1,0 +1,19 @@
+name: scheduled castles collecting and enrichment
+
+on:
+  schedule:
+    - cron: '*/20 * * * *' #'0 0 * * 1'  # every Monday at 00:00 GMT-0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run enricher
+        env:
+          DB_URI: ${{ secrets.DB_URI }}
+          ENRICHMENT_TIMEOUT_IN_SECONDS: ${{ secrets.ENRICHMENT_TIMEOUT_IN_SECONDS }}
+        run: go run cmd/enricher/*.go
