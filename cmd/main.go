@@ -6,7 +6,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"runtime"
 
+	"github.com/buarki/find-castles/enricher"
+	"github.com/buarki/find-castles/htmlfetcher"
 	"github.com/buarki/find-castles/httpclient"
 )
 
@@ -16,6 +19,7 @@ func main() {
 		log.Fatal("missing PORT env var")
 	}
 	httpClient := httpclient.New()
+	castlesEnricher := enricher.New(runtime.NumCPU(), httpClient, htmlfetcher.Fetch)
 
 	fs := http.FileServer(http.Dir("./public"))
 	http.Handle("/", fs)
@@ -24,7 +28,7 @@ func main() {
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Connection", "keep-alive")
 
-		enrichedCastles, enrichmentErrs := findCastles(r.Context(), httpClient)
+		enrichedCastles, enrichmentErrs := castlesEnricher.Enrich(r.Context())
 
 		for {
 			select {

@@ -18,7 +18,3 @@ type Model struct {
 	YearOfFoundation string  `json:"yearOfFoundation"`
 	FlagLink         string  `json:"flagLink"`
 }
-
-func (c Model) DisplayName() string {
-	return ""
-}

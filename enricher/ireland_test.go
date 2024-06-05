@@ -1,12 +1,43 @@
 package enricher
 
 import (
+	"context"
+	"net/http"
 	"testing"
 
 	"github.com/buarki/find-castles/castle"
+	"github.com/buarki/find-castles/fileloader"
+	"github.com/buarki/find-castles/httpclient"
 )
 
-func TestIrishExtraction(t *testing.T) {
+const (
+	irishCastlesHomePageHTMLPath = "../data/ireland-list.html"
+	expectedIrishCastlesAsJSON   = "../data/ireland-list.json"
+	irishCastlePageHTMLPath      = "../data/ireland-castle.html"
+)
+
+func TestCollectIrishCastlesToEnrich(t *testing.T) {
+	htmlFetcher := func(ctx context.Context, link string, httpClient *http.Client) ([]byte, error) {
+		return fileloader.LoadHTMLFile(irishCastlesHomePageHTMLPath)
+	}
+	expectedCastles, err := fileloader.LoadCastlesAsJSONList(expectedIrishCastlesAsJSON)
+	if err != nil {
+		t.Fatalf("expected to have err nil, got %v", err)
+	}
+
+	irishCollector := NewIrishEnricher(httpclient.New(), htmlFetcher)
+
+	foundCastles, err := irishCollector.CollectCastlesToEnrich(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !slicesWithSameContent(foundCastles, expectedCastles) {
+		t.Errorf("parsed castles do not match expected castles")
+	}
+}
+
+func TestEnrich(t *testing.T) {
 	testCases := []struct {
 		html   string
 		castle castle.Model
@@ -65,28 +96,34 @@ func TestIrishExtraction(t *testing.T) {
 				</div>
 			<div>`,
 			castle: castle.Model{
-				Name:     "Ross Castle",
+				Name: "Ross Castle",
+
 				District: "Ross Road",
 				City:     "Killarney",
-				State:    "Co. Kerr",
+				State:    "Co. Kerry",
 			},
 		},
 	}
 
 	for _, tt := range testCases {
-		res, err := extractIrelandCastleInfo(tt.castle, []byte(tt.html))
+		fetcher := func(ctx context.Context, link string, httpClient *http.Client) ([]byte, error) {
+			return []byte(tt.html), nil
+		}
+		enricher := NewIrishEnricher(httpclient.New(), fetcher)
+
+		castle, err := enricher.EnrichCastle(context.Background(), tt.castle)
 		if err != nil {
 			t.Errorf("expecte err nil, got %v", err)
+		}
 
-			if res.City != tt.castle.City {
-				t.Errorf("expected city [%s], got [%s]", tt.castle.City, res.City)
-			}
-			if res.State != tt.castle.State {
-				t.Errorf("expected State [%s], got [%s]", tt.castle.State, res.State)
-			}
-			if res.District != tt.castle.District {
-				t.Errorf("expected District [%s], got [%s]", tt.castle.District, res.District)
-			}
+		if castle.City != tt.castle.City {
+			t.Errorf("expected city [%s], got [%s]", tt.castle.City, castle.City)
+		}
+		if castle.State != tt.castle.State {
+			t.Errorf("expected State [%s], got [%s]", tt.castle.State, castle.State)
+		}
+		if castle.District != tt.castle.District {
+			t.Errorf("expected District [%s], got [%s]", tt.castle.District, castle.District)
 		}
 	}
 }

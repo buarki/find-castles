@@ -5,7 +5,7 @@ import (
 	"sync"
 )
 
-func Merge[T comparable](ctx context.Context, channels ...<-chan T) chan T {
+func Merge[T any](ctx context.Context, channels ...<-chan T) <-chan T {
 	mergedChannel := make(chan T)
 	var wg sync.WaitGroup
 	wg.Add(len(channels))

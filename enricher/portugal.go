@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io"
 	"net/http"
 	"strings"
 
@@ -16,41 +15,64 @@ const (
 	castlesSource = "https://www.castelosdeportugal.pt"
 )
 
-func enrichCastleFromPortugal(
-	ctx context.Context,
+type portugueseEnricher struct {
+	httpClient *http.Client
+	fetchHTML  func(ctx context.Context, link string, httpClient *http.Client) ([]byte, error)
+}
+
+func NewPortugueseEnricher(
 	httpClient *http.Client,
-	c castle.Model,
-) (castle.Model, error) {
-	castlePage, err := getCastleHTMLPage(ctx, c, httpClient)
+	fetchHTML func(ctx context.Context, link string, httpClient *http.Client) ([]byte, error)) Enricher {
+	return &portugueseEnricher{
+		httpClient: httpClient,
+		fetchHTML:  fetchHTML,
+	}
+}
+
+func (p *portugueseEnricher) CollectCastlesToEnrich(ctx context.Context) ([]castle.Model, error) {
+	htmlWithCastlesToCollect, err := p.fetchHTML(ctx, castlesSource, p.httpClient)
+	if err != nil {
+		return nil, err
+	}
+	castles, err := p.collectCastleNameAndLinks(htmlWithCastlesToCollect)
+	if err != nil {
+		return nil, err
+	}
+	return castles, nil
+}
+
+func (p *portugueseEnricher) collectCastleNameAndLinks(rawHTML []byte) ([]castle.Model, error) {
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(rawHTML))
+	if err != nil {
+		return nil, fmt.Errorf("error loading HTML of portugal: %v", err)
+	}
+	var castles []castle.Model
+	doc.Find("#div-list-alfa-cast p a").Each(func(i int, s *goquery.Selection) {
+		link, _ := s.Attr("href")
+		name := s.Text()
+		castles = append(castles, castle.Model{
+			Name:     name,
+			Country:  castle.Portugal,
+			Link:     fmt.Sprintf("%s/castelos/%s", castlesSource, strings.ReplaceAll(link, "../", "")),
+			FlagLink: "/pt-flag.webp",
+		})
+	})
+	return castles, nil
+}
+
+func (p *portugueseEnricher) EnrichCastle(ctx context.Context, c castle.Model) (castle.Model, error) {
+	castlePage, err := p.fetchHTML(ctx, c.Link, p.httpClient)
 	if err != nil {
 		return castle.Model{}, nil
 	}
-	enrichedCastled, err := extractCastleInfo(c, castlePage)
+	enrichedCastled, err := p.extractCastleInfo(c, castlePage)
 	if err != nil {
 		return castle.Model{}, err
 	}
 	return enrichedCastled, nil
 }
 
-func getCastleHTMLPage(ctx context.Context, c castle.Model, httpClient *http.Client) ([]byte, error) {
-	req, err := http.NewRequest("GET", c.Link, nil)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get home of castle [%s], got %v", c.Name, err)
-	}
-	req = req.WithContext(ctx)
-	res, err := httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to do GET at [%s] for castle [%s], got %v", c.Link, c.Name, err)
-	}
-	defer res.Body.Close()
-	rawBody, err := io.ReadAll(res.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read body content of castle [%s], got %v", c.Name, err)
-	}
-	return rawBody, nil
-}
-
-func extractCastleInfo(c castle.Model, rawHTMLPage []byte) (castle.Model, error) {
+func (p *portugueseEnricher) extractCastleInfo(c castle.Model, rawHTMLPage []byte) (castle.Model, error) {
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(rawHTMLPage))
 	if err != nil {
 		return castle.Model{}, fmt.Errorf("failed to load page, got %v", err)
@@ -62,17 +84,16 @@ func extractCastleInfo(c castle.Model, rawHTMLPage []byte) (castle.Model, error)
 
 	doc.Find("#info-table tbody tr").Each(func(i int, s *goquery.Selection) {
 		key := strings.TrimSpace(s.Find("td:nth-child(1)").Text())
-		if contains(rowsToExtract, key) {
+		if p.contains(rowsToExtract, key) {
 			value := strings.TrimSpace(s.Find("td:nth-child(2)").Text())
 			tableData[key] = value
 		}
 	})
 
-	fmt.Println("Table Data:", c.Name, tableData)
 	return castle.Model{
 		Name:             c.Name,
-		Country:          "Portugal",
-		Link:             fmt.Sprintf("%s/castelos/%s", castlesSource, strings.ReplaceAll(c.Link, "../", "")),
+		Country:          c.Country,
+		Link:             c.Link,
 		City:             tableData["Concelho"],
 		State:            tableData["Distrito"],
 		District:         tableData["Freguesia"],
@@ -81,7 +102,7 @@ func extractCastleInfo(c castle.Model, rawHTMLPage []byte) (castle.Model, error)
 	}, nil
 }
 
-func contains(arr []string, str string) bool {
+func (p *portugueseEnricher) contains(arr []string, str string) bool {
 	for _, a := range arr {
 		if a == str {
 			return true
