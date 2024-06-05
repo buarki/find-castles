@@ -7,20 +7,13 @@ on:
 jobs:
   enrich:
     runs-on: ubuntu-latest
+
     steps:
-    - name: set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.22
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: build
-      run: ls
-
-    - name: build
-      run: go build cmd/enricher/*
-
-    - name: run enricher
-      env:
-        DB_URI: ${{ secrets.DB_URI }}
-        ENRICHMENT_TIMEOUT_IN_SECONDS: ${{ secrets.ENRICHMENT_TIMEOUT_IN_SECONDS }}
-      run: go run cmd/enricher/*.go
+      - name: run enricher
+        env:
+          DB_URI: ${{ secrets.DB_URI }}
+          ENRICHMENT_TIMEOUT_IN_SECONDS: ${{ secrets.ENRICHMENT_TIMEOUT_IN_SECONDS }}
+        run: go run cmd/enricher/*.go
