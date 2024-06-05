@@ -21,7 +21,7 @@ func main() {
 	httpClient := httpclient.New()
 	castlesEnricher := enricher.New(runtime.NumCPU(), httpClient, htmlfetcher.Fetch)
 
-	fs := http.FileServer(http.Dir("./public"))
+	fs := http.FileServer(http.Dir("./cmd/standalone/public"))
 	http.Handle("/", fs)
 	http.HandleFunc("/sse", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/event-stream")
