@@ -5,6 +5,10 @@ export type MenuPageItem = {
 
 export const menuItems = [
   {
+    name: "About",
+    link: '/about',
+  },
+  {
     name: "Index",
     link: '/index',
   },
@@ -17,7 +21,7 @@ export const menuItems = [
     link: '/tech-stuff',
   },
   {
-    name: "About Us",
-    link: '/about',
+    name: "Crew",
+    link: '/crew',
   },
 ] as MenuPageItem[];
