@@ -11,6 +11,7 @@ import (
 	"github.com/buarki/find-castles/castle"
 	"github.com/buarki/find-castles/db"
 	"github.com/buarki/find-castles/enricher"
+	"github.com/buarki/find-castles/executor"
 	"github.com/buarki/find-castles/htmlfetcher"
 	"github.com/buarki/find-castles/httpclient"
 )
@@ -51,7 +52,12 @@ func main() {
 	}
 
 	httpClient := httpclient.New()
-	castlesEnricher := enricher.New(runtime.NumCPU(), httpClient, htmlfetcher.Fetch)
+	enrichers := map[castle.Country]enricher.Enricher{
+		castle.Ireland:  enricher.NewIrishEnricher(httpClient, htmlfetcher.Fetch),
+		castle.Portugal: enricher.NewPortugueseEnricher(httpClient, htmlfetcher.Fetch),
+		castle.UK:       enricher.NewBritishEnricher(httpClient, htmlfetcher.Fetch),
+	}
+	castlesEnricher := executor.New(runtime.NumCPU(), httpClient, enrichers)
 	castlesChan, errChan := castlesEnricher.Enrich(ctx)
 
 	var buffer []castle.Model

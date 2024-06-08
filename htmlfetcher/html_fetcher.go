@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+type HTMLFetcher func(ctx context.Context, url string, httpClient *http.Client) ([]byte, error)
+
 func Fetch(ctx context.Context, url string, httpClient *http.Client) ([]byte, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
