@@ -35,7 +35,37 @@ func NewBritishEnricher(httpClient *http.Client,
 	}
 }
 
-func (be *britishEnricher) CollectCastlesToEnrich(ctx context.Context) ([]castle.Model, error) {
+func (be *britishEnricher) CollectCastlesToEnrich(ctx context.Context) (chan castle.Model, chan error) {
+	castlesToEnrichChan := make(chan castle.Model)
+	errorsChan := make(chan error)
+
+	go func() {
+		defer close(castlesToEnrichChan)
+		defer close(errorsChan)
+
+		for {
+			select {
+			case <-ctx.Done():
+				fmt.Println("UK got done")
+				return
+			default:
+				castles, err := be.collect(ctx)
+				if err != nil {
+					errorsChan <- err
+				}
+				for _, c := range castles {
+					castlesToEnrichChan <- c
+				}
+				return
+			}
+		}
+
+	}()
+
+	return castlesToEnrichChan, errorsChan
+}
+
+func (be *britishEnricher) collect(ctx context.Context) ([]castle.Model, error) {
 	sources := []string{
 		listOfCastlesInEngland,
 		listOfCastlesInScotland,

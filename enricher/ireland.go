@@ -28,16 +28,38 @@ func NewIrishEnricher(httpClient *http.Client,
 	}
 }
 
-func (ie *irishEnricher) CollectCastlesToEnrich(ctx context.Context) ([]castle.Model, error) {
-	htmlWithCastlesToCollect, err := ie.fetchHTML(ctx, irelandCastlesURL, ie.httpClient)
-	if err != nil {
-		return nil, err
-	}
-	castles, err := ie.collectCastleNameAndLinks(htmlWithCastlesToCollect)
-	if err != nil {
-		return nil, err
-	}
-	return castles, nil
+func (ie *irishEnricher) CollectCastlesToEnrich(ctx context.Context) (chan castle.Model, chan error) {
+	castlesToEnrichChan := make(chan castle.Model)
+	errorsChan := make(chan error)
+
+	go func() {
+		defer close(castlesToEnrichChan)
+		defer close(errorsChan)
+
+		for {
+			select {
+			case <-ctx.Done():
+				fmt.Println("Ireland got done")
+				return
+			default:
+				htmlWithCastlesToCollect, err := ie.fetchHTML(ctx, irelandCastlesURL, ie.httpClient)
+				if err != nil {
+					errorsChan <- err
+				}
+				castles, err := ie.collectCastleNameAndLinks(htmlWithCastlesToCollect)
+				if err != nil {
+					errorsChan <- err
+				}
+				for _, c := range castles {
+					castlesToEnrichChan <- c
+				}
+				return
+			}
+		}
+
+	}()
+
+	return castlesToEnrichChan, errorsChan
 }
 
 func (ie *irishEnricher) collectCastleNameAndLinks(rawHTML []byte) ([]castle.Model, error) {

@@ -29,16 +29,40 @@ func NewPortugueseEnricher(
 	}
 }
 
-func (p *portugueseEnricher) CollectCastlesToEnrich(ctx context.Context) ([]castle.Model, error) {
-	htmlWithCastlesToCollect, err := p.fetchHTML(ctx, castlesSource, p.httpClient)
-	if err != nil {
-		return nil, err
-	}
-	castles, err := p.collectCastleNameAndLinks(htmlWithCastlesToCollect)
-	if err != nil {
-		return nil, err
-	}
-	return castles, nil
+func (p *portugueseEnricher) CollectCastlesToEnrich(ctx context.Context) (chan castle.Model, chan error) {
+	castlesToEnrichChan := make(chan castle.Model)
+	errChan := make(chan error)
+
+	go func() {
+		defer close(castlesToEnrichChan)
+		defer close(errChan)
+
+		for {
+			select {
+			case <-ctx.Done():
+				fmt.Println("Portugal received done!")
+				return
+			default:
+				htmlWithCastlesToCollect, err := p.fetchHTML(ctx, castlesSource, p.httpClient)
+				if err != nil {
+					errChan <- err
+					return
+				}
+				castles, err := p.collectCastleNameAndLinks(htmlWithCastlesToCollect)
+				if err != nil {
+					errChan <- err
+					return
+				}
+				for _, c := range castles {
+					castlesToEnrichChan <- c
+				}
+				return
+			}
+		}
+
+	}()
+
+	return castlesToEnrichChan, errChan
 }
 
 func (p *portugueseEnricher) collectCastleNameAndLinks(rawHTML []byte) ([]castle.Model, error) {
@@ -97,7 +121,7 @@ func (p *portugueseEnricher) extractCastleInfo(c castle.Model, rawHTMLPage []byt
 		City:             tableData["Concelho"],
 		State:            tableData["Distrito"],
 		District:         tableData["Freguesia"],
-		YearOfFoundation: tableData["Construção"],
+		FoundationPeriod: tableData["Construção"],
 		FlagLink:         "/pt-flag.webp",
 	}, nil
 }

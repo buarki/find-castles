@@ -27,9 +27,13 @@ func TestCollectIrishCastlesToEnrich(t *testing.T) {
 
 	irishCollector := NewIrishEnricher(httpclient.New(), htmlFetcher)
 
-	foundCastles, err := irishCollector.CollectCastlesToEnrich(context.Background())
-	if err != nil {
-		t.Fatal(err)
+	castlesChan, errChan := irishCollector.CollectCastlesToEnrich(context.Background())
+	if len(errChan) > 0 {
+		t.Fatalf("expected no err, got %d", len(errChan))
+	}
+	var foundCastles []castle.Model
+	for c := range castlesChan {
+		foundCastles = append(foundCastles, c)
 	}
 
 	if !slicesWithSameContent(foundCastles, expectedCastles) {
