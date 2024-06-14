@@ -15,7 +15,8 @@ import (
 )
 
 const (
-	slovakSource = "https://www.ebidat.de/cgi-bin/ebidat.pl?a=a&te53=6"
+	sloavkHost   = "www.ebidat.de"
+	slovakSource = "https://" + sloavkHost + "/cgi-bin/ebidat.pl?a=a&te53=6"
 )
 
 type extractLocation struct {
@@ -93,7 +94,7 @@ func (se *slovakEnricher) collectCastleNameAndLinks(htmlContent []byte) ([]castl
 		name := link.Text()
 		href, _ := link.Attr("href")
 		if !strings.HasPrefix(href, "http") {
-			href = "www.ebidat.de" + href // replace with your base URL
+			href = sloavkHost + href
 		}
 
 		data := se.extractDistrictCityAndState(s.Text())
