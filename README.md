@@ -1,5 +1,6 @@
-[![Tests Status](https://github.com/buarki/find-castles/workflows/tests/badge.svg)](https://github.com/buarki/find-castles/actions)
-[![Vercel Deploy](https://deploy-badge.vercel.app/vercel/find-castles)](https://find-castles.vercel.app/)
+[![Tests Status](https://github.com/buarki/find-castles/workflows/tests/badge.svg)](https://github.com/buarki/find-castles/actions/workflows/tests.yml)
+ [![Vercel Deploy](https://deploy-badge.vercel.app/vercel/find-castles)](https://find-castles.vercel.app/) [![Enrichment](https://github.com/buarki/find-castles/workflows/scheduled%20castles%20collecting%20and%20enrichment/badge.svg)](https://github.com/buarki/find-castles/actions/workflows/collect-and-enrich-castles.yml)
+
 
 # find castles
 
