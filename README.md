@@ -1,4 +1,5 @@
 [![Tests Status](https://github.com/buarki/find-castles/workflows/tests/badge.svg)](https://github.com/buarki/find-castles/actions)
+[![Vercel Deploy](https://deploy-badge.vercel.app/vercel/find-castles)](https://find-castles.vercel.app/)
 
 # find castles
 
