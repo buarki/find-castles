@@ -49,6 +49,7 @@ Bellow image illustrates how it works:
 |<img width=20 src="./cmd/standalone/public/uk-flag.webp"/> United Kingdom|https://medievalbritain.com/category/type/medieval-castles/|
 |<img width=20 src="./cmd/standalone/public/pt-flag.webp"/> Portugal|https://www.castelosdeportugal.pt/|
 |<img width=20 src="./cmd/standalone/public/ir-flag.jpeg"/> Ireland|https://heritageireland.ie/visit/castles/|
+|<img width=20 src="./cmd/standalone/public/sk.png"/> Slovakia|https://www.ebidat.de/cgi-bin/ebidat.pl?a=a&te53=7;|
 
 ## Architectural Decision Records
 

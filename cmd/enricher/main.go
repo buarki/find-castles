@@ -56,8 +56,10 @@ func main() {
 		castle.Ireland:  enricher.NewIrishEnricher(httpClient, htmlfetcher.Fetch),
 		castle.Portugal: enricher.NewPortugueseEnricher(httpClient, htmlfetcher.Fetch),
 		castle.UK:       enricher.NewBritishEnricher(httpClient, htmlfetcher.Fetch),
+		castle.Slovakia: enricher.NewSlovakEnricher(httpClient, htmlfetcher.Fetch),
 	}
-	castlesEnricher := executor.New(runtime.NumCPU(), httpClient, enrichers)
+	cpus := runtime.NumCPU()
+	castlesEnricher := executor.New(int(float64(cpus)*0.3), int(float64(cpus)*0.7), httpClient, enrichers)
 	castlesChan, errChan := castlesEnricher.Enrich(ctx)
 
 	var buffer []castle.Model

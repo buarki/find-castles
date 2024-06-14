@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/buarki/find-castles/castle"
 	"go.mongodb.org/mongo-driver/bson"
@@ -15,19 +16,18 @@ func SaveCastles(ctx context.Context, collection *mongo.Collection, castles []ca
 
 	for _, c := range castles {
 		filter := bson.M{
-			"country": c.Country.String(),
-			"name":    c.Name,
+			"country": strings.ToLower(c.Country.String()),
+			"name":    strings.ToLower(c.Name),
 		}
 		update := bson.M{
 			"$set": bson.M{
-				"name":             c.Name,
+				"name":             strings.ToLower(c.Name),
 				"link":             c.Link,
-				"country":          c.Country.String(),
+				"country":          strings.ToLower(c.Country.String()),
 				"state":            c.State,
 				"city":             c.City,
 				"district":         c.District,
-				"yearOfFoundation": c.YearOfFoundation,
-				"flagLink":         c.FlagLink,
+				"foundationPeriod": c.FoundationPeriod,
 			},
 		}
 		operation := mongo.NewUpdateOneModel().SetFilter(filter).SetUpdate(update).SetUpsert(true)
@@ -37,7 +37,7 @@ func SaveCastles(ctx context.Context, collection *mongo.Collection, castles []ca
 	if len(operations) > 0 {
 		_, err := collection.BulkWrite(ctx, operations)
 		if err != nil {
-			log.Printf("failed to iupsert castles: %v", err)
+			log.Printf("failed to upsert castles: %v", err)
 			return fmt.Errorf("failed to upsert [%d] castles, got %v", len(operations), err)
 		} else {
 			log.Printf("successfully upserted [%d] castles", len(castles))

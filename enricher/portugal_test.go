@@ -47,9 +47,16 @@ func TestCollectPortugueseCastlesToEnrich(t *testing.T) {
 
 	portugueseCollector := NewPortugueseEnricher(httpclient.New(), htmlFetcher)
 
-	foundCastles, err := portugueseCollector.CollectCastlesToEnrich(context.Background())
+	castleChan, errChan := portugueseCollector.CollectCastlesToEnrich(context.Background())
 	if err != nil {
 		t.Fatal(err)
+	}
+	if len(errChan) > 0 {
+		t.Errorf("failed to collect, got %v", err)
+	}
+	var foundCastles []castle.Model
+	for c := range castleChan {
+		foundCastles = append(foundCastles, c)
 	}
 
 	if !slicesWithSameContent(foundCastles, expectedCastles) {
@@ -68,7 +75,7 @@ func TestExtractPortugueseCastleInfo(t *testing.T) {
 		City:             "Guimarães",
 		State:            "Guimarães",
 		District:         "Oliveira do Castelo",
-		YearOfFoundation: "(ant. a 958)",
+		FoundationPeriod: "(ant. a 958)",
 		Link:             "https://somelink.pt",
 	}
 
@@ -91,7 +98,7 @@ func TestExtractPortugueseCastleInfo(t *testing.T) {
 	if receivedCastle.Name != expectedCastle.Name {
 		t.Errorf("expected Name to be [%s], got [%s]", expectedCastle.Name, receivedCastle.Name)
 	}
-	if receivedCastle.YearOfFoundation != expectedCastle.YearOfFoundation {
-		t.Errorf("expected YearOfFoundation to be [%s], got [%s]", expectedCastle.YearOfFoundation, receivedCastle.YearOfFoundation)
+	if receivedCastle.FoundationPeriod != expectedCastle.FoundationPeriod {
+		t.Errorf("expected FoundationPeriod to be [%s], got [%s]", expectedCastle.FoundationPeriod, receivedCastle.FoundationPeriod)
 	}
 }
