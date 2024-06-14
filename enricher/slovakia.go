@@ -104,7 +104,7 @@ func (se *slovakEnricher) collectCastleNameAndLinks(htmlContent []byte) ([]castl
 			City:     data.city,
 			State:    data.state,
 			District: data.district,
-			FlagLink: "/slovakia.png",
+			FlagLink: "/sk.png",
 		}
 		castles = append(castles, castle)
 	})
