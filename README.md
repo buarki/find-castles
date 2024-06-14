@@ -1,3 +1,5 @@
+[![Tests Status](https://github.com/buarki/find-castles/workflows/tests/badge.svg)](https://github.com/buarki/find-castles/actions)
+
 # find castles
 
 <img src="./docs/find-castles.gif" alt="app running"/>
