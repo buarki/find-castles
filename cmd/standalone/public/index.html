@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Find Castles</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body
-    class="mx-8 min-h-screen flex flex-col p-3">
-    <header
-        class="
+
+<body class="mx-8 min-h-screen flex flex-col p-3">
+    <header class="
             flex 
             w-full
             justify-between
@@ -22,27 +22,22 @@
         </nav>
     </header>
     <div class="my-3">
-        <button
-            id="searchButton"
-            title="Search for castles"
-            class="
+        <button id="searchButton" title="Search for castles" class="
                 bg-blue-400
                 hover:bg-blue-300
                 text-white
                 p-1
-            "
-            onclick="search()">
+            " onclick="search()">
             Search
         </button>
     </div>
 
-    <div
-        class="w-full flex gap-5 flex-grow"
-        id="country-castles">
+    <div class="w-full flex gap-5 flex-grow" id="country-castles">
     </div>
 
     <footer class="flex items-center justify-center bg-white p-4 mt-3">
-        <p title="Visit author's site.">Made with love by <a target='_blank' class='underline hover:bg-blue-400 p-1 hover:text-white' href='https://buarki.com'>buarki.com.</a></p>
+        <p title="Visit author's site.">Made with love by <a target='_blank'
+                class='underline hover:bg-blue-400 p-1 hover:text-white' href='https://buarki.com'>buarki.com.</a></p>
     </footer>
 
 
@@ -149,14 +144,22 @@
                     castlesArea.appendChild(countryDiv);
                 }
 
-                const castlesList  = document.getElementById(`${castleData.country}-list`);
-                castlesList.innerHTML += castleCard({...castleData});
+                const castlesList = document.getElementById(`${castleData.country}-list`);
+                const newCastleCard = document.createElement("div");
+                newCastleCard.innerHTML = castleCard({ ...castleData });
+                newCastleCard.classList.add("fade-in-up");
+                castlesList.prepend(newCastleCard);
 
-                const castlesCounter  = document.getElementById(`${castleData.country}-castles-counter`);
+                requestAnimationFrame(() => {
+                    newCastleCard.classList.add("visible");
+                });
+
+                const castlesCounter = document.getElementById(`${castleData.country}-castles-counter`);
                 castlesCounter.innerHTML = parseInt(castlesCounter.innerHTML, 10) + 1;
             }
-
         }
+
+
 
         function onFinish(event) {
             console.log("Search finished!");
@@ -177,18 +180,19 @@
             configureSearchButton(CANCEL);
 
             sse = new EventSource("/sse");
-    
+
             sse.addEventListener("message", handleSSE);
             sse.addEventListener("finished", onFinish);
-    
-            sse.onerror = function(event) {
+
+            sse.onerror = function (event) {
                 console.error("SSE error:", event);
             };
-    
-            window.onunload = function() {
+
+            window.onunload = function () {
                 sse.close();
             };
         }
     </script>
 </body>
+
 </html>
