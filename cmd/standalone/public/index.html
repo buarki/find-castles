@@ -50,6 +50,29 @@
         const castlesArea = document.getElementById("country-castles");
         const searchButton = document.getElementById("searchButton");
 
+        const flagByCountry = {
+            uk: '/uk-flag.webp',
+            pt: '/pt-flag.webp',
+            ir: '/ir-flag.jpeg',
+            sv: '/sk.png',
+        };
+
+        const codeToName = {
+            pt: 'Portugal',
+            uk: 'United Kingdom',
+            ir: 'Ireland',
+            sv: 'Slovakia',
+        };
+
+        function toTitleCase(text) {
+            if (!text) {
+                return ""
+            }
+            return text.toLowerCase().split(' ').map((word) => {
+                return word.charAt(0).toUpperCase().concat(word.substr(1));
+            }).join(' ');
+        }
+
         function clean() {
             configureSearchButton(SEARCH);
             while (castlesArea.firstChild) {
@@ -101,7 +124,8 @@
         }
 
 
-        const castleCard = ({ name, country, state, city, link }) => `
+        function CastleCard({ name, country, state, city, link }) {
+            return `
             <div class="p-4 my-4 bg-gray-100 rounded-lg shadow-md transition-transform transform-gpu hover:scale-105">
                 <p class="text-xl font-bold mb-2">${name}</p>
                 <p class="text-gray-600">${city}, ${state}, ${country}</p>
@@ -110,13 +134,14 @@
                 </div>
             </div>
         `;
+        }
 
-        function CountrySection({ id, flagLink }) {
+        function CountrySection({ id, name, flagLink }) {
             const countryDiv = document.createElement("div");
             countryDiv.innerHTML = `
                 <div id="${id}" class="w-96 flex flex-col bg-green-300 p-4 rounded-lg shadow-md">
                     <div class="flex items-center mb-3">
-                        <p class="text-2xl font-bold">${id}</p>
+                        <p class="text-2xl font-bold">${name}</p>
                         <img src="${flagLink}" class="w-10 h-auto ml-3"/>
                     </div>
                     <p class="text-gray-600">Found <span id="${id}-castles-counter" class="font-bold">0</span> Castles</p>
@@ -140,13 +165,19 @@
 
                 let countryDiv = document.getElementById(castleData.country);
                 if (!countryDiv) {
-                    countryDiv = CountrySection({ id: castleData.country, flagLink: castleData.flagLink, });
+                    countryDiv = CountrySection({ id: castleData.country, name: toTitleCase(codeToName[castleData.country]), flagLink: flagByCountry[castleData.country], });
                     castlesArea.appendChild(countryDiv);
                 }
 
                 const castlesList = document.getElementById(`${castleData.country}-list`);
                 const newCastleCard = document.createElement("div");
-                newCastleCard.innerHTML = castleCard({ ...castleData });
+                newCastleCard.innerHTML = CastleCard({
+                    ...castleData,
+                    name: toTitleCase(castleData.name),
+                    country: toTitleCase(codeToName[castleData.country]),
+                    state: toTitleCase(castleData.state),
+                    city: toTitleCase(castleData.city),
+                });
                 newCastleCard.classList.add("fade-in-up");
                 castlesList.prepend(newCastleCard);
 

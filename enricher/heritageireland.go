@@ -15,20 +15,20 @@ const (
 	irelandCastlesURL = "https://heritageireland.ie/visit/castles/"
 )
 
-type irishEnricher struct {
+type heritageirelandEnricher struct {
 	httpClient *http.Client
 	fetchHTML  func(ctx context.Context, link string, httpClient *http.Client) ([]byte, error)
 }
 
-func NewIrishEnricher(httpClient *http.Client,
+func NewHeritageIreland(httpClient *http.Client,
 	fetchHTML func(ctx context.Context, link string, httpClient *http.Client) ([]byte, error)) Enricher {
-	return &irishEnricher{
+	return &heritageirelandEnricher{
 		httpClient: httpClient,
 		fetchHTML:  fetchHTML,
 	}
 }
 
-func (ie *irishEnricher) CollectCastlesToEnrich(ctx context.Context) (chan castle.Model, chan error) {
+func (ie *heritageirelandEnricher) CollectCastlesToEnrich(ctx context.Context) (chan castle.Model, chan error) {
 	castlesToEnrichChan := make(chan castle.Model)
 	errorsChan := make(chan error)
 
@@ -62,7 +62,7 @@ func (ie *irishEnricher) CollectCastlesToEnrich(ctx context.Context) (chan castl
 	return castlesToEnrichChan, errorsChan
 }
 
-func (ie *irishEnricher) collectCastleNameAndLinks(rawHTML []byte) ([]castle.Model, error) {
+func (ie *heritageirelandEnricher) collectCastleNameAndLinks(rawHTML []byte) ([]castle.Model, error) {
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(rawHTML))
 	if err != nil {
 		return nil, fmt.Errorf("error loading HTML: %v", err)
@@ -74,10 +74,9 @@ func (ie *irishEnricher) collectCastleNameAndLinks(rawHTML []byte) ([]castle.Mod
 		link, exists := s.Attr("href")
 		if exists {
 			castles = append(castles, castle.Model{
-				Name:     name,
-				Link:     link,
-				Country:  castle.Ireland,
-				FlagLink: "/ir-flag.jpeg",
+				Name:    name,
+				Link:    link,
+				Country: castle.Ireland,
 			})
 		}
 	})
@@ -85,19 +84,20 @@ func (ie *irishEnricher) collectCastleNameAndLinks(rawHTML []byte) ([]castle.Mod
 	return castles, nil
 }
 
-func (ie *irishEnricher) EnrichCastle(ctx context.Context, c castle.Model) (castle.Model, error) {
+func (ie *heritageirelandEnricher) EnrichCastle(ctx context.Context, c castle.Model) (castle.Model, error) {
 	castlePage, err := ie.fetchHTML(ctx, c.Link, ie.httpClient)
 	if err != nil {
-		return castle.Model{}, nil
+		return castle.Model{}, err
 	}
 	enrichedCastled, err := ie.extractCastleInfo(c, castlePage)
 	if err != nil {
 		return castle.Model{}, err
 	}
+	enrichedCastled.CleanFields()
 	return enrichedCastled, nil
 }
 
-func (ie *irishEnricher) extractCastleInfo(c castle.Model, castlePage []byte) (castle.Model, error) {
+func (ie *heritageirelandEnricher) extractCastleInfo(c castle.Model, castlePage []byte) (castle.Model, error) {
 	rawAddress, err := ie.extractContact(castlePage)
 	if err != nil {
 		return castle.Model{}, err
@@ -112,11 +112,10 @@ func (ie *irishEnricher) extractCastleInfo(c castle.Model, castlePage []byte) (c
 		City:     city,
 		State:    state,
 		District: district,
-		FlagLink: c.FlagLink,
 	}, nil
 }
 
-func (ie *irishEnricher) extractContact(rawHTML []byte) (string, error) {
+func (ie *heritageirelandEnricher) extractContact(rawHTML []byte) (string, error) {
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(rawHTML))
 	if err != nil {
 		return "", fmt.Errorf("error loading HTML: %v", err)
@@ -130,7 +129,7 @@ func (ie *irishEnricher) extractContact(rawHTML []byte) (string, error) {
 	return address, nil
 }
 
-func (ie *irishEnricher) get(raw string) (string, string, string) {
+func (ie *heritageirelandEnricher) get(raw string) (string, string, string) {
 	parts := strings.Split(raw, "<br/>")
 	for i := range parts {
 		parts[i] = strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(parts[i], ",", ""), "\n", ""))

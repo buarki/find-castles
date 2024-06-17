@@ -7,7 +7,7 @@ import (
 )
 
 func TestExtractAccessCode(t *testing.T) {
-	e := slovakEnricher{}
+	e := ebidatEnricher{}
 
 	testCases := []struct {
 		html       []byte
@@ -70,7 +70,7 @@ func TestExtractAccessCode(t *testing.T) {
 }
 
 func TestGetCurrentPage(t *testing.T) {
-	e := slovakEnricher{}
+	e := ebidatEnricher{}
 	testCases := []struct {
 		html []byte
 		page int
@@ -178,7 +178,7 @@ func TestParseNumber(t *testing.T) {
 		{currentPage: 22, expectedCode: "210"},
 	}
 
-	e := &slovakEnricher{}
+	e := &ebidatEnricher{}
 
 	for _, tt := range testCases {
 		receivedCode := e.parsePageNumber(tt.currentPage)
@@ -285,7 +285,7 @@ func TestCheckForNextPage(t *testing.T) {
 			nextPageLink: "https://www.ebidat.de/cgi-bin/r30msvcshop_anzeige.pl?var_hauptpfad=../r30/vc_shop/&var_datei_selektionen=20240614/212718770666b730228b76b.dat&var_anzahl_angezeigte_saetze=110",
 		},
 	}
-	e := &slovakEnricher{}
+	e := &ebidatEnricher{}
 
 	for _, tt := range testCases {
 		found, nextPageURL := e.checkForNextPage(tt.html)
@@ -419,7 +419,7 @@ func TestCollectCastleNameAndLinks(t *testing.T) {
 			},
 		},
 	}
-	e := &slovakEnricher{}
+	e := &ebidatEnricher{}
 
 	for _, tt := range testCases {
 		foundCastle, err := e.collectCastleNameAndLinks(tt.html)
@@ -445,7 +445,7 @@ func TestCollectCastleNameAndLinks(t *testing.T) {
 }
 
 func TestExtractDistrictCityAndState(t *testing.T) {
-	e := &slovakEnricher{}
+	e := &ebidatEnricher{}
 
 	testCases := []struct {
 		html string

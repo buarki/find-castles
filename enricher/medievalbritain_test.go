@@ -25,7 +25,7 @@ func TestCollectBritishCastlesToEnrich(t *testing.T) {
 		t.Fatalf("expected to have err nil, got %v", err)
 	}
 
-	britishCollector := NewBritishEnricher(httpclient.New(), htmlFetcher)
+	britishCollector := NewMedievalBritainEnricher(httpclient.New(), htmlFetcher)
 
 	castlesChan, errChan := britishCollector.CollectCastlesToEnrich(context.Background())
 	if len(errChan) > 0 {
@@ -48,11 +48,11 @@ func TestExtractBritishCastleInfo(t *testing.T) {
 
 	expectedCastle := castle.Model{
 		Country: castle.UK,
-		City:    "Windsor SL4 1NJ",
-		State:   "Berkshire, GreaterLondon",
+		City:    "windsor sl4 1nj",
+		State:   "berkshire, greaterlondon",
 	}
 
-	britishCollector := NewBritishEnricher(httpclient.New(), htmlFetcher)
+	britishCollector := NewMedievalBritainEnricher(httpclient.New(), htmlFetcher)
 
 	receivedCastle, err := britishCollector.EnrichCastle(context.Background(), expectedCastle)
 	if err != nil {

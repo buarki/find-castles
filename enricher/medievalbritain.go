@@ -13,6 +13,8 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+// TODO do not process the four sources in separated goroutines, use a loop instead
+
 const (
 	listOfCastlesInEngland        = "https://medievalbritain.com/medieval-castles-of-england"
 	listOfCastlesInScotland       = "https://medievalbritain.com/medieval-castles-of-scotland"
@@ -22,20 +24,20 @@ const (
 	workersToExtractCastlesFromHTML = 3
 )
 
-type britishEnricher struct {
+type medievalbritainEnricher struct {
 	httpClient *http.Client
 	fetchHTML  func(ctx context.Context, link string, httpClient *http.Client) ([]byte, error)
 }
 
-func NewBritishEnricher(httpClient *http.Client,
+func NewMedievalBritainEnricher(httpClient *http.Client,
 	fetchHTML func(ctx context.Context, link string, httpClient *http.Client) ([]byte, error)) Enricher {
-	return &britishEnricher{
+	return &medievalbritainEnricher{
 		httpClient: httpClient,
 		fetchHTML:  fetchHTML,
 	}
 }
 
-func (be *britishEnricher) CollectCastlesToEnrich(ctx context.Context) (chan castle.Model, chan error) {
+func (be *medievalbritainEnricher) CollectCastlesToEnrich(ctx context.Context) (chan castle.Model, chan error) {
 	castlesToEnrichChan := make(chan castle.Model)
 	errorsChan := make(chan error)
 
@@ -65,7 +67,7 @@ func (be *britishEnricher) CollectCastlesToEnrich(ctx context.Context) (chan cas
 	return castlesToEnrichChan, errorsChan
 }
 
-func (be *britishEnricher) collect(ctx context.Context) ([]castle.Model, error) {
+func (be *medievalbritainEnricher) collect(ctx context.Context) ([]castle.Model, error) {
 	sources := []string{
 		listOfCastlesInEngland,
 		listOfCastlesInScotland,
@@ -79,7 +81,7 @@ func (be *britishEnricher) collect(ctx context.Context) ([]castle.Model, error) 
 	return be.extractTheListOfCastlesToEnrich(ctx, collectedHTMLs, workersToExtractCastlesFromHTML)
 }
 
-func (be *britishEnricher) collectHTMLPagesToExtractCastlesInfo(ctx context.Context, sources []string) ([][]byte, error) {
+func (be *medievalbritainEnricher) collectHTMLPagesToExtractCastlesInfo(ctx context.Context, sources []string) ([][]byte, error) {
 	var rawHTMLs [][]byte
 	var mutex sync.Mutex
 	errs, errCtx := errgroup.WithContext(ctx)
@@ -99,7 +101,7 @@ func (be *britishEnricher) collectHTMLPagesToExtractCastlesInfo(ctx context.Cont
 	return rawHTMLs, errs.Wait()
 }
 
-func (be *britishEnricher) extractTheListOfCastlesToEnrich(ctx context.Context, rawHTMLs [][]byte, workers int) ([]castle.Model, error) {
+func (be *medievalbritainEnricher) extractTheListOfCastlesToEnrich(ctx context.Context, rawHTMLs [][]byte, workers int) ([]castle.Model, error) {
 	errs, errCtx := errgroup.WithContext(ctx)
 	htmlsChan := make(chan []byte)
 	var collectedCastles []castle.Model
@@ -136,7 +138,7 @@ func (be *britishEnricher) extractTheListOfCastlesToEnrich(ctx context.Context, 
 	return collectedCastles, errs.Wait()
 }
 
-func (be *britishEnricher) extractTheListOfCastlesFromPage(rawHTML []byte) ([]castle.Model, error) {
+func (be *medievalbritainEnricher) extractTheListOfCastlesFromPage(rawHTML []byte) ([]castle.Model, error) {
 	var castles []castle.Model
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(rawHTML))
 	if err != nil {
@@ -146,24 +148,24 @@ func (be *britishEnricher) extractTheListOfCastlesFromPage(rawHTML []byte) ([]ca
 		title := s.Text()
 		link, _ := s.Attr("href")
 		castles = append(castles, castle.Model{
-			Name:     strings.ReplaceAll(strings.ReplaceAll(title, "\t", ""), "\n", ""),
-			Link:     link,
-			Country:  castle.UK,
-			FlagLink: "/uk-flag.webp",
+			Name:    strings.ReplaceAll(strings.ReplaceAll(title, "\t", ""), "\n", ""),
+			Link:    link,
+			Country: castle.UK,
 		})
 	})
 	return castles, nil
 }
 
-func (be *britishEnricher) EnrichCastle(ctx context.Context, c castle.Model) (castle.Model, error) {
+func (be *medievalbritainEnricher) EnrichCastle(ctx context.Context, c castle.Model) (castle.Model, error) {
 	castlePage, err := be.fetchHTML(ctx, c.Link, be.httpClient)
 	if err != nil {
-		return castle.Model{}, nil
+		return castle.Model{}, err
 	}
 	enrichedCastled, err := be.extractDataOfUKCastle(castlePage, c)
 	if err != nil {
 		return castle.Model{}, err
 	}
+	enrichedCastled.CleanFields()
 	return enrichedCastled, nil
 }
 
@@ -195,7 +197,7 @@ provides the state as its first item.
 		</div>
 	</div>
 */
-func (be *britishEnricher) extractUkState(rawHTML []byte, c castle.Model) (string, error) {
+func (be *medievalbritainEnricher) extractUkState(rawHTML []byte, c castle.Model) (string, error) {
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(rawHTML))
 	if err != nil {
 		return "", fmt.Errorf("failed to create reader for castle [%s], got %v", c.Name, err)
@@ -225,7 +227,7 @@ provides the state as its first item.
 		</div>
 	</div>
 */
-func (be *britishEnricher) extractUkCity(rawHTML []byte, c castle.Model) (string, error) {
+func (be *medievalbritainEnricher) extractUkCity(rawHTML []byte, c castle.Model) (string, error) {
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(rawHTML))
 	if err != nil {
 		return "", fmt.Errorf("failed to create reader for castle [%s], got %v", c.Name, err)
@@ -243,7 +245,7 @@ func (be *britishEnricher) extractUkCity(rawHTML []byte, c castle.Model) (string
 	return city, nil
 }
 
-func (be *britishEnricher) extractDataOfUKCastle(rawHTML []byte, c castle.Model) (castle.Model, error) {
+func (be *medievalbritainEnricher) extractDataOfUKCastle(rawHTML []byte, c castle.Model) (castle.Model, error) {
 	state, err := be.extractUkState(rawHTML, c)
 	if err != nil {
 		return castle.Model{}, err
@@ -253,11 +255,10 @@ func (be *britishEnricher) extractDataOfUKCastle(rawHTML []byte, c castle.Model)
 		return castle.Model{}, err
 	}
 	return castle.Model{
-		Name:     c.Name,
-		Country:  c.Country,
-		FlagLink: c.FlagLink,
-		Link:     c.Link,
-		State:    state,
-		City:     city,
+		Name:    c.Name,
+		Country: c.Country,
+		Link:    c.Link,
+		State:   state,
+		City:    city,
 	}, nil
 }
