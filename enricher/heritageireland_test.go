@@ -25,7 +25,7 @@ func TestCollectIrishCastlesToEnrich(t *testing.T) {
 		t.Fatalf("expected to have err nil, got %v", err)
 	}
 
-	irishCollector := NewIrishEnricher(httpclient.New(), htmlFetcher)
+	irishCollector := NewHeritageIreland(httpclient.New(), htmlFetcher)
 
 	castlesChan, errChan := irishCollector.CollectCastlesToEnrich(context.Background())
 	if len(errChan) > 0 {
@@ -61,10 +61,10 @@ func TestEnrich(t *testing.T) {
 			<div>
 			`,
 			castle: castle.Model{
-				Name:     "Adare",
-				District: "Adare Heritage Centre",
-				City:     "Adare",
-				State:    "Co. Limerick",
+				Name:     "adare",
+				District: "adare heritage centre",
+				City:     "adare",
+				State:    "co. limerick",
 			},
 		},
 		{
@@ -80,10 +80,10 @@ func TestEnrich(t *testing.T) {
 			<div>
 			`,
 			castle: castle.Model{
-				Name:     "Trim",
-				District: "Trim",
-				City:     "Trim",
-				State:    "Co Meath",
+				Name:     "trim",
+				District: "trim",
+				City:     "trim",
+				State:    "co meath",
 			},
 		},
 		{
@@ -102,9 +102,9 @@ func TestEnrich(t *testing.T) {
 			castle: castle.Model{
 				Name: "Ross Castle",
 
-				District: "Ross Road",
-				City:     "Killarney",
-				State:    "Co. Kerry",
+				District: "ross road",
+				City:     "killarney",
+				State:    "co. kerry",
 			},
 		},
 	}
@@ -113,7 +113,7 @@ func TestEnrich(t *testing.T) {
 		fetcher := func(ctx context.Context, link string, httpClient *http.Client) ([]byte, error) {
 			return []byte(tt.html), nil
 		}
-		enricher := NewIrishEnricher(httpclient.New(), fetcher)
+		enricher := NewHeritageIreland(httpclient.New(), fetcher)
 
 		castle, err := enricher.EnrichCastle(context.Background(), tt.castle)
 		if err != nil {

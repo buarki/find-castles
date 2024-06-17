@@ -20,6 +20,9 @@ func Fetch(ctx context.Context, url string, httpClient *http.Client) ([]byte, er
 		return nil, fmt.Errorf("failed to do GET at [%s], got %v", url, err)
 	}
 	defer res.Body.Close()
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("received [%d] while doing request at [%s]", res.StatusCode, url)
+	}
 	rawBody, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read body content of GET [%s], got %v", url, err)

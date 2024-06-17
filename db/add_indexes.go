@@ -12,7 +12,9 @@ import (
 
 func AddIndexes(ctx context.Context, collection *mongo.Collection) error {
 	isTrue := true
-	indexModel := mongo.IndexModel{
+	isFalse := false
+
+	nameAndCountry := mongo.IndexModel{
 		Keys: bson.D{
 			{Key: "country", Value: 1},
 			{Key: "name", Value: 1},
@@ -21,7 +23,32 @@ func AddIndexes(ctx context.Context, collection *mongo.Collection) error {
 			Unique: &isTrue,
 		},
 	}
-	name, err := collection.Indexes().CreateOne(ctx, indexModel)
+
+	matchingTags := mongo.IndexModel{
+		Keys: bson.D{
+			{
+				Key:   "matchingTags",
+				Value: 1,
+			},
+		},
+	}
+
+	countryIndex := mongo.IndexModel{
+		Keys: bson.D{
+			{Key: "country", Value: 1},
+		},
+		Options: &options.IndexOptions{
+			Unique: &isFalse,
+		},
+	}
+
+	indexes := []mongo.IndexModel{
+		nameAndCountry,
+		matchingTags,
+		countryIndex,
+	}
+
+	name, err := collection.Indexes().CreateMany(ctx, indexes)
 	if err != nil {
 		return err
 	}

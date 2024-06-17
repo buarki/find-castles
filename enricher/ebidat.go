@@ -14,6 +14,8 @@ import (
 	"golang.org/x/net/html"
 )
 
+// TODO support the other countries available other than Slovakia
+
 const (
 	sloavkHost   = "www.ebidat.de"
 	slovakSource = "https://" + sloavkHost + "/cgi-bin/ebidat.pl?a=a&te53=6"
@@ -25,21 +27,21 @@ type extractLocation struct {
 	district string
 }
 
-type slovakEnricher struct {
+type ebidatEnricher struct {
 	httpClient *http.Client
 	fetchHTML  htmlfetcher.HTMLFetcher
 }
 
-func NewSlovakEnricher(
+func NewEbidatEnricher(
 	httpClient *http.Client,
 	fetchHTML htmlfetcher.HTMLFetcher) Enricher {
-	return &slovakEnricher{
+	return &ebidatEnricher{
 		httpClient: httpClient,
 		fetchHTML:  fetchHTML,
 	}
 }
 
-func (se *slovakEnricher) CollectCastlesToEnrich(ctx context.Context) (chan castle.Model, chan error) {
+func (se *ebidatEnricher) CollectCastlesToEnrich(ctx context.Context) (chan castle.Model, chan error) {
 	castlesToEnrichChan := make(chan castle.Model)
 	errChan := make(chan error)
 
@@ -82,7 +84,7 @@ func (se *slovakEnricher) CollectCastlesToEnrich(ctx context.Context) (chan cast
 	return castlesToEnrichChan, errChan
 }
 
-func (se *slovakEnricher) collectCastleNameAndLinks(htmlContent []byte) ([]castle.Model, error) {
+func (se *ebidatEnricher) collectCastleNameAndLinks(htmlContent []byte) ([]castle.Model, error) {
 	var castles []castle.Model
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(htmlContent))
 	if err != nil {
@@ -105,7 +107,6 @@ func (se *slovakEnricher) collectCastleNameAndLinks(htmlContent []byte) ([]castl
 			City:     data.city,
 			State:    data.state,
 			District: data.district,
-			FlagLink: "/sk.png",
 		}
 		castles = append(castles, castle)
 	})
@@ -113,7 +114,7 @@ func (se *slovakEnricher) collectCastleNameAndLinks(htmlContent []byte) ([]castl
 	return castles, nil
 }
 
-func (se *slovakEnricher) extractDistrictCityAndState(rawLocation string) extractLocation {
+func (se *ebidatEnricher) extractDistrictCityAndState(rawLocation string) extractLocation {
 	mainPart := rawLocation[:strings.Index(rawLocation, "if")]
 	splited := strings.Split(mainPart, "\n")
 	var noEmptySpaces []string
@@ -159,7 +160,7 @@ var_anzahl_angezeigte_saetze: 10
 
 https://www.ebidat.de/cgi-bin/r30msvcshop_anzeige.pl?var_hauptpfad=../r30/vc_shop/&var_datei_selektionen=20240614%2F212718770666b6f64427d52.dat&var_anzahl_angezeigte_saetze=10
 */
-func (se *slovakEnricher) checkForNextPage(htmlContent []byte) (bool, string) {
+func (se *ebidatEnricher) checkForNextPage(htmlContent []byte) (bool, string) {
 	currentPage, err := se.getCurrentPage(htmlContent)
 	if err != nil {
 		return false, ""
@@ -173,14 +174,14 @@ func (se *slovakEnricher) checkForNextPage(htmlContent []byte) (bool, string) {
 	return true, fmt.Sprintf("https://www.ebidat.de/cgi-bin/r30msvcshop_anzeige.pl?var_hauptpfad=../r30/vc_shop/&var_datei_selektionen=%s&var_anzahl_angezeigte_saetze=%s", nonce, se.parsePageNumber(nextPage))
 }
 
-func (se *slovakEnricher) parsePageNumber(page int) string {
+func (se *ebidatEnricher) parsePageNumber(page int) string {
 	if page == 1 {
 		return "00"
 	}
 	return fmt.Sprintf("%d", (page-1)*10)
 }
 
-func (se *slovakEnricher) getCurrentPage(htmlContent []byte) (int, error) {
+func (se *ebidatEnricher) getCurrentPage(htmlContent []byte) (int, error) {
 	doc, err := html.Parse(bytes.NewReader(htmlContent))
 	if err != nil {
 		return 0, err
@@ -221,7 +222,7 @@ func (se *slovakEnricher) getCurrentPage(htmlContent []byte) (int, error) {
 	return currentPage, nil
 }
 
-func (se *slovakEnricher) getNonce(htmlContent []byte, formName string) (bool, string) {
+func (se *ebidatEnricher) getNonce(htmlContent []byte, formName string) (bool, string) {
 	doc, err := html.Parse(bytes.NewReader(htmlContent))
 	if err != nil {
 		return false, ""
@@ -264,6 +265,7 @@ func (se *slovakEnricher) getNonce(htmlContent []byte, formName string) (bool, s
 	return found, val
 }
 
-func (se *slovakEnricher) EnrichCastle(ctx context.Context, c castle.Model) (castle.Model, error) {
+func (se *ebidatEnricher) EnrichCastle(ctx context.Context, c castle.Model) (castle.Model, error) {
+	c.CleanFields()
 	return c, nil
 }

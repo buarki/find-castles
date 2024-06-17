@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
+	"log/slog"
 	"os"
 	"runtime"
 	"strconv"
@@ -14,6 +16,7 @@ import (
 	"github.com/buarki/find-castles/executor"
 	"github.com/buarki/find-castles/htmlfetcher"
 	"github.com/buarki/find-castles/httpclient"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (
@@ -53,34 +56,36 @@ func main() {
 
 	httpClient := httpclient.New()
 	enrichers := map[castle.Country]enricher.Enricher{
-		castle.Ireland:  enricher.NewIrishEnricher(httpClient, htmlfetcher.Fetch),
-		castle.Portugal: enricher.NewPortugueseEnricher(httpClient, htmlfetcher.Fetch),
-		castle.UK:       enricher.NewBritishEnricher(httpClient, htmlfetcher.Fetch),
-		castle.Slovakia: enricher.NewSlovakEnricher(httpClient, htmlfetcher.Fetch),
+		castle.Portugal: enricher.NewCastelosDePortugalEnricher(httpClient, htmlfetcher.Fetch),
+		castle.Ireland:  enricher.NewHeritageIreland(httpClient, htmlfetcher.Fetch),
+		castle.UK:       enricher.NewMedievalBritainEnricher(httpClient, htmlfetcher.Fetch),
+		castle.Slovakia: enricher.NewEbidatEnricher(httpClient, htmlfetcher.Fetch),
 	}
 	cpus := runtime.NumCPU()
 	castlesEnricher := executor.New(int(float64(cpus)*0.3), int(float64(cpus)*0.7), httpClient, enrichers)
 	castlesChan, errChan := castlesEnricher.Enrich(ctx)
 
-	var buffer []castle.Model
+	checkingCastlesBuffer := make([]castle.Model, 0, bufferSize)
 
 	for {
 		select {
+		case <-ctx.Done():
+			return
 		case castle, ok := <-castlesChan:
 			if !ok {
-				if len(buffer) > 0 {
-					if err := db.SaveCastles(ctx, collection, buffer); err != nil {
+				if len(checkingCastlesBuffer) > 0 {
+					if err := processBuffer(ctx, collection, checkingCastlesBuffer); err != nil {
 						log.Fatal(err)
 					}
 				}
 				return
 			}
-			buffer = append(buffer, castle)
-			if len(buffer) >= bufferSize {
-				if err := db.SaveCastles(ctx, collection, buffer); err != nil {
+			checkingCastlesBuffer = append(checkingCastlesBuffer, castle)
+			if len(checkingCastlesBuffer) == bufferSize {
+				if err := processBuffer(ctx, collection, checkingCastlesBuffer); err != nil {
 					log.Fatal(err)
 				}
-				buffer = buffer[:0]
+				checkingCastlesBuffer = checkingCastlesBuffer[:0]
 			}
 		case err := <-errChan:
 			if err != nil {
@@ -88,4 +93,52 @@ func main() {
 			}
 		}
 	}
+}
+
+func processBuffer(ctx context.Context, collection *mongo.Collection, buffer []castle.Model) error {
+	if len(buffer) == 0 {
+		return errors.New("cannot process empty buffer")
+	}
+
+	similarCastlesFound, err := db.TryToFindCastles(ctx, collection, buffer)
+	if err != nil {
+		return err
+	}
+
+	castlesToSave, err := reconcileCastles(buffer, similarCastlesFound)
+	if err != nil {
+		return err
+	}
+
+	if err := db.SaveCastles(ctx, collection, castlesToSave); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func reconcileCastles(newCastles, similarCastles []castle.Model) ([]castle.Model, error) {
+	var result []castle.Model
+
+	// O(nˆ2), can we improve it?
+	for _, newCastle := range newCastles {
+		found := false
+		for _, existingCastle := range similarCastles {
+			if newCastle.IsProbably(existingCastle) {
+				slog.Info("found similar castle", "current castle name", newCastle.Name, "found castle name", existingCastle.Name)
+				reconciliatedCastle, err := newCastle.ReconcileWith(existingCastle)
+				if err != nil {
+					return nil, err
+				}
+				result = append(result, reconciliatedCastle)
+				found = true
+				break
+			}
+		}
+		if !found {
+			result = append(result, newCastle)
+		}
+	}
+
+	return result, nil
 }

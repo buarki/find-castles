@@ -17,17 +17,20 @@ func SaveCastles(ctx context.Context, collection *mongo.Collection, castles []ca
 	for _, c := range castles {
 		filter := bson.M{
 			"country": strings.ToLower(c.Country.String()),
-			"name":    strings.ToLower(c.Name),
+			"name":    strings.ToLower(c.FilteredName()),
 		}
+		// TODO collect fields with values only
 		update := bson.M{
 			"$set": bson.M{
-				"name":             strings.ToLower(c.Name),
+				"name":             strings.ToLower(c.FilteredName()),
 				"link":             c.Link,
+				"sources":          c.Sources,
 				"country":          strings.ToLower(c.Country.String()),
-				"state":            c.State,
-				"city":             c.City,
-				"district":         c.District,
+				"state":            strings.ToLower(c.State),
+				"city":             strings.ToLower(c.City),
+				"district":         strings.ToLower(c.District),
 				"foundationPeriod": c.FoundationPeriod,
+				"matchingTags":     c.GetMatchingTags(),
 			},
 		}
 		operation := mongo.NewUpdateOneModel().SetFilter(filter).SetUpdate(update).SetUpsert(true)
