@@ -1,13 +1,11 @@
+import { Inter } from "next/font/google";
 import "./globals.css";
-import { Roboto } from '@next/font/google';
+import { Box } from "@mui/material";
+import { ThemeRegistry } from "@find-castles/theme/theme-registry";
 import { Header } from "@find-castles/components/header/header.component";
 import { Footer } from "@find-castles/components/footer/footer.component";
 
-const roboto = Roboto({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  variable: '--font-roboto',
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -16,12 +14,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex flex-col min-h-screen">
-        <Header className="px-12"/>
-        <div className="grow px-12">
-          {children}
-        </div>
-        <Footer className="px-12"/>
+      <body className={inter.className}>
+        <ThemeRegistry options={{ key: 'mui-theme' }}>
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100vh',
+          }}>
+            <Header />
+            <Box sx={{ flexGrow: 1}}>
+              {children}
+            </Box>
+            <Footer />
+          </Box>
+        </ThemeRegistry>
       </body>
     </html>
   );
