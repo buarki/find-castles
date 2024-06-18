@@ -6,6 +6,7 @@ export type Country = {
   name: string;
   code: CountryCode;
   trackingStatus: TrackingStatus;
+  sources?: string[];
 };
 
 export const countries = [
@@ -32,7 +33,7 @@ export const countries = [
   { name: "Poland", trackingStatus: 'not-tracked', code: "pl" },
   { name: "Portugal", trackingStatus: 'tracked', code: "pt" },
   { name: "Romania", trackingStatus: 'not-tracked', code: "ro" },
-  { name: "Slovakia", trackingStatus: 'not-tracked', code: "sk" },
+  { name: "Slovakia", trackingStatus: 'tracked', code: "sk" },
   { name: "Slovenia", trackingStatus: 'not-tracked', code: "si" },
   { name: "Spain", trackingStatus: 'not-tracked', code: "es" },
   { name: "Sweden", trackingStatus: 'not-tracked', code: "se" },
