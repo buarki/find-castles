@@ -1,8 +1,10 @@
 package enricher
 
 import (
+	"bytes"
 	"testing"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/buarki/find-castles/castle"
 )
 
@@ -506,4 +508,116 @@ func TestExtractDistrictCityAndState(t *testing.T) {
 			t.Errorf("expected district to be [%s], got [%s]", tt.c.State, extracted.state)
 		}
 	}
+}
+
+func TestExtractPropertyConditions(t *testing.T) {
+	content := []byte(
+		`
+		<div class="mainContent">
+					<h2>B�na<br>Hauptdaten</h2>
+					<section>
+						<article class="beschreibung">				
+							<ul>
+								<li class="daten">
+									<div class="gruppe">weitere Namen:</div>
+									<div class="gruppenergebnis">B�ny</div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Staat:</div>
+									<div class="gruppenergebnis">Slowakei</div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Bundesland:</div>
+									<div class="gruppenergebnis">Nitra</div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Region:</div>
+									<div class="gruppenergebnis">Pohronie/Grantal</div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Kreis:</div>
+									<div class="gruppenergebnis">Nov� Z�mky</div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Stadt / Gemeinde:</div>
+									<div class="gruppenergebnis">B�na</div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Gemarkung / Ortsteil:</div>
+									<div class="gruppenergebnis">B�na</div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Typ:</div>
+									<div class="gruppenergebnis"> Burg<br> 
+																						 Sonstiges<br> </div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Klassifizierung:</div>
+									<div class="gruppenergebnis">Ringwall<br></div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Funktion Rechtsstellung:</div>
+									<div class="gruppenergebnis">Fluchtburg<br>Adelssitz</div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Kurzansprache:</div>
+									<div class="gruppenergebnis">Der Tradition nach eine Burg des ungarischen K&ouml;nigs Stephan I., die  w&auml;hrend der Koppany-Aufstand  Ende des 10. Jhs. gegr&uuml;ndet wurde. Sp&auml;ter Eigentum der Familie Hunt-Pozn�ny . -  Podla trad�cie hrad zalo�en� �tefanom I. pocas Kopp�nyovho povstania. Nesk�r majetkom rodu Hunt-Pozn�ny.</div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Niederungslage:</div>
+									<div class="gruppenergebnis">�berh�hung-Plateaurand</div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Lagebeschreibung:</div>
+									<div class="gruppenergebnis">Das umfangreiche Areal ist mit zwei oder drei Linien von W&auml;lle und  Gr&auml;ben befestigt. Die Befestigung liegt an der rechten Seite des Flussufers Hron am Innen- und Aussenbereich des Dorfes B�na. -  Rozsiahly are�l opevnen� 2-3 l�niami valov a priekop na pravobre�nej terase rieky Hron v intravil�ne a extravil�ne obce B�na.</div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Datierung-Beginn:</div>
+									<div class="gruppenergebnis">10.Jh.</div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Datierung-Ende:</div>
+									<div class="gruppenergebnis">2.H.11.Jh.</div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Erhaltung - Heutiger Zustand:</div>
+									<div class="gruppenergebnis">Geringe Reste</div>
+								</li>
+								<li class="daten">
+									<div class="gruppe">Erhaltung - Kommentar:</div>
+									<div class="gruppenergebnis">Aus der Innenlinien der Befestigung im Innenbereich des Dorfes ist  ein Teil des Burggraben festzustellen. Von der Mittel- und Aussenlinien der Befestigung sind die Teile des Erdwalles und der Graben erhalten. Von der Innenbebauung ist die Kirche des prem</div>
+								</li>
+							</ul>
+						</article>
+						<article class="beschreibung">
+							<h3>weitere Informationen:</h3>
+							<ul id="verlinkungen">
+								<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?m=h&id=2014">Hauptdaten</a></li>
+								<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?m=o&id=2014">Objektdaten</a></li>
+								<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?m=g&id=2014">Touristische Informationen</a></li>
+								<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?m=n&id=2014">Nachweise</a></li>
+								<li class="informationen_link"><a href="/cgi-bin/r30msvcxxx_ebidat_kml_download.pl?obj=65002">Google Earth</a></li>
+								<li class="informationen_link" ><a href="http://maps.google.com/maps/?q=47.921271,18.642998" target="_blank">Google Maps</a></li>
+								<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?id=2014">Home</a></li>
+							</ul>
+						</article>
+					</section>	
+				</div>
+		`,
+	)
+
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(content))
+	if err != nil {
+		t.Errorf("expected err nil, got %v", err)
+	}
+
+	se := ebidatEnricher{}
+	expectedCondition := castle.Ruins
+
+	receivedCondition := se.getPropertyConditions(doc)
+
+	if receivedCondition != expectedCondition {
+		t.Errorf("expected conditions [%s], got [%s]", expectedCondition.String(), receivedCondition.String())
+	}
+
 }

@@ -30,7 +30,9 @@ func SaveCastles(ctx context.Context, collection *mongo.Collection, castles []ca
 				"city":             strings.ToLower(c.City),
 				"district":         strings.ToLower(c.District),
 				"foundationPeriod": c.FoundationPeriod,
-				"matchingTags":     c.GetMatchingTags(),
+				// Only if present
+				"propertyCondition": c.PropertyCondition.String(),
+				"matchingTags":      c.GetMatchingTags(),
 			},
 		}
 		operation := mongo.NewUpdateOneModel().SetFilter(filter).SetUpdate(update).SetUpsert(true)

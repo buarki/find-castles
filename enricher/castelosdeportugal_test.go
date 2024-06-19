@@ -106,13 +106,14 @@ func TestExtractPortugueseCastleInfo(t *testing.T) {
 	}
 
 	expectedCastle := castle.Model{
-		Name:             "porto",
-		Country:          castle.Portugal,
-		City:             "guimarães",
-		State:            "guimarães",
-		District:         "oliveira do castelo",
-		FoundationPeriod: "(ant. a 958)",
-		Link:             "https://somelink.pt",
+		Name:              "porto",
+		Country:           castle.Portugal,
+		City:              "guimarães",
+		State:             "guimarães",
+		District:          "oliveira do castelo",
+		FoundationPeriod:  "(ant. a 958)",
+		Link:              "https://somelink.pt",
+		PropertyCondition: castle.Intact,
 	}
 
 	castelosDePortugalEnricher := NewCastelosDePortugalEnricher(httpclient.New(), htmlFetcher)
@@ -136,5 +137,34 @@ func TestExtractPortugueseCastleInfo(t *testing.T) {
 	}
 	if receivedCastle.FoundationPeriod != expectedCastle.FoundationPeriod {
 		t.Errorf("expected FoundationPeriod to be [%s], got [%s]", expectedCastle.FoundationPeriod, receivedCastle.FoundationPeriod)
+	}
+	if receivedCastle.PropertyCondition != expectedCastle.PropertyCondition {
+		t.Errorf("expected PropertyCondition to be [%s], got [%s]", expectedCastle.PropertyCondition, receivedCastle.PropertyCondition)
+	}
+}
+
+func TestParseCondition(t *testing.T) {
+	testCases := []struct {
+		rawCondition      string
+		expectedCondition castle.PropertyCondition
+	}{
+		{rawCondition: "Boa", expectedCondition: castle.Intact},
+		{rawCondition: "", expectedCondition: castle.Unknown},
+		{rawCondition: "()", expectedCondition: castle.Unknown},
+		{rawCondition: "Submerso", expectedCondition: castle.Ruins},
+		{rawCondition: "Mau", expectedCondition: castle.Ruins},
+		{rawCondition: "Razoável", expectedCondition: castle.Damaged},
+	}
+	cp := &castelosDePortugalEnricher{}
+
+	for _, tt := range testCases {
+		cTT := tt
+		t.Run(cTT.rawCondition, func(t *testing.T) {
+			received := cp.parseCondition(cTT.rawCondition)
+
+			if received != cTT.expectedCondition {
+				t.Errorf("expected to have condition [%s], got [%s]", cTT.expectedCondition.String(), received.String())
+			}
+		})
 	}
 }
