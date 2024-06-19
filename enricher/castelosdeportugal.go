@@ -110,6 +110,7 @@ func (p *castelosDePortugalEnricher) extractCastleInfo(c castle.Model, rawHTMLPa
 		"Concelho",
 		"Freguesia",
 		"Construção",
+		"Conservação",
 	}
 
 	doc.Find("#info-table tbody tr").Each(func(i int, s *goquery.Selection) {
@@ -138,14 +139,31 @@ func (p *castelosDePortugalEnricher) extractCastleInfo(c castle.Model, rawHTMLPa
 	}
 
 	return castle.Model{
-		Name:             c.Name,
-		Country:          c.Country,
-		Link:             c.Link,
-		City:             tableData["Concelho"],
-		State:            tableData["Distrito"],
-		District:         district,
-		FoundationPeriod: tableData["Construção"],
+		Name:              c.Name,
+		Country:           c.Country,
+		Link:              c.Link,
+		City:              tableData["Concelho"],
+		State:             tableData["Distrito"],
+		District:          district,
+		FoundationPeriod:  tableData["Construção"],
+		PropertyCondition: p.parseCondition(tableData["Conservação"]),
 	}, nil
+}
+
+func (p castelosDePortugalEnricher) parseCondition(rawCondition string) castle.PropertyCondition {
+	filtered := strings.ToLower(rawCondition)
+	switch filtered {
+	case "boa":
+		return castle.Intact
+	case "razoável":
+		return castle.Damaged
+	case "mau":
+		return castle.Ruins
+	case "submerso":
+		return castle.Ruins
+	default:
+		return castle.Unknown
+	}
 }
 
 func (p *castelosDePortugalEnricher) contains(arr []string, str string) bool {

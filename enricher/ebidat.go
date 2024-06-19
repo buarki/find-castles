@@ -266,6 +266,51 @@ func (se *ebidatEnricher) getNonce(htmlContent []byte, formName string) (bool, s
 }
 
 func (se *ebidatEnricher) EnrichCastle(ctx context.Context, c castle.Model) (castle.Model, error) {
-	c.CleanFields()
-	return c, nil
+	dataPageLink := fmt.Sprintf("https://%s&m=h", c.Link)
+	dataHTML, err := se.fetchHTML(ctx, dataPageLink, se.httpClient)
+	if err != nil {
+		fmt.Println(err.Error())
+		return castle.Model{}, err
+	}
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(dataHTML))
+	if err != nil {
+		return castle.Model{}, fmt.Errorf("error loading HTML from [%s]: %v", dataPageLink, err)
+	}
+
+	c1 := &c
+	c1.PropertyCondition = se.getPropertyConditions(doc)
+
+	c1.CleanFields()
+	return *c1, nil
+}
+
+func (se ebidatEnricher) getPropertyConditions(doc *goquery.Document) castle.PropertyCondition {
+	propertyCondition := castle.Unknown
+
+	doc.Find("div.mainContent section article.beschreibung ul li.daten").Each(func(i int, s *goquery.Selection) {
+		gruppe := s.Find("div.gruppe").Text()
+		if strings.Contains(gruppe, "Erhaltung - Heutiger Zustand:") {
+			collectedCondition := strings.ToLower(s.Find("div.gruppenergebnis").Text())
+			fmt.Println("collectedCondition", collectedCondition)
+			switch collectedCondition {
+			case "weitgehend erhalten": //largely preserved
+				propertyCondition = castle.Intact
+			case "stark historisierend überformt": //  heavily historicized
+				propertyCondition = castle.Intact
+			case "überbaut": //built over
+				propertyCondition = castle.Intact
+			case "geringe reste": // sall residues
+				propertyCondition = castle.Ruins
+			case "bedeutende reste": //significant remains
+				propertyCondition = castle.Ruins
+			case "fundamente": //foundations
+				propertyCondition = castle.Ruins
+			default:
+				propertyCondition = castle.Unknown
+			}
+			return
+		}
+	})
+
+	return propertyCondition
 }

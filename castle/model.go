@@ -5,17 +5,10 @@ import (
 	"strings"
 )
 
-type PropertyCondition string
-
 type Coordinates struct {
 	Latitude  float64 `json:"latitude"`
 	Longitude float64 `json:"longitude"`
 }
-
-const (
-	Unknown PropertyCondition = "unknown"
-	Ruins   PropertyCondition = "ruins"
-)
 
 var (
 	ErrCastlesShouldProbablyBeTheSameToReconcile = errors.New("castles to reconcile should be probably the same")
