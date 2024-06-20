@@ -53,6 +53,7 @@ func TestExtractBritishCastleInfo(t *testing.T) {
 		City:        "windsor sl4 1nj",
 		State:       "berkshire, greaterlondon",
 		PictureLink: "https://medievalbritain.com/wp-content/uploads/2021/05/medieval-castles-england_windsor.jpg",
+		Coordinates: "51°29'0\"N,00°36'15\"W",
 	}
 
 	britishCollector := NewMedievalBritainEnricher(httpclient.New(), htmlFetcher)
@@ -70,6 +71,9 @@ func TestExtractBritishCastleInfo(t *testing.T) {
 	}
 	if receivedCastle.PictureLink != expectedCastle.PictureLink {
 		t.Errorf("expected PictureLink to be [%s], got [%s]", expectedCastle.PictureLink, receivedCastle.PictureLink)
+	}
+	if receivedCastle.Coordinates != expectedCastle.Coordinates {
+		t.Errorf("expected Coordinates to be [%s], got [%s]", expectedCastle.Coordinates, receivedCastle.Coordinates)
 	}
 }
 
@@ -89,5 +93,55 @@ func TestExtractPictureOfMedievalBritain(t *testing.T) {
 
 	if collectedImageLink != expectedImageLink {
 		t.Errorf("expected to find link [%s], got [%s]", expectedImageLink, collectedImageLink)
+	}
+}
+
+func TestCollectingLocalizationCoordinatesOfMedievalBritain(t *testing.T) {
+	testCases := []struct {
+		name                string
+		htmlChunk           []byte
+		expectedCoordinates string
+	}{
+		{
+			name: "latitude and longitude together",
+			htmlChunk: []byte(`
+			<span class="geo-default">
+				<span
+					class="geo-dec"
+					title="Maps, aerial photos, and other data for this location">54.9904°N 2.0000°W</span>
+			</span>
+			`),
+			expectedCoordinates: "54.9904°N 2.0000°W",
+		},
+		{
+			name: "latitude and longitude separated",
+			htmlChunk: []byte(`
+			<span
+				class="geo-default">
+				<span
+					class="geo-dms"
+					title="Maps, aerial photos, and other data for this location">
+					<span class="latitude">51°29′0″N</span> <span
+						class="longitude">00°36′15″W</span></span></span>
+			`),
+			expectedCoordinates: "51°29'0\"N,00°36'15\"W",
+		},
+	}
+	e := medievalbritainEnricher{}
+
+	for _, tt := range testCases {
+		currentTT := tt
+		t.Run(currentTT.name, func(t *testing.T) {
+			doc, err := goquery.NewDocumentFromReader(bytes.NewReader(currentTT.htmlChunk))
+			if err != nil {
+				t.Errorf("expected to have err nil, got [%v]", err)
+			}
+
+			receivedCoordinates := e.collectCoordinates(doc)
+
+			if receivedCoordinates != currentTT.expectedCoordinates {
+				t.Errorf("expected to find [%s], got [%s]", currentTT.expectedCoordinates, receivedCoordinates)
+			}
+		})
 	}
 }

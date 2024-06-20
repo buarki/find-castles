@@ -257,6 +257,7 @@ func (be *medievalbritainEnricher) extractDataOfUKCastle(rawHTML []byte, c castl
 		State:       state,
 		City:        city,
 		PictureLink: be.collectImage(doc),
+		Coordinates: be.collectCoordinates(doc),
 	}, nil
 }
 
@@ -265,4 +266,19 @@ func (be *medievalbritainEnricher) collectImage(doc *goquery.Document) string {
 	metaTag := doc.Find("meta[property='og:image']")
 	imageSrc, _ = metaTag.Attr("content")
 	return imageSrc
+}
+
+func (be *medievalbritainEnricher) collectCoordinates(doc *goquery.Document) string {
+	replacer := strings.NewReplacer(
+		`′`, `'`,
+		`″`, `"`,
+		`\n`, "",
+	)
+	latitude := doc.Find(".geo-default .latitude").First()
+	longitude := doc.Find(".geo-default .longitude").First()
+	if latitude.Text() == "" || longitude.Text() == "" {
+		latitudeAndLongigude := doc.Find(".geo-default .geo-dec").First()
+		return replacer.Replace(latitudeAndLongigude.Text())
+	}
+	return fmt.Sprintf("%s,%s", replacer.Replace(latitude.Text()), replacer.Replace(longitude.Text()))
 }
