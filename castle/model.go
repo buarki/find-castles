@@ -5,11 +5,6 @@ import (
 	"strings"
 )
 
-type Coordinates struct {
-	Latitude  float64 `json:"latitude"`
-	Longitude float64 `json:"longitude"`
-}
-
 var (
 	ErrCastlesShouldProbablyBeTheSameToReconcile = errors.New("castles to reconcile should be probably the same")
 )
@@ -24,7 +19,7 @@ type Model struct {
 	District          string            `json:"district"`
 	FoundationPeriod  string            `json:"foundationPeriod"`
 	PropertyCondition PropertyCondition `json:"propertyCondition"`
-	Coordinates       Coordinates       `json:"coordinates"`
+	Coordinates       string            `json:"coordinates"`
 	RawData           any               `json:"rawData"`
 	MatchingTags      []string          `json:"matchingTags"`
 	PictureLink       string            `json:"pictureLink"`
@@ -162,11 +157,6 @@ func (m Model) Copy() Model {
 		copy(matchingTagsCopy, m.MatchingTags)
 	}
 
-	coordinatesCopy := Coordinates{
-		Latitude:  m.Coordinates.Latitude,
-		Longitude: m.Coordinates.Longitude,
-	}
-
 	return Model{
 		Country:           m.Country,
 		Name:              m.Name,
@@ -177,7 +167,7 @@ func (m Model) Copy() Model {
 		District:          m.District,
 		FoundationPeriod:  m.FoundationPeriod,
 		PropertyCondition: m.PropertyCondition,
-		Coordinates:       coordinatesCopy,
+		Coordinates:       m.Coordinates,
 		RawData:           m.RawData,
 		MatchingTags:      matchingTagsCopy,
 		PictureLink:       m.PictureLink,

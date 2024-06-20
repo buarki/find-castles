@@ -279,6 +279,7 @@ func (se *ebidatEnricher) EnrichCastle(ctx context.Context, c castle.Model) (cas
 	c1 := &c
 	c1.PropertyCondition = se.getPropertyConditions(doc)
 	c1.PictureLink = se.collectImage(doc)
+	c1.Coordinates = se.collectCoordinates(doc)
 	c1.CleanFields()
 	return *c1, nil
 }
@@ -320,4 +321,19 @@ func (se ebidatEnricher) collectImage(doc *goquery.Document) string {
 		return false
 	})
 	return fmt.Sprintf("%s%s", ebidatHost, strings.ReplaceAll(imageSrc, "..", ""))
+}
+
+func (se ebidatEnricher) collectCoordinates(doc *goquery.Document) string {
+	var coordinates string
+	doc.Find("#verlinkungen .informationen_link a").Each(func(i int, s *goquery.Selection) {
+		if s.Text() == "Google Maps" {
+			coordinates, _ = s.Attr("href")
+			return
+		}
+	})
+	parts := strings.Split(coordinates, "q=")
+	if len(parts) > 0 {
+		return parts[1]
+	}
+	return ""
 }

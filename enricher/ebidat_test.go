@@ -683,3 +683,35 @@ func TestExtractPictureOfEBITAD(t *testing.T) {
 		t.Errorf("expected to find link [%s], got [%s]", expectedImageLink, collectedImageLink)
 	}
 }
+
+func TestCollectingLocalizationCoordinates(t *testing.T) {
+	content := []byte(`
+			<article class="beschreibung">
+			<h3>weitere Informationen:</h3>
+			<ul id="verlinkungen">
+				<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?m=h&id=2029">Hauptdaten</a></li>
+				<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?m=o&id=2029">Objektdaten</a></li>
+				<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?m=g&id=2029">Touristische Informationen</a>
+				</li>
+				<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?m=n&id=2029">Nachweise</a></li>
+				<li class="informationen_link"><a href="/cgi-bin/r30msvcxxx_ebidat_kml_download.pl?obj=65017">Google
+						Earth</a></li>
+				<li class="informationen_link"><a href="http://maps.google.com/maps/?q=48.780049,18.577476"
+						target="_blank">Google Maps</a></li>
+				<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?id=2029">Home</a></li>
+			</ul>
+		</article>
+	`)
+	expectedCoordinates := "48.780049,18.577476"
+	e := ebidatEnricher{}
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(content))
+	if err != nil {
+		t.Errorf("expected to have err nil, got [%v]", err)
+	}
+
+	receivedCoordinates := e.collectCoordinates(doc)
+
+	if receivedCoordinates != expectedCoordinates {
+		t.Errorf("expected to find [%s], got [%s]", expectedCoordinates, receivedCoordinates)
+	}
+}
