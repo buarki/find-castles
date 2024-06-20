@@ -1,10 +1,12 @@
 package enricher
 
 import (
+	"bytes"
 	"context"
 	"net/http"
 	"testing"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/buarki/find-castles/castle"
 	"github.com/buarki/find-castles/fileloader"
 	"github.com/buarki/find-castles/httpclient"
@@ -47,9 +49,10 @@ func TestExtractBritishCastleInfo(t *testing.T) {
 	}
 
 	expectedCastle := castle.Model{
-		Country: castle.UK,
-		City:    "windsor sl4 1nj",
-		State:   "berkshire, greaterlondon",
+		Country:     castle.UK,
+		City:        "windsor sl4 1nj",
+		State:       "berkshire, greaterlondon",
+		PictureLink: "https://medievalbritain.com/wp-content/uploads/2021/05/medieval-castles-england_windsor.jpg",
 	}
 
 	britishCollector := NewMedievalBritainEnricher(httpclient.New(), htmlFetcher)
@@ -64,5 +67,27 @@ func TestExtractBritishCastleInfo(t *testing.T) {
 	}
 	if receivedCastle.State != expectedCastle.State {
 		t.Errorf("expected State to be [%s], got [%s]", expectedCastle.State, receivedCastle.State)
+	}
+	if receivedCastle.PictureLink != expectedCastle.PictureLink {
+		t.Errorf("expected PictureLink to be [%s], got [%s]", expectedCastle.PictureLink, receivedCastle.PictureLink)
+	}
+}
+
+func TestExtractPictureOfMedievalBritain(t *testing.T) {
+	content, err := fileloader.LoadHTMLFile(jsonWithEnglandCastlePagePath)
+	if err != nil {
+		t.Errorf("expected to have err nil, got [%v]", err)
+	}
+	expectedImageLink := `https://medievalbritain.com/wp-content/uploads/2021/05/medieval-castles-england_windsor.jpg`
+	e := medievalbritainEnricher{}
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(content))
+	if err != nil {
+		t.Errorf("expected to have err nil, got [%v]", err)
+	}
+
+	collectedImageLink := e.collectImage(doc)
+
+	if collectedImageLink != expectedImageLink {
+		t.Errorf("expected to find link [%s], got [%s]", expectedImageLink, collectedImageLink)
 	}
 }

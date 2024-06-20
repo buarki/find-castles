@@ -147,7 +147,16 @@ func (p *castelosDePortugalEnricher) extractCastleInfo(c castle.Model, rawHTMLPa
 		District:          district,
 		FoundationPeriod:  tableData["Construção"],
 		PropertyCondition: p.parseCondition(tableData["Conservação"]),
+		PictureLink:       p.collectImage(doc),
 	}, nil
+}
+
+func (p castelosDePortugalEnricher) collectImage(doc *goquery.Document) string {
+	link := ""
+	doc.Find("img[alt='Foto 1 castelo']").Each(func(i int, s *goquery.Selection) {
+		link, _ = s.Attr("src")
+	})
+	return fmt.Sprintf("%s/castelos%s", castelosdeportugalHost, strings.ReplaceAll(link, "..", ""))
 }
 
 func (p castelosDePortugalEnricher) parseCondition(rawCondition string) castle.PropertyCondition {

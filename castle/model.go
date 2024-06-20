@@ -27,6 +27,7 @@ type Model struct {
 	Coordinates       Coordinates       `json:"coordinates"`
 	RawData           any               `json:"rawData"`
 	MatchingTags      []string          `json:"matchingTags"`
+	PictureLink       string            `json:"pictureLink"`
 }
 
 func (m Model) FilteredName() string {
@@ -179,5 +180,6 @@ func (m Model) Copy() Model {
 		Coordinates:       coordinatesCopy,
 		RawData:           m.RawData,
 		MatchingTags:      matchingTagsCopy,
+		PictureLink:       m.PictureLink,
 	}
 }

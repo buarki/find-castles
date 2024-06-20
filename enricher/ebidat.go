@@ -17,8 +17,8 @@ import (
 // TODO support the other countries available other than Slovakia
 
 const (
-	sloavkHost   = "www.ebidat.de"
-	slovakSource = "https://" + sloavkHost + "/cgi-bin/ebidat.pl?a=a&te53=6"
+	ebidatHost   = "www.ebidat.de"
+	slovakSource = "https://" + ebidatHost + "/cgi-bin/ebidat.pl?a=a&te53=6"
 )
 
 type extractLocation struct {
@@ -96,7 +96,7 @@ func (se *ebidatEnricher) collectCastleNameAndLinks(htmlContent []byte) ([]castl
 		name := link.Text()
 		href, _ := link.Attr("href")
 		if !strings.HasPrefix(href, "http") {
-			href = sloavkHost + href
+			href = ebidatHost + href
 		}
 
 		data := se.extractDistrictCityAndState(s.Text())
@@ -269,7 +269,6 @@ func (se *ebidatEnricher) EnrichCastle(ctx context.Context, c castle.Model) (cas
 	dataPageLink := fmt.Sprintf("https://%s&m=h", c.Link)
 	dataHTML, err := se.fetchHTML(ctx, dataPageLink, se.httpClient)
 	if err != nil {
-		fmt.Println(err.Error())
 		return castle.Model{}, err
 	}
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(dataHTML))
@@ -279,7 +278,7 @@ func (se *ebidatEnricher) EnrichCastle(ctx context.Context, c castle.Model) (cas
 
 	c1 := &c
 	c1.PropertyCondition = se.getPropertyConditions(doc)
-
+	c1.PictureLink = se.collectImage(doc)
 	c1.CleanFields()
 	return *c1, nil
 }
@@ -291,7 +290,6 @@ func (se ebidatEnricher) getPropertyConditions(doc *goquery.Document) castle.Pro
 		gruppe := s.Find("div.gruppe").Text()
 		if strings.Contains(gruppe, "Erhaltung - Heutiger Zustand:") {
 			collectedCondition := strings.ToLower(s.Find("div.gruppenergebnis").Text())
-			fmt.Println("collectedCondition", collectedCondition)
 			switch collectedCondition {
 			case "weitgehend erhalten": //largely preserved
 				propertyCondition = castle.Intact
@@ -313,4 +311,13 @@ func (se ebidatEnricher) getPropertyConditions(doc *goquery.Document) castle.Pro
 	})
 
 	return propertyCondition
+}
+
+func (se ebidatEnricher) collectImage(doc *goquery.Document) string {
+	var imageSrc string
+	doc.Find("div.galerie img").EachWithBreak(func(i int, s *goquery.Selection) bool {
+		imageSrc, _ = s.Attr("src")
+		return false
+	})
+	return fmt.Sprintf("%s%s", ebidatHost, strings.ReplaceAll(imageSrc, "..", ""))
 }

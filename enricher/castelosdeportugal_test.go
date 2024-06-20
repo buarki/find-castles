@@ -1,11 +1,13 @@
 package enricher
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"net/http"
 	"testing"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/buarki/find-castles/castle"
 	"github.com/buarki/find-castles/fileloader"
 	"github.com/buarki/find-castles/httpclient"
@@ -114,6 +116,7 @@ func TestExtractPortugueseCastleInfo(t *testing.T) {
 		FoundationPeriod:  "(ant. a 958)",
 		Link:              "https://somelink.pt",
 		PropertyCondition: castle.Intact,
+		PictureLink:       "https://www.castelosdeportugal.pt/castelos/assets/img/Castelos(pre)SECXII/guimaraes/guimaraes1_small.jpg",
 	}
 
 	castelosDePortugalEnricher := NewCastelosDePortugalEnricher(httpclient.New(), htmlFetcher)
@@ -141,6 +144,9 @@ func TestExtractPortugueseCastleInfo(t *testing.T) {
 	if receivedCastle.PropertyCondition != expectedCastle.PropertyCondition {
 		t.Errorf("expected PropertyCondition to be [%s], got [%s]", expectedCastle.PropertyCondition, receivedCastle.PropertyCondition)
 	}
+	if receivedCastle.PictureLink != expectedCastle.PictureLink {
+		t.Errorf("expected PictureLink to be [%s], got [%s]", expectedCastle.PictureLink, receivedCastle.PictureLink)
+	}
 }
 
 func TestParseCondition(t *testing.T) {
@@ -166,5 +172,24 @@ func TestParseCondition(t *testing.T) {
 				t.Errorf("expected to have condition [%s], got [%s]", cTT.expectedCondition.String(), received.String())
 			}
 		})
+	}
+}
+
+func TestExtractPicture(t *testing.T) {
+	content, err := fileloader.LoadHTMLFile(castlePageHTMLPath)
+	if err != nil {
+		t.Errorf("expected to have err nil, got [%v]", err)
+	}
+	expectedImageLink := `https://www.castelosdeportugal.pt/castelos/assets/img/Castelos(pre)SECXII/guimaraes/guimaraes1_small.jpg`
+	e := castelosDePortugalEnricher{}
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(content))
+	if err != nil {
+		t.Errorf("expected to have err nil, got [%v]", err)
+	}
+
+	collectedImageLink := e.collectImage(doc)
+
+	if collectedImageLink != expectedImageLink {
+		t.Errorf("expected to find link [%s], got [%s]", expectedImageLink, collectedImageLink)
 	}
 }
