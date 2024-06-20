@@ -33,6 +33,7 @@ func SaveCastles(ctx context.Context, collection *mongo.Collection, castles []ca
 				// Only if present
 				"propertyCondition": c.PropertyCondition.String(),
 				"matchingTags":      c.GetMatchingTags(),
+				"pictureURL":        c.PictureLink,
 			},
 		}
 		operation := mongo.NewUpdateOneModel().SetFilter(filter).SetUpdate(update).SetUpsert(true)

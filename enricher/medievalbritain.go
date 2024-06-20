@@ -197,11 +197,7 @@ provides the state as its first item.
 		</div>
 	</div>
 */
-func (be *medievalbritainEnricher) extractUkState(rawHTML []byte, c castle.Model) (string, error) {
-	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(rawHTML))
-	if err != nil {
-		return "", fmt.Errorf("failed to create reader for castle [%s], got %v", c.Name, err)
-	}
+func (be *medievalbritainEnricher) extractUkState(doc *goquery.Document, c castle.Model) (string, error) {
 	state := doc.Find(".elementor-widget-container div.elementor-text-editor.elementor-clearfix p a").First().Parent().Text()
 	state = strings.ReplaceAll(strings.ReplaceAll(state, "\n", ""), "\t", "")
 	before, _, found := strings.Cut(state, "(")
@@ -227,11 +223,7 @@ provides the state as its first item.
 		</div>
 	</div>
 */
-func (be *medievalbritainEnricher) extractUkCity(rawHTML []byte, c castle.Model) (string, error) {
-	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(rawHTML))
-	if err != nil {
-		return "", fmt.Errorf("failed to create reader for castle [%s], got %v", c.Name, err)
-	}
+func (be *medievalbritainEnricher) extractUkCity(doc *goquery.Document, c castle.Model) (string, error) {
 	var city string
 	doc.Find(".elementor-text-editor.elementor-clearfix p").Each(func(i int, s *goquery.Selection) {
 		if s.Text() == "Address" {
@@ -246,19 +238,31 @@ func (be *medievalbritainEnricher) extractUkCity(rawHTML []byte, c castle.Model)
 }
 
 func (be *medievalbritainEnricher) extractDataOfUKCastle(rawHTML []byte, c castle.Model) (castle.Model, error) {
-	state, err := be.extractUkState(rawHTML, c)
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(rawHTML))
+	if err != nil {
+		return castle.Model{}, fmt.Errorf("failed to create reader for castle [%s], got %v", c.Name, err)
+	}
+	state, err := be.extractUkState(doc, c)
 	if err != nil {
 		return castle.Model{}, err
 	}
-	city, err := be.extractUkCity(rawHTML, c)
+	city, err := be.extractUkCity(doc, c)
 	if err != nil {
 		return castle.Model{}, err
 	}
 	return castle.Model{
-		Name:    c.Name,
-		Country: c.Country,
-		Link:    c.Link,
-		State:   state,
-		City:    city,
+		Name:        c.Name,
+		Country:     c.Country,
+		Link:        c.Link,
+		State:       state,
+		City:        city,
+		PictureLink: be.collectImage(doc),
 	}, nil
+}
+
+func (be *medievalbritainEnricher) collectImage(doc *goquery.Document) string {
+	var imageSrc string
+	metaTag := doc.Find("meta[property='og:image']")
+	imageSrc, _ = metaTag.Attr("content")
+	return imageSrc
 }

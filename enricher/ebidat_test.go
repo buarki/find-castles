@@ -621,3 +621,65 @@ func TestExtractPropertyConditions(t *testing.T) {
 	}
 
 }
+
+func TestExtractPictureOfEBITAD(t *testing.T) {
+	content := []byte(
+		`
+		<article class="beschreibung">
+						<h3>weitere Informationen:</h3>
+						<ul id="verlinkungen">
+							<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?m=h&id=2029">Hauptdaten</a></li>
+							<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?m=o&id=2029">Objektdaten</a></li>
+							<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?m=g&id=2029">Touristische Informationen</a>
+							</li>
+							<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?m=n&id=2029">Nachweise</a></li>
+							<li class="informationen_link"><a href="/cgi-bin/r30msvcxxx_ebidat_kml_download.pl?obj=65017">Google
+									Earth</a></li>
+							<li class="informationen_link"><a href="http://maps.google.com/maps/?q=48.780049,18.577476"
+									target="_blank">Google Maps</a></li>
+							<li class="informationen_link"><a href="/cgi-bin/ebidat.pl?id=2029">Home</a></li>
+						</ul>
+
+						<div class="galerie">
+							<a href="../r30/vc_content/bilder/firma451/msvc_intern/925_101_20070926122153.jpg"
+								onClick="window.open('/cgi-bin/r30msvc_menue.pl?var_hauptpfad=../r30/vc_content/&var_fa1_select=var_fa1_select||451|&var_html_folgemaske=bild.shtml&var_variable_uebergabe=../r30/vc_content/bilder/firma451/msvc_intern/925_101_20070926122153.jpg', 'NeuesFenster', 'width=600,height=' + (420 + 50) + ',resizable=yes,dependent=yes,scrollbars=no,status=NO,left=0,top=0');return false;">
+								<img src="../r30/vc_content/bilder/firma451/msvc_intern/925_18_20070926122153.jpg" width=245 height=172
+									alt="Bojnice" title="Bojnice">
+							</a>
+							<a href="../r30/vc_content/bilder/firma451/msvc_intern/925_103_20070926122153.jpg"
+								onClick="window.open('/cgi-bin/r30msvc_menue.pl?var_hauptpfad=../r30/vc_content/&var_fa1_select=var_fa1_select||451|&var_html_folgemaske=bild.shtml&var_variable_uebergabe=../r30/vc_content/bilder/firma451/msvc_intern/925_103_20070926122153.jpg', 'NeuesFenster', 'width=600,height=' + (398 + 50) + ',resizable=yes,dependent=yes,scrollbars=no,status=NO,left=0,top=0');return false;">
+								<img class="links_klein" src="../r30/vc_content/bilder/firma451/msvc_intern/925_19_20070926122153.jpg"
+									width=120 height=80 alt=" Bojnice" title=" Bojnice">
+							</a>
+							<a href="../r30/vc_content/bilder/firma451/msvc_intern/925_105_20070926122153.jpg"
+								onClick="window.open('/cgi-bin/r30msvc_menue.pl?var_hauptpfad=../r30/vc_content/&var_fa1_select=var_fa1_select||451|&var_html_folgemaske=bild.shtml&var_variable_uebergabe=../r30/vc_content/bilder/firma451/msvc_intern/925_105_20070926122153.jpg', 'NeuesFenster', 'width=700,height=' + (444 + 50) + ',resizable=yes,dependent=yes,scrollbars=no,status=NO,left=0,top=0');return false;">
+								<img src="../r30/vc_content/bilder/firma451/msvc_intern/925_20_20070926122153.jpg" width=120 height=80
+									alt="Die Burg auf dem Plan von 19. Jh. (nach J. K�ny�ki)."
+									title="Die Burg auf dem Plan von 19. Jh. (nach J. K�ny�ki).">
+							</a>
+						</div>
+						<div class="galerie">
+							<h3>Grundriss</h3>
+							<a href="../r30/vc_content/bilder/firma451/msvc_intern/925_23_20070926122153.gif"
+								onClick="window.open('/cgi-bin/r30msvc_menue.pl?var_hauptpfad=../r30/vc_content/&var_fa1_select=var_fa1_select||451|&var_html_folgemaske=bild.shtml&var_variable_uebergabe=../r30/vc_content/bilder/firma451/msvc_intern/925_23_20070926122153.gif', 'NeuesFenster', 'width=420,height=' + (714 + 50) + ',resizable=yes,dependent=yes,scrollbars=no,status=NO,left=0,top=0');return false;">
+								<img src="../r30/vc_content/bilder/firma451/msvc_intern/925_24_20070926122153.jpg" width=245 height=417
+									alt="Bojnice. Grundriss mit den Bauetappen; nach Menclov� (1956) und Grundriss der untersuchten Fl�che des Archivfl�gels mit stilistischer Analyse (nach B�na, 1997)"
+									title="Bojnice. Grundriss mit den Bauetappen; nach Menclov� (1956) und Grundriss der untersuchten Fl�che des Archivfl�gels mit stilistischer Analyse (nach B�na, 1997)">
+							</a>
+						</div>
+					</article>
+		`,
+	)
+	expectedImageLink := `www.ebidat.de/r30/vc_content/bilder/firma451/msvc_intern/925_18_20070926122153.jpg`
+	e := ebidatEnricher{}
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(content))
+	if err != nil {
+		t.Errorf("expected to have err nil, got [%v]", err)
+	}
+
+	collectedImageLink := e.collectImage(doc)
+
+	if collectedImageLink != expectedImageLink {
+		t.Errorf("expected to find link [%s], got [%s]", expectedImageLink, collectedImageLink)
+	}
+}

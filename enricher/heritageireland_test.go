@@ -1,10 +1,12 @@
 package enricher
 
 import (
+	"bytes"
 	"context"
 	"net/http"
 	"testing"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/buarki/find-castles/castle"
 	"github.com/buarki/find-castles/fileloader"
 	"github.com/buarki/find-castles/httpclient"
@@ -129,5 +131,24 @@ func TestEnrich(t *testing.T) {
 		if castle.District != tt.castle.District {
 			t.Errorf("expected District [%s], got [%s]", tt.castle.District, castle.District)
 		}
+	}
+}
+
+func TestExtractPictureOfHeritageIreland(t *testing.T) {
+	content, err := fileloader.LoadHTMLFile(irishCastlePageHTMLPath)
+	if err != nil {
+		t.Errorf("expected to have err nil, got [%v]", err)
+	}
+	expectedImageLink := `https://heritageireland.ie/assets/uploads/2020/03/Adare-Castle-Aerial-View-2-640x427.jpg`
+	e := heritageirelandEnricher{}
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(content))
+	if err != nil {
+		t.Errorf("expected to have err nil, got [%v]", err)
+	}
+
+	collectedImageLink := e.collectImage(doc)
+
+	if collectedImageLink != expectedImageLink {
+		t.Errorf("expected to find link [%s], got [%s]", expectedImageLink, collectedImageLink)
 	}
 }

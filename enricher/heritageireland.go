@@ -12,7 +12,8 @@ import (
 )
 
 const (
-	irelandCastlesURL = "https://heritageireland.ie/visit/castles/"
+	heritageIrelandHost = "https://heritageireland.ie"
+	herirageIrelandURL  = heritageIrelandHost + "/visit/castles/"
 )
 
 type heritageirelandEnricher struct {
@@ -42,7 +43,7 @@ func (ie *heritageirelandEnricher) CollectCastlesToEnrich(ctx context.Context) (
 				fmt.Println("Ireland got done")
 				return
 			default:
-				htmlWithCastlesToCollect, err := ie.fetchHTML(ctx, irelandCastlesURL, ie.httpClient)
+				htmlWithCastlesToCollect, err := ie.fetchHTML(ctx, herirageIrelandURL, ie.httpClient)
 				if err != nil {
 					errorsChan <- err
 				}
@@ -98,7 +99,11 @@ func (ie *heritageirelandEnricher) EnrichCastle(ctx context.Context, c castle.Mo
 }
 
 func (ie *heritageirelandEnricher) extractCastleInfo(c castle.Model, castlePage []byte) (castle.Model, error) {
-	rawAddress, err := ie.extractContact(castlePage)
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(castlePage))
+	if err != nil {
+		return castle.Model{}, fmt.Errorf("error loading HTML: %v", err)
+	}
+	rawAddress, err := ie.extractContact(doc)
 	if err != nil {
 		return castle.Model{}, err
 	}
@@ -106,21 +111,17 @@ func (ie *heritageirelandEnricher) extractCastleInfo(c castle.Model, castlePage 
 	district, city, state := ie.get(rawAddress)
 
 	return castle.Model{
-		Name:     c.Name,
-		Country:  castle.Ireland,
-		Link:     c.Link,
-		City:     city,
-		State:    state,
-		District: district,
+		Name:        c.Name,
+		Country:     castle.Ireland,
+		Link:        c.Link,
+		City:        city,
+		State:       state,
+		District:    district,
+		PictureLink: ie.collectImage(doc),
 	}, nil
 }
 
-func (ie *heritageirelandEnricher) extractContact(rawHTML []byte) (string, error) {
-	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(rawHTML))
-	if err != nil {
-		return "", fmt.Errorf("error loading HTML: %v", err)
-	}
-
+func (ie *heritageirelandEnricher) extractContact(doc *goquery.Document) (string, error) {
 	address, err := doc.Find("#place--contact div p.address").First().Html()
 	if err != nil {
 		return "", err
@@ -146,4 +147,17 @@ func (ie *heritageirelandEnricher) get(raw string) (string, string, string) {
 	}
 	// ex: [Adare Heritage Centre, Adare, Co. Limerick, V94 DWV7]
 	return parts[0], parts[1], parts[len(parts)-2]
+}
+
+func (ie *heritageirelandEnricher) collectImage(doc *goquery.Document) string {
+	var srcset string
+	picture := doc.Find("section.gallery ul.hi_gallery li a figure picture").First()
+	if picture.Find("source").Length() > 0 {
+		srcset, _ = picture.Find("source").First().Attr("srcset")
+	}
+	parts := strings.Split(srcset, " ")
+	if len(parts) > 0 {
+		return parts[0]
+	}
+	return ""
 }
