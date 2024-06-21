@@ -182,3 +182,74 @@ func TestExtractContactOfHeritageIreland(t *testing.T) {
 		t.Errorf("expected Phone to be [%s], got [%s]", expectedContact.Phone, collectedContact.Email)
 	}
 }
+
+func TestCollectWorkingHoursOfHeritageIreland(t *testing.T) {
+	testCases := []struct {
+		name                 string
+		htmlChunk            []byte
+		expectedWorkingHours string
+	}{
+		{
+			name: "simple",
+			htmlChunk: []byte(`
+			<section id="place--opening" class="section">
+				<h2>Opening Times</h2>
+				<div>
+					<p><strong>01 June &#8211; 29 September 2024</strong></p>
+					<p>09:30- 16:00</p>
+				</div>
+			</section>
+			`),
+			expectedWorkingHours: "01 June - 29 September 2024 - 09:30- 16:00",
+		},
+		{
+			name: "simple",
+			htmlChunk: []byte(`
+			<section id="place--opening" class="section">
+        <h2>Opening Times</h2>
+        <div>
+          <p>15 March- 3 November 2024</p>
+        </div>
+        <div>
+          <h3>Seasonal Opening Times</h3>
+          <dl class="accordion">
+            <dt>15 March - 26 October<b></b></dt>
+            <dd>
+              <div>
+                <p>Daily 10:00 &#8211; 18:00</p>
+                <p>Last admission: 17:15</p>
+              </div>
+            </dd>
+            <dt>27 October - 03 November <b></b></dt>
+            <dd>
+              <div>
+                <p>Daily 10:00 &#8211; 17:00</p>
+                <p>Last admission: 16:15</p>
+              </div>
+            </dd>
+          </dl>
+        </div>
+      </section>
+			`),
+			expectedWorkingHours: "15 March- 3 November 2024",
+		},
+	}
+	e := heritageirelandEnricher{}
+
+	for _, tt := range testCases {
+		currentTT := tt
+		t.Run(currentTT.name, func(t *testing.T) {
+			t.Helper()
+			doc, err := goquery.NewDocumentFromReader(bytes.NewReader(currentTT.htmlChunk))
+			if err != nil {
+				t.Errorf("expected to have err nil, got [%v]", err)
+			}
+			collectedWorkingHours := e.collectHorkingHours(doc)
+
+			if collectedWorkingHours != currentTT.expectedWorkingHours {
+				t.Errorf("expected to have [%s], got [%s]", currentTT.expectedWorkingHours, collectedWorkingHours)
+			}
+		})
+	}
+
+}

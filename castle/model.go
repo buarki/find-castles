@@ -14,10 +14,39 @@ type Contact struct {
 	Email string
 }
 
+type Facilities struct {
+	AssistanceDogsAllowed bool
+	Cafe                  bool
+	Restrooms             bool
+	Giftshops             bool
+	PinicArea             bool
+	Parking               bool
+	Exhibitions           bool
+	WheelchairSupport     bool
+}
+
+type VisitingInfo struct {
+	WorkingHours string
+	Facilities   *Facilities
+}
+
+func (vi *VisitingInfo) Copy() *VisitingInfo {
+	newVisitingInfo := &VisitingInfo{
+		WorkingHours: vi.WorkingHours,
+	}
+	if vi.Facilities != nil {
+		newFacilities := *vi.Facilities
+		newVisitingInfo.Facilities = &newFacilities
+	}
+	return newVisitingInfo
+}
+
 type Model struct {
-	Name              string            `json:"name"`
-	Sources           []string          `json:"sourcs"`
-	Country           Country           `json:"country"`
+	// mandatory fields
+	Name    string   `json:"name"`
+	Sources []string `json:"sourcs"`
+	Country Country  `json:"country"`
+
 	State             string            `json:"state"`
 	City              string            `json:"city"`
 	District          string            `json:"district"`
@@ -28,6 +57,7 @@ type Model struct {
 	MatchingTags      []string          `json:"matchingTags"`
 	PictureURL        string            `json:"pictureLink"`
 	Contact           *Contact
+	VisitingInfo      *VisitingInfo
 
 	CurrentEnrichmentLink string // current link being used on enrichment
 }
@@ -172,6 +202,27 @@ func (m Model) ReconcileWith(c Model) (Model, error) {
 
 	newCastle.Sources = newSources
 
+	if newCastle.VisitingInfo == nil {
+		if c.VisitingInfo != nil {
+			newCastle.VisitingInfo = c.VisitingInfo.Copy()
+		}
+	} else {
+		if c.VisitingInfo != nil {
+			if len(newCastle.VisitingInfo.WorkingHours) < len(c.VisitingInfo.WorkingHours) {
+				newCastle.VisitingInfo.WorkingHours = c.VisitingInfo.WorkingHours
+			}
+
+			newCastle.VisitingInfo.Facilities.AssistanceDogsAllowed = newCastle.VisitingInfo.Facilities.AssistanceDogsAllowed && c.VisitingInfo.Facilities.AssistanceDogsAllowed
+			newCastle.VisitingInfo.Facilities.Cafe = newCastle.VisitingInfo.Facilities.Cafe && c.VisitingInfo.Facilities.Cafe
+			newCastle.VisitingInfo.Facilities.Exhibitions = newCastle.VisitingInfo.Facilities.Exhibitions && c.VisitingInfo.Facilities.Exhibitions
+			newCastle.VisitingInfo.Facilities.Giftshops = newCastle.VisitingInfo.Facilities.Giftshops && c.VisitingInfo.Facilities.Giftshops
+			newCastle.VisitingInfo.Facilities.Parking = newCastle.VisitingInfo.Facilities.Parking && c.VisitingInfo.Facilities.Parking
+			newCastle.VisitingInfo.Facilities.PinicArea = newCastle.VisitingInfo.Facilities.PinicArea && c.VisitingInfo.Facilities.PinicArea
+			newCastle.VisitingInfo.Facilities.Restrooms = newCastle.VisitingInfo.Facilities.Restrooms && c.VisitingInfo.Facilities.Restrooms
+			newCastle.VisitingInfo.Facilities.WheelchairSupport = newCastle.VisitingInfo.Facilities.WheelchairSupport && c.VisitingInfo.Facilities.WheelchairSupport
+		}
+	}
+
 	return newCastle, nil
 }
 
@@ -241,5 +292,6 @@ func (m Model) Copy() Model {
 		MatchingTags:          matchingTagsCopy,
 		PictureURL:            m.PictureURL,
 		Contact:               m.Contact,
+		VisitingInfo:          m.VisitingInfo,
 	}
 }

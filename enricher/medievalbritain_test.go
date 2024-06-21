@@ -10,6 +10,7 @@ import (
 	"github.com/buarki/find-castles/castle"
 	"github.com/buarki/find-castles/fileloader"
 	"github.com/buarki/find-castles/httpclient"
+	"github.com/google/go-cmp/cmp"
 )
 
 const (
@@ -199,6 +200,172 @@ func TestExtractContactOfMedievalBritain(t *testing.T) {
 
 			if collectedContact != nil && collectedContact.Phone != currentTT.expectedContact.Phone {
 				t.Errorf("expected Phone to be [%s], got [%s]", currentTT.expectedContact.Phone, collectedContact.Email)
+			}
+		})
+	}
+}
+
+func TestExtracVisitingInfotOfMedievalBritain(t *testing.T) {
+	content, err := fileloader.LoadHTMLFile(jsonWithEnglandCastlePagePath)
+	if err != nil {
+		t.Errorf("expected to have err nil, got [%v]", err)
+	}
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(content))
+	if err != nil {
+		t.Errorf("expected to have err nil, got [%v]", err)
+	}
+	expectedVisitingInfo := &castle.VisitingInfo{
+		WorkingHours: "Summer: 10:00 - 16:00,Winter: 10:00 - 15:00",
+		Facilities: &castle.Facilities{
+			AssistanceDogsAllowed: true,
+			Giftshops:             true,
+			WheelchairSupport:     true,
+			Restrooms:             true,
+			PinicArea:             true,
+			Exhibitions:           true,
+			Cafe:                  true,
+			Parking:               true,
+		},
+	}
+	e := medievalbritainEnricher{}
+
+	collectedVisitingInfo := e.collectVisitingInfo(doc)
+
+	if collectedVisitingInfo == nil {
+		t.Errorf("expected contact to not be null")
+	}
+
+	diff := cmp.Diff(expectedVisitingInfo, collectedVisitingInfo)
+	if diff != "" {
+		t.Errorf("diff: %v", diff)
+	}
+}
+
+func TestCollectWorkingHoursOfMedievalBritain(t *testing.T) {
+	testCases := []struct {
+		name                 string
+		htmlChunk            []byte
+		expectedWorkingHours string
+	}{
+		{
+			name: "default working hours scheme",
+			htmlChunk: []byte(`
+			<div class="elementor-widget-container">
+				<div
+					class="elementor-text-editor elementor-clearfix">
+					<p><strong>Hours</strong></p>
+					<p>Summer: 10:00 &#8211; 16:00</p>
+					<p>Winter: 10:00 &#8211; 15:00</p>
+				</div>
+			</div>
+			`),
+			expectedWorkingHours: "Summer: 10:00 - 16:00,Winter: 10:00 - 15:00",
+		},
+		{
+			name: "horking hours is pure text",
+			htmlChunk: []byte(`
+			<div class="elementor-widget-container">
+					<div class="elementor-text-editor elementor-clearfix">
+						<p><strong>Hours</strong></p>
+						<div class="soft bg-brand-inverlochy">
+							<p class="beta white">Castle Sween is open year-round.</p>
+						</div>
+					</div>
+				</div>
+			`),
+			expectedWorkingHours: "Castle Sween is open year-round.",
+		},
+		{
+			name: "horking hours is pure text (1)",
+			htmlChunk: []byte(`
+			<div class="elementor-widget-container">
+				<div class="elementor-text-editor elementor-clearfix">
+					<p><strong>Hours</strong></p>
+					<p>Open 24 hours, year-round.</p>
+				</div>
+			</div>
+			`),
+			expectedWorkingHours: "Open 24 hours, year-round.",
+		},
+		{
+			name: "when working hours is given on a single line table",
+			htmlChunk: []byte(`
+			<div class="elementor-widget-container">
+				<div class="elementor-text-editor elementor-clearfix">
+					<p><strong>Hours</strong></p>
+					<table class="WgFkxc">
+						<tbody>
+							<tr class="K7Ltle">
+								<td class="SKNSIb">Summer</td>
+								<td>10am–4pm</td>
+							</tr>
+							<tr>
+								<td class="SKNSIb">Winter</td>
+								<td>10am–5pm</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			`),
+			expectedWorkingHours: "Summer: 10am-4pm, Winter: 10am-5pm",
+		},
+		{
+			name: "when working hours is given on a multi line table",
+			htmlChunk: []byte(`
+			<div class="elementor-text-editor elementor-clearfix">
+				<p><strong>Hours</strong></p>
+				<table class="WgFkxc">
+					<tbody>
+						<tr class="K7Ltle">
+							<td class="SKNSIb">Tuesday</td>
+							<td>11am–4pm</td>
+						</tr>
+						<tr>
+							<td class="SKNSIb">Wednesday</td>
+							<td>11am–4pm</td>
+						</tr>
+						<tr>
+							<td class="SKNSIb">Thursday</td>
+							<td>11am–4pm</td>
+						</tr>
+						<tr>
+							<td class="SKNSIb">Friday</td>
+							<td>11am–4pm</td>
+						</tr>
+						<tr>
+							<td class="SKNSIb">Saturday</td>
+							<td>11am–4pm</td>
+						</tr>
+						<tr>
+							<td class="SKNSIb">Sunday</td>
+							<td>11am–4pm</td>
+						</tr>
+						<tr>
+							<td class="SKNSIb">Monday</td>
+							<td>Closed</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			`),
+			expectedWorkingHours: "Tuesday: 11am-4pm, Wednesday: 11am-4pm, Thursday: 11am-4pm, Friday: 11am-4pm, Saturday: 11am-4pm, Sunday: 11am-4pm, Monday: Closed",
+		},
+	}
+	e := medievalbritainEnricher{}
+
+	for _, tt := range testCases {
+		currentTT := tt
+		t.Run(currentTT.name, func(t *testing.T) {
+			doc, err := goquery.NewDocumentFromReader(bytes.NewReader(currentTT.htmlChunk))
+			if err != nil {
+				t.Errorf("expected to have err nil, got [%v]", err)
+			}
+
+			collectedContact := e.collectHorkingHours(doc)
+
+			if collectedContact != currentTT.expectedWorkingHours {
+				t.Errorf("expected working hours to be [%s], got [%s]", currentTT.expectedWorkingHours, collectedContact)
 			}
 		})
 	}

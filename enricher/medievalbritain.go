@@ -260,6 +260,7 @@ func (be *medievalbritainEnricher) extractDataOfUKCastle(rawHTML []byte, c castl
 		Coordinates:           be.collectCoordinates(doc),
 		Contact:               be.collectContactInfo(doc),
 		Sources:               []string{c.CurrentEnrichmentLink},
+		VisitingInfo:          be.collectVisitingInfo(doc),
 	}, nil
 }
 
@@ -294,4 +295,78 @@ func (be *medievalbritainEnricher) collectContactInfo(doc *goquery.Document) *ca
 		}
 	}
 	return nil
+}
+
+func (be *medievalbritainEnricher) collectVisitingInfo(doc *goquery.Document) *castle.VisitingInfo {
+	return &castle.VisitingInfo{
+		WorkingHours: be.collectHorkingHours(doc),
+		Facilities: &castle.Facilities{
+			AssistanceDogsAllowed: doc.Find(".fa-dog").Length() > 0,
+			Giftshops:             doc.Find(".fa-shopping-bag").Length() > 0,
+			WheelchairSupport:     doc.Find(".fa-wheelchair").Length() > 0,
+			Restrooms:             doc.Find(".fa-toilet").Length() > 0,
+			PinicArea:             doc.Find(".fa-tree").Length() > 0,
+			Exhibitions:           doc.Find(".fa-vector-square").Length() > 0,
+			Cafe:                  doc.Find(".fa-coffee").Length() > 0,
+			Parking:               doc.Find(".fa-car-alt").Length() > 0,
+		},
+	}
+}
+
+// the searching key for this one is <strong>Hours</strong>
+func (be *medievalbritainEnricher) collectHorkingHours(doc *goquery.Document) string {
+	var hours []string
+
+	doc.Find(".elementor-text-editor p").Each(func(i int, s *goquery.Selection) {
+		if s.Find("strong").Text() == "Hours" {
+			s.NextAll().Each(func(j int, p *goquery.Selection) {
+				text := p.Text()
+				if strings.Contains(text, ":") {
+					hours = append(hours, text)
+				}
+			})
+			return
+		}
+	})
+
+	replacer := strings.NewReplacer(
+		`–`, "-",
+	)
+
+	workingHours := replacer.Replace(strings.Join(hours, ","))
+	if workingHours != "" {
+		return workingHours
+	}
+
+	// given hours as raw text
+	doc.Find(".elementor-text-editor").Each(func(i int, s *goquery.Selection) {
+		if s.Find("strong").Text() == "Hours" {
+			wh := s.Find("p").Text()
+			if wh != "" {
+				workingHours = strings.ReplaceAll(wh, "Hours", "")
+				return
+			}
+		}
+	})
+
+	if workingHours != "" {
+		return workingHours
+	}
+
+	// given hours as table
+	doc.Find(".elementor-text-editor").Each(func(i int, s *goquery.Selection) {
+		if s.Find("p:contains('Hours')").Length() > 0 {
+			// get the table after the <strong>Hours</strong> element
+			s.Find("table.WgFkxc tr").Each(func(i int, tr *goquery.Selection) {
+				season := strings.TrimSpace(tr.Find("td.SKNSIb").Text())
+				time := strings.TrimSpace(tr.Find("td").Last().Text())
+				if season != "" && time != "" {
+					hours = append(hours, fmt.Sprintf("%s: %s", season, time))
+				}
+			})
+		}
+	})
+
+	return replacer.Replace(strings.Join(hours, ", "))
+
 }

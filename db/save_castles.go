@@ -70,5 +70,8 @@ func prepareObjectToSave(c castle.Model) bson.M {
 			"email": c.Contact.Email,
 		}
 	}
+	if c.VisitingInfo != nil {
+		object["visitingInfo"] = c.VisitingInfo
+	}
 	return object
 }
