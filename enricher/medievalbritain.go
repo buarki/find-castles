@@ -148,16 +148,16 @@ func (be *medievalbritainEnricher) extractTheListOfCastlesFromPage(rawHTML []byt
 		title := s.Text()
 		link, _ := s.Attr("href")
 		castles = append(castles, castle.Model{
-			Name:    strings.ReplaceAll(strings.ReplaceAll(title, "\t", ""), "\n", ""),
-			Link:    link,
-			Country: castle.UK,
+			Name:                  strings.ReplaceAll(strings.ReplaceAll(title, "\t", ""), "\n", ""),
+			CurrentEnrichmentLink: link,
+			Country:               castle.UK,
 		})
 	})
 	return castles, nil
 }
 
 func (be *medievalbritainEnricher) EnrichCastle(ctx context.Context, c castle.Model) (castle.Model, error) {
-	castlePage, err := be.fetchHTML(ctx, c.Link, be.httpClient)
+	castlePage, err := be.fetchHTML(ctx, c.CurrentEnrichmentLink, be.httpClient)
 	if err != nil {
 		return castle.Model{}, err
 	}
@@ -251,13 +251,15 @@ func (be *medievalbritainEnricher) extractDataOfUKCastle(rawHTML []byte, c castl
 		return castle.Model{}, err
 	}
 	return castle.Model{
-		Name:        c.Name,
-		Country:     c.Country,
-		Link:        c.Link,
-		State:       state,
-		City:        city,
-		PictureLink: be.collectImage(doc),
-		Coordinates: be.collectCoordinates(doc),
+		Name:                  c.Name,
+		Country:               c.Country,
+		CurrentEnrichmentLink: c.CurrentEnrichmentLink,
+		State:                 state,
+		City:                  city,
+		PictureURL:            be.collectImage(doc),
+		Coordinates:           be.collectCoordinates(doc),
+		Contact:               be.collectContactInfo(doc),
+		Sources:               []string{c.CurrentEnrichmentLink},
 	}, nil
 }
 
@@ -281,4 +283,15 @@ func (be *medievalbritainEnricher) collectCoordinates(doc *goquery.Document) str
 		return replacer.Replace(latitudeAndLongigude.Text())
 	}
 	return fmt.Sprintf("%s,%s", replacer.Replace(latitude.Text()), replacer.Replace(longitude.Text()))
+}
+
+func (be *medievalbritainEnricher) collectContactInfo(doc *goquery.Document) *castle.Contact {
+	phoneElement := doc.Find(".elementor-text-editor .w8qArf").First()
+	collectedPhone := phoneElement.Parent().Next().Text()
+	if collectedPhone != "" {
+		return &castle.Contact{
+			Phone: collectedPhone,
+		}
+	}
+	return nil
 }

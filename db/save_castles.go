@@ -19,24 +19,8 @@ func SaveCastles(ctx context.Context, collection *mongo.Collection, castles []ca
 			"country": strings.ToLower(c.Country.String()),
 			"name":    strings.ToLower(c.FilteredName()),
 		}
-		// TODO collect fields with values only
 		update := bson.M{
-			"$set": bson.M{
-				"name":             strings.ToLower(c.FilteredName()),
-				"link":             c.Link,
-				"sources":          c.Sources,
-				"country":          strings.ToLower(c.Country.String()),
-				"state":            strings.ToLower(c.State),
-				"city":             strings.ToLower(c.City),
-				"district":         strings.ToLower(c.District),
-				"foundationPeriod": c.FoundationPeriod,
-				// Only if present
-				"propertyCondition": c.PropertyCondition.String(),
-				"matchingTags":      c.GetMatchingTags(),
-				"pictureURL":        c.PictureLink,
-				// Only if present
-				"coordinates": c.Coordinates,
-			},
+			"$set": prepareObjectToSave(c),
 		}
 		operation := mongo.NewUpdateOneModel().SetFilter(filter).SetUpdate(update).SetUpsert(true)
 		operations = append(operations, operation)
@@ -52,4 +36,39 @@ func SaveCastles(ctx context.Context, collection *mongo.Collection, castles []ca
 		}
 	}
 	return nil
+}
+
+func prepareObjectToSave(c castle.Model) bson.M {
+	object := bson.M{
+		"name":         strings.ToLower(c.FilteredName()),
+		"sources":      c.Sources,
+		"country":      strings.ToLower(c.Country.String()),
+		"matchingTags": c.GetMatchingTags(),
+		"pictureURL":   c.PictureURL,
+	}
+	if c.State != "" {
+		object["state"] = c.State
+	}
+	if c.City != "" {
+		object["city"] = c.City
+	}
+	if c.District != "" {
+		object["district"] = c.District
+	}
+	if c.FoundationPeriod != "" {
+		object["foundationPeriod"] = c.FoundationPeriod
+	}
+	if c.PropertyCondition != "" {
+		object["propertyCondition"] = c.PropertyCondition
+	}
+	if c.Coordinates != "" {
+		object["coordinates"] = c.Coordinates
+	}
+	if c.Contact != nil {
+		object["contact"] = bson.M{
+			"phone": c.Contact.Phone,
+			"email": c.Contact.Email,
+		}
+	}
+	return object
 }

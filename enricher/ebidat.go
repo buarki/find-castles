@@ -101,12 +101,13 @@ func (se *ebidatEnricher) collectCastleNameAndLinks(htmlContent []byte) ([]castl
 
 		data := se.extractDistrictCityAndState(s.Text())
 		castle := castle.Model{
-			Name:     name,
-			Link:     href,
-			Country:  castle.Slovakia,
-			City:     data.city,
-			State:    data.state,
-			District: data.district,
+			Name:                  name,
+			CurrentEnrichmentLink: href,
+			Country:               castle.Slovakia,
+			City:                  data.city,
+			State:                 data.state,
+			District:              data.district,
+			Sources:               []string{href},
 		}
 		castles = append(castles, castle)
 	})
@@ -266,7 +267,7 @@ func (se *ebidatEnricher) getNonce(htmlContent []byte, formName string) (bool, s
 }
 
 func (se *ebidatEnricher) EnrichCastle(ctx context.Context, c castle.Model) (castle.Model, error) {
-	dataPageLink := fmt.Sprintf("https://%s&m=h", c.Link)
+	dataPageLink := fmt.Sprintf("https://%s&m=h", c.CurrentEnrichmentLink)
 	dataHTML, err := se.fetchHTML(ctx, dataPageLink, se.httpClient)
 	if err != nil {
 		return castle.Model{}, err
@@ -278,7 +279,7 @@ func (se *ebidatEnricher) EnrichCastle(ctx context.Context, c castle.Model) (cas
 
 	c1 := &c
 	c1.PropertyCondition = se.getPropertyConditions(doc)
-	c1.PictureLink = se.collectImage(doc)
+	c1.PictureURL = se.collectImage(doc)
 	c1.Coordinates = se.collectCoordinates(doc)
 	c1.CleanFields()
 	return *c1, nil

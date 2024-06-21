@@ -152,3 +152,33 @@ func TestExtractPictureOfHeritageIreland(t *testing.T) {
 		t.Errorf("expected to find link [%s], got [%s]", expectedImageLink, collectedImageLink)
 	}
 }
+
+func TestExtractContactOfHeritageIreland(t *testing.T) {
+	content, err := fileloader.LoadHTMLFile(irishCastlePageHTMLPath)
+	if err != nil {
+		t.Errorf("expected to have err nil, got [%v]", err)
+	}
+	expectedContact := &castle.Contact{
+		Email: "reception@adareheritagecentre.ie",
+		Phone: "061 396 666",
+	}
+	e := heritageirelandEnricher{}
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(content))
+	if err != nil {
+		t.Errorf("expected to have err nil, got [%v]", err)
+	}
+
+	collectedContact := e.collectContactInfo(doc)
+
+	if collectedContact == nil {
+		t.Errorf("expected contact to not be null")
+	}
+
+	if collectedContact != nil && collectedContact.Email != expectedContact.Email {
+		t.Errorf("expected email to be [%s], got [%s]", expectedContact.Email, collectedContact.Email)
+	}
+
+	if collectedContact != nil && collectedContact.Phone != expectedContact.Phone {
+		t.Errorf("expected Phone to be [%s], got [%s]", expectedContact.Phone, collectedContact.Email)
+	}
+}

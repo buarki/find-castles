@@ -75,9 +75,9 @@ func (ie *heritageirelandEnricher) collectCastleNameAndLinks(rawHTML []byte) ([]
 		link, exists := s.Attr("href")
 		if exists {
 			castles = append(castles, castle.Model{
-				Name:    name,
-				Link:    link,
-				Country: castle.Ireland,
+				Name:                  name,
+				CurrentEnrichmentLink: link,
+				Country:               castle.Ireland,
 			})
 		}
 	})
@@ -86,7 +86,7 @@ func (ie *heritageirelandEnricher) collectCastleNameAndLinks(rawHTML []byte) ([]
 }
 
 func (ie *heritageirelandEnricher) EnrichCastle(ctx context.Context, c castle.Model) (castle.Model, error) {
-	castlePage, err := ie.fetchHTML(ctx, c.Link, ie.httpClient)
+	castlePage, err := ie.fetchHTML(ctx, c.CurrentEnrichmentLink, ie.httpClient)
 	if err != nil {
 		return castle.Model{}, err
 	}
@@ -111,13 +111,15 @@ func (ie *heritageirelandEnricher) extractCastleInfo(c castle.Model, castlePage 
 	district, city, state := ie.get(rawAddress)
 
 	return castle.Model{
-		Name:        c.Name,
-		Country:     castle.Ireland,
-		Link:        c.Link,
-		City:        city,
-		State:       state,
-		District:    district,
-		PictureLink: ie.collectImage(doc),
+		Name:                  c.Name,
+		Country:               castle.Ireland,
+		CurrentEnrichmentLink: c.CurrentEnrichmentLink,
+		City:                  city,
+		State:                 state,
+		District:              district,
+		PictureURL:            ie.collectImage(doc),
+		Contact:               ie.collectContactInfo(doc),
+		Sources:               []string{c.CurrentEnrichmentLink},
 	}, nil
 }
 
@@ -160,4 +162,16 @@ func (ie *heritageirelandEnricher) collectImage(doc *goquery.Document) string {
 		return parts[0]
 	}
 	return ""
+}
+
+func (ie *heritageirelandEnricher) collectContactInfo(doc *goquery.Document) *castle.Contact {
+	collectedPhone := doc.Find("#place--contact div .phone").First().Text()
+	collectedEmail := doc.Find("#place--contact div .email").First().Text()
+	if collectedEmail != "" || collectedPhone != "" {
+		return &castle.Contact{
+			Email: collectedEmail,
+			Phone: collectedPhone,
+		}
+	}
+	return nil
 }

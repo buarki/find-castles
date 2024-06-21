@@ -76,16 +76,17 @@ func (p *castelosDePortugalEnricher) collectCastleNameAndLinks(rawHTML []byte) (
 		link, _ := s.Attr("href")
 		name := s.Text()
 		castles = append(castles, castle.Model{
-			Name:    name,
-			Country: castle.Portugal,
-			Link:    fmt.Sprintf("%s/castelos/%s", castelosdeportugalHost, link),
+			Name:                  name,
+			Country:               castle.Portugal,
+			CurrentEnrichmentLink: fmt.Sprintf("%s/castelos/%s", castelosdeportugalHost, link),
+			Sources:               []string{fmt.Sprintf("%s/castelos/%s", castelosdeportugalHost, link)},
 		})
 	})
 	return castles, nil
 }
 
 func (p *castelosDePortugalEnricher) EnrichCastle(ctx context.Context, c castle.Model) (castle.Model, error) {
-	castlePage, err := p.fetchHTML(ctx, c.Link, p.httpClient)
+	castlePage, err := p.fetchHTML(ctx, c.CurrentEnrichmentLink, p.httpClient)
 	if err != nil {
 		return castle.Model{}, err
 	}
@@ -139,15 +140,15 @@ func (p *castelosDePortugalEnricher) extractCastleInfo(c castle.Model, rawHTMLPa
 	}
 
 	return castle.Model{
-		Name:              c.Name,
-		Country:           c.Country,
-		Link:              c.Link,
-		City:              tableData["Concelho"],
-		State:             tableData["Distrito"],
-		District:          district,
-		FoundationPeriod:  tableData["Construção"],
-		PropertyCondition: p.parseCondition(tableData["Conservação"]),
-		PictureLink:       p.collectImage(doc),
+		Name:                  c.Name,
+		Country:               c.Country,
+		CurrentEnrichmentLink: c.CurrentEnrichmentLink,
+		City:                  tableData["Concelho"],
+		State:                 tableData["Distrito"],
+		District:              district,
+		FoundationPeriod:      tableData["Construção"],
+		PropertyCondition:     p.parseCondition(tableData["Conservação"]),
+		PictureURL:            p.collectImage(doc),
 	}, nil
 }
 
