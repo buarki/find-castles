@@ -412,12 +412,12 @@ func TestCollectCastleNameAndLinks(t *testing.T) {
 			`),
 			error: false,
 			c: castle.Model{
-				Name:     "Biely Kamen",
-				District: "Neštich",
-				City:     "Pezinok",
-				State:    "Bratislava",
-				Country:  castle.Slovakia,
-				Link:     "",
+				Name:                  "Biely Kamen",
+				District:              "Neštich",
+				City:                  "Pezinok",
+				State:                 "Bratislava",
+				Country:               castle.Slovakia,
+				CurrentEnrichmentLink: "",
 			},
 		},
 	}

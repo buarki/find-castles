@@ -266,7 +266,7 @@ func TestReconcileWith(t *testing.T) {
 			},
 			resultCastle: Model{
 				Country: Portugal,
-				State:   "Braga",
+				State:   "Distrito de Braga",
 				Name:    "guimaraes",
 			},
 			err: nil,
@@ -285,7 +285,7 @@ func TestReconcileWith(t *testing.T) {
 			},
 			resultCastle: Model{
 				Country: Portugal,
-				State:   "Braga",
+				State:   "Distrito de Braga",
 				Name:    "guimaraes",
 			},
 			err: nil,
@@ -305,6 +305,175 @@ func TestReconcileWith(t *testing.T) {
 				Country: Portugal,
 				State:   "Distrito de Braga",
 				Name:    "guimaraes",
+			},
+			err: nil,
+		},
+		{
+			name: "when one castle has coordinates while other don't",
+			c1: Model{
+				Country: Portugal,
+				Name:    "guimaraes",
+			},
+			c2: Model{
+				Country:     Portugal,
+				Name:        "castelo de guimaraes",
+				Coordinates: "47.921271,18.642998",
+			},
+			resultCastle: Model{
+				Country:     Portugal,
+				Name:        "guimaraes",
+				Coordinates: "47.921271,18.642998",
+			},
+			err: nil,
+		},
+		{
+			name: "when one castle has coordinates while other don't (REVERSE)",
+			c1: Model{
+				Country:     Portugal,
+				Name:        "castelo de guimaraes",
+				Coordinates: "47.921271,18.642998",
+			},
+			c2: Model{
+				Country: Portugal,
+				Name:    "guimaraes",
+			},
+			resultCastle: Model{
+				Country:     Portugal,
+				Name:        "guimaraes",
+				Coordinates: "47.921271,18.642998",
+			},
+			err: nil,
+		},
+		{
+			name: "when BOTH castles have coordinates, biggest one stays",
+			c1: Model{
+				Country:     Portugal,
+				Name:        "castelo de guimaraes",
+				Coordinates: "47.921271, 18.642998",
+			},
+			c2: Model{
+				Country:     Portugal,
+				Name:        "guimaraes",
+				Coordinates: "47.921271,18.642998",
+			},
+			resultCastle: Model{
+				Country:     Portugal,
+				Name:        "guimaraes",
+				Coordinates: "47.921271, 18.642998",
+			},
+			err: nil,
+		},
+		{
+			name: "when BOTH castles have coordinates, biggest one stays (REVERSE)",
+			c1: Model{
+				Country:     Portugal,
+				Name:        "guimaraes",
+				Coordinates: "47.921271,18.642998",
+			},
+			c2: Model{
+				Country:     Portugal,
+				Name:        "castelo de guimaraes",
+				Coordinates: "47.921271, 18.642998",
+			},
+			resultCastle: Model{
+				Country:     Portugal,
+				Name:        "guimaraes",
+				Coordinates: "47.921271, 18.642998",
+			},
+			err: nil,
+		},
+		{
+			name: "when one castle has contacts while other have",
+			c1: Model{
+				Country: Portugal,
+				Name:    "guimaraes",
+				Contact: &Contact{
+					Phone: "8383883383",
+					Email: "nuno@portugal.pt",
+				},
+			},
+			c2: Model{
+				Country: Portugal,
+				Name:    "castelo de guimaraes",
+			},
+			resultCastle: Model{
+				Country: Portugal,
+				Name:    "guimaraes",
+				Contact: &Contact{
+					Phone: "8383883383",
+					Email: "nuno@portugal.pt",
+				},
+			},
+			err: nil,
+		},
+		{
+			name: "when one castle has contacts while other have (REVERSE)",
+			c1: Model{
+				Country: Portugal,
+				Name:    "castelo de guimaraes",
+			},
+			c2: Model{
+				Country: Portugal,
+				Name:    "guimaraes",
+				Contact: &Contact{
+					Phone: "8383883383",
+					Email: "nuno@portugal.pt",
+				},
+			},
+			resultCastle: Model{
+				Country: Portugal,
+				Name:    "guimaraes",
+				Contact: &Contact{
+					Phone: "8383883383",
+					Email: "nuno@portugal.pt",
+				},
+			},
+			err: nil,
+		},
+		{
+			name: "when both castles have contact the bigger data stays",
+			c1: Model{
+				Country: Portugal,
+				Name:    "castelo de guimaraes",
+				Contact: &Contact{
+					Phone: "1234567",
+					Email: "nuno@portugal.pt",
+				},
+			},
+			c2: Model{
+				Country: Portugal,
+				Name:    "guimaraes",
+				Contact: &Contact{
+					Phone: "12345",
+					Email: "nuno-manel@portugal.pt",
+				},
+			},
+			resultCastle: Model{
+				Country: Portugal,
+				Name:    "guimaraes",
+				Contact: &Contact{
+					Phone: "1234567",
+					Email: "nuno-manel@portugal.pt",
+				},
+			},
+			err: nil,
+		},
+		{
+			name: "when castles have different sources",
+			c1: Model{
+				Country: Portugal,
+				Name:    "castelo de guimaraes",
+				Sources: []string{"https://castle.pt"},
+			},
+			c2: Model{
+				Country: Portugal,
+				Name:    "guimaraes",
+				Sources: []string{"https://castelos.pt"},
+			},
+			resultCastle: Model{
+				Country: Portugal,
+				Name:    "guimaraes",
+				Sources: []string{"https://castle.pt", "https://castelos.pt"},
 			},
 			err: nil,
 		},

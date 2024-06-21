@@ -75,13 +75,13 @@ func TestCollectCastleNamesAndLinks(t *testing.T) {
 	}
 
 	expectedCastles := []castle.Model{
-		{Country: castle.Portugal, Name: "Abrantes", Link: "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/abrantes.html"},
-		{Country: castle.Portugal, Name: "Alpalhão", Link: "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/alpalhao.html"},
-		{Country: castle.Portugal, Name: "Atouguia da Baleia", Link: "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/atouguiaBaleia.html"},
-		{Country: castle.Portugal, Name: "Braga", Link: "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/braga.html"},
-		{Country: castle.Portugal, Name: "Bragança", Link: "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/braganca.html"},
-		{Country: castle.Portugal, Name: "Cabeço de Vide", Link: "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/cabecoVide.html"},
-		{Country: castle.Portugal, Name: "Castelo Rodrigo", Link: "https://www.castelosdeportugal.pt/CastelosSECXII/casteloRodrigo.html"},
+		{Country: castle.Portugal, Name: "Abrantes", CurrentEnrichmentLink: "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/abrantes.html"},
+		{Country: castle.Portugal, Name: "Alpalhão", CurrentEnrichmentLink: "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/alpalhao.html"},
+		{Country: castle.Portugal, Name: "Atouguia da Baleia", CurrentEnrichmentLink: "https://www.castelosdeportugal.pt/castelos/Castelos(pre)SECXII/atouguiaBaleia.html"},
+		{Country: castle.Portugal, Name: "Braga", CurrentEnrichmentLink: "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/braga.html"},
+		{Country: castle.Portugal, Name: "Bragança", CurrentEnrichmentLink: "https://www.castelosdeportugal.pt/castelos/CastelosSECXIII/braganca.html"},
+		{Country: castle.Portugal, Name: "Cabeço de Vide", CurrentEnrichmentLink: "https://www.castelosdeportugal.pt/castelos/CastelosSECXII/cabecoVide.html"},
+		{Country: castle.Portugal, Name: "Castelo Rodrigo", CurrentEnrichmentLink: "https://www.castelosdeportugal.pt/CastelosSECXII/casteloRodrigo.html"},
 	}
 
 	portugueseCollector := NewCastelosDePortugalEnricher(httpclient.New(), fakeHTMLFetcher)
@@ -108,15 +108,15 @@ func TestExtractPortugueseCastleInfo(t *testing.T) {
 	}
 
 	expectedCastle := castle.Model{
-		Name:              "porto",
-		Country:           castle.Portugal,
-		City:              "guimarães",
-		State:             "guimarães",
-		District:          "oliveira do castelo",
-		FoundationPeriod:  "(ant. a 958)",
-		Link:              "https://somelink.pt",
+		Name:             "porto",
+		Country:          castle.Portugal,
+		City:             "guimarães",
+		State:            "guimarães",
+		District:         "oliveira do castelo",
+		FoundationPeriod: "(ant. a 958)",
+		// Link:              "https://somelink.pt",
 		PropertyCondition: castle.Intact,
-		PictureLink:       "https://www.castelosdeportugal.pt/castelos/assets/img/Castelos(pre)SECXII/guimaraes/guimaraes1_small.jpg",
+		PictureURL:        "https://www.castelosdeportugal.pt/castelos/assets/img/Castelos(pre)SECXII/guimaraes/guimaraes1_small.jpg",
 	}
 
 	castelosDePortugalEnricher := NewCastelosDePortugalEnricher(httpclient.New(), htmlFetcher)
@@ -144,8 +144,8 @@ func TestExtractPortugueseCastleInfo(t *testing.T) {
 	if receivedCastle.PropertyCondition != expectedCastle.PropertyCondition {
 		t.Errorf("expected PropertyCondition to be [%s], got [%s]", expectedCastle.PropertyCondition, receivedCastle.PropertyCondition)
 	}
-	if receivedCastle.PictureLink != expectedCastle.PictureLink {
-		t.Errorf("expected PictureLink to be [%s], got [%s]", expectedCastle.PictureLink, receivedCastle.PictureLink)
+	if receivedCastle.PictureURL != expectedCastle.PictureURL {
+		t.Errorf("expected PictureURL to be [%s], got [%s]", expectedCastle.PictureURL, receivedCastle.PictureURL)
 	}
 }
 

@@ -9,9 +9,13 @@ var (
 	ErrCastlesShouldProbablyBeTheSameToReconcile = errors.New("castles to reconcile should be probably the same")
 )
 
+type Contact struct {
+	Phone string
+	Email string
+}
+
 type Model struct {
 	Name              string            `json:"name"`
-	Link              string            `json:"link"`
 	Sources           []string          `json:"sourcs"`
 	Country           Country           `json:"country"`
 	State             string            `json:"state"`
@@ -22,7 +26,10 @@ type Model struct {
 	Coordinates       string            `json:"coordinates"`
 	RawData           any               `json:"rawData"`
 	MatchingTags      []string          `json:"matchingTags"`
-	PictureLink       string            `json:"pictureLink"`
+	PictureURL        string            `json:"pictureLink"`
+	Contact           *Contact
+
+	CurrentEnrichmentLink string // current link being used on enrichment
 }
 
 func (m Model) FilteredName() string {
@@ -69,41 +76,101 @@ func (m Model) IsProbably(c Model) bool {
 
 	return true
 }
+
+// Idempotent reconciliation of castles
 func (m Model) ReconcileWith(c Model) (Model, error) {
 	if !m.IsProbably(c) {
 		return Model{}, ErrCastlesShouldProbablyBeTheSameToReconcile
 	}
-
 	newCastle := m.Copy()
 
 	if newCastle.Name != c.Name {
-		// always select the smaller name
-		if len(newCastle.Name) > len(c.Name) {
+		if len(newCastle.Name) > len(c.Name) { // always select the smaller name
 			newCastle.Name = c.Name
 		}
 	}
 
 	if newCastle.State == "" {
 		newCastle.State = c.State
-	}
-
-	if len(newCastle.State) > len(c.State) {
-		newCastle.State = c.State
+	} else {
+		if len(newCastle.State) < len(c.State) {
+			newCastle.State = c.State
+		}
 	}
 
 	if newCastle.City == "" {
 		newCastle.City = c.City
+	} else {
+		if len(newCastle.City) < len(c.City) {
+			newCastle.City = c.City
+		}
 	}
 
 	if newCastle.District == "" {
 		newCastle.District = c.District
+	} else {
+		if len(newCastle.District) < len(c.District) {
+			newCastle.District = c.District
+		}
 	}
 
 	if newCastle.FoundationPeriod == "" {
 		newCastle.FoundationPeriod = c.FoundationPeriod
+	} else {
+		if len(newCastle.FoundationPeriod) < len(c.FoundationPeriod) {
+			newCastle.FoundationPeriod = c.FoundationPeriod
+		}
 	}
 
-	// TODO handle property condition, lat and long...
+	if newCastle.Coordinates == "" {
+		newCastle.Coordinates = c.Coordinates
+	} else {
+		if len(newCastle.Coordinates) < len(c.Coordinates) {
+			newCastle.Coordinates = c.Coordinates
+		}
+	}
+
+	if newCastle.Contact == nil {
+		if c.Contact != nil {
+			newCastle.Contact = c.Contact
+		}
+	} else {
+		if c.Contact != nil {
+			if len(c.Contact.Phone) > len(newCastle.Contact.Phone) {
+				newCastle.Contact.Phone = c.Contact.Phone
+			}
+			if len(c.Contact.Email) > len(newCastle.Contact.Email) {
+				newCastle.Contact.Email = c.Contact.Email
+			}
+		}
+	}
+
+	if newCastle.PropertyCondition == Unknown {
+		if m.PropertyCondition != Unknown {
+			newCastle.PropertyCondition = m.PropertyCondition
+		}
+	} else {
+		if newCastle.PropertyCondition.ComparisonWeight() < m.PropertyCondition.ComparisonWeight() {
+			newCastle.PropertyCondition = m.PropertyCondition
+		}
+	}
+
+	var newSources []string
+	sourceSet := make(map[string]bool)
+	for _, source := range newCastle.Sources {
+		if !sourceSet[source] {
+			newSources = append(newSources, source)
+			sourceSet[source] = true
+		}
+	}
+	for _, source := range c.Sources {
+		if !sourceSet[source] {
+			newSources = append(newSources, source)
+			sourceSet[source] = true
+		}
+	}
+
+	newCastle.Sources = newSources
 
 	return newCastle, nil
 }
@@ -148,28 +215,31 @@ func (m Model) GetMatchingTags() []string {
 
 func (m Model) Copy() Model {
 	var sourcesCopy []string
-	if len(m.Sources) >= 0 {
+	if len(m.Sources) > 0 {
+		sourcesCopy = make([]string, len(m.Sources))
 		copy(sourcesCopy, m.Sources)
 	}
 
 	var matchingTagsCopy []string
 	if len(m.MatchingTags) > 0 {
+		matchingTagsCopy = make([]string, len(m.MatchingTags))
 		copy(matchingTagsCopy, m.MatchingTags)
 	}
 
 	return Model{
-		Country:           m.Country,
-		Name:              m.Name,
-		Link:              m.Link,
-		Sources:           sourcesCopy,
-		State:             m.State,
-		City:              m.City,
-		District:          m.District,
-		FoundationPeriod:  m.FoundationPeriod,
-		PropertyCondition: m.PropertyCondition,
-		Coordinates:       m.Coordinates,
-		RawData:           m.RawData,
-		MatchingTags:      matchingTagsCopy,
-		PictureLink:       m.PictureLink,
+		Country:               m.Country,
+		Name:                  m.Name,
+		CurrentEnrichmentLink: m.CurrentEnrichmentLink,
+		Sources:               sourcesCopy,
+		State:                 m.State,
+		City:                  m.City,
+		District:              m.District,
+		FoundationPeriod:      m.FoundationPeriod,
+		PropertyCondition:     m.PropertyCondition,
+		Coordinates:           m.Coordinates,
+		RawData:               m.RawData,
+		MatchingTags:          matchingTagsCopy,
+		PictureURL:            m.PictureURL,
+		Contact:               m.Contact,
 	}
 }

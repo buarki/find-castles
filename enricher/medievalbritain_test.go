@@ -52,7 +52,7 @@ func TestExtractBritishCastleInfo(t *testing.T) {
 		Country:     castle.UK,
 		City:        "windsor sl4 1nj",
 		State:       "berkshire, greaterlondon",
-		PictureLink: "https://medievalbritain.com/wp-content/uploads/2021/05/medieval-castles-england_windsor.jpg",
+		PictureURL:  "https://medievalbritain.com/wp-content/uploads/2021/05/medieval-castles-england_windsor.jpg",
 		Coordinates: "51°29'0\"N,00°36'15\"W",
 	}
 
@@ -69,8 +69,8 @@ func TestExtractBritishCastleInfo(t *testing.T) {
 	if receivedCastle.State != expectedCastle.State {
 		t.Errorf("expected State to be [%s], got [%s]", expectedCastle.State, receivedCastle.State)
 	}
-	if receivedCastle.PictureLink != expectedCastle.PictureLink {
-		t.Errorf("expected PictureLink to be [%s], got [%s]", expectedCastle.PictureLink, receivedCastle.PictureLink)
+	if receivedCastle.PictureURL != expectedCastle.PictureURL {
+		t.Errorf("expected PictureURL to be [%s], got [%s]", expectedCastle.PictureURL, receivedCastle.PictureURL)
 	}
 	if receivedCastle.Coordinates != expectedCastle.Coordinates {
 		t.Errorf("expected Coordinates to be [%s], got [%s]", expectedCastle.Coordinates, receivedCastle.Coordinates)
@@ -141,6 +141,64 @@ func TestCollectingLocalizationCoordinatesOfMedievalBritain(t *testing.T) {
 
 			if receivedCoordinates != currentTT.expectedCoordinates {
 				t.Errorf("expected to find [%s], got [%s]", currentTT.expectedCoordinates, receivedCoordinates)
+			}
+		})
+	}
+}
+
+func TestExtractContactOfMedievalBritain(t *testing.T) {
+	testCases := []struct {
+		name            string
+		htmlChunk       []byte
+		expectedContact *castle.Contact
+	}{
+		{
+			name: "schema with number between p",
+			htmlChunk: []byte(`
+			<div class="elementor-text-editor elementor-clearfix">
+				<p><span class="w8qArf"><strong>Phone</strong></span>
+				</p>
+				<p>+44 (0)303 123 7304</p>
+			</div>
+			`),
+			expectedContact: &castle.Contact{
+				Phone: "+44 (0)303 123 7304",
+			},
+		},
+		// {
+		// 	name: "schema with number between p",
+		// 	htmlChunk: []byte(`
+		// 	<div class="elementor-text-editor elementor-clearfix">
+		// 		<p><span class="w8qArf"><strong>Phone</strong></span></p>
+		// 		<div class="Z0LcW">
+		// 			<span data-dtype="d3ifr" data-local-attribute="d3ph">0370 333 1181</span>
+		// 		</div>
+		// 		</div>
+		// 		</div>
+		// 	`),
+		// 	expectedContact: &castle.Contact{
+		// 		Phone: "0370 333 1181",
+		// 	},
+		// },
+	}
+	e := medievalbritainEnricher{}
+
+	for _, tt := range testCases {
+		currentTT := tt
+		t.Run(currentTT.name, func(t *testing.T) {
+			doc, err := goquery.NewDocumentFromReader(bytes.NewReader(currentTT.htmlChunk))
+			if err != nil {
+				t.Errorf("expected to have err nil, got [%v]", err)
+			}
+
+			collectedContact := e.collectContactInfo(doc)
+
+			if collectedContact == nil {
+				t.Errorf("expected contact to not be null")
+			}
+
+			if collectedContact != nil && collectedContact.Phone != currentTT.expectedContact.Phone {
+				t.Errorf("expected Phone to be [%s], got [%s]", currentTT.expectedContact.Phone, collectedContact.Email)
 			}
 		})
 	}
