@@ -120,6 +120,7 @@ func (ie *heritageirelandEnricher) extractCastleInfo(c castle.Model, castlePage 
 		PictureURL:            ie.collectImage(doc),
 		Contact:               ie.collectContactInfo(doc),
 		Sources:               []string{c.CurrentEnrichmentLink},
+		VisitingInfo:          ie.collectVisitingInfo(doc),
 	}, nil
 }
 
@@ -174,4 +175,44 @@ func (ie *heritageirelandEnricher) collectContactInfo(doc *goquery.Document) *ca
 		}
 	}
 	return nil
+}
+
+func (ie *heritageirelandEnricher) collectVisitingInfo(doc *goquery.Document) *castle.VisitingInfo {
+	return &castle.VisitingInfo{
+		WorkingHours: ie.collectHorkingHours(doc),
+		Facilities: &castle.Facilities{
+			AssistanceDogsAllowed: doc.Find(".fa-dog").Length() > 0,
+			Giftshops:             doc.Find(".fa-shopping-bag").Length() > 0,
+			WheelchairSupport:     doc.Find(".fa-wheelchair").Length() > 0,
+			Restrooms:             doc.Find(".fa-toilet").Length() > 0,
+			PinicArea:             doc.Find(".fa-tree").Length() > 0,
+			Exhibitions:           doc.Find(".fa-vector-square").Length() > 0,
+			Cafe:                  doc.Find(".fa-coffee").Length() > 0,
+			Parking:               doc.Find(".fa-car-alt").Length() > 0,
+		},
+	}
+}
+
+// we can use id place--opening
+func (ie heritageirelandEnricher) collectHorkingHours(doc *goquery.Document) string {
+	replacer := strings.NewReplacer(
+		`–`, "-",
+	)
+	var dateRange, timeRange string
+	doc.Find("section#place--opening").Each(func(i int, s *goquery.Selection) {
+		dateRange = strings.TrimSpace(s.Find("p strong").Text())
+		timeRange = strings.TrimSpace(s.Find("p").Next().Text())
+	})
+	if dateRange != "" && timeRange != "" {
+		return replacer.Replace(fmt.Sprintf("%s - %s", dateRange, timeRange))
+	}
+
+	//in case of a accordion used
+	var openingDates string
+
+	doc.Find("section#place--opening").Each(func(i int, s *goquery.Selection) {
+		openingDates = strings.TrimSpace(s.Find("div p").First().Text())
+	})
+
+	return openingDates
 }
