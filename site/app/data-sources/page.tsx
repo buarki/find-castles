@@ -1,13 +1,9 @@
 import { Country, countries } from "@find-castles/lib/country";
+import { MetadataProps } from "@find-castles/lib/metadata-props";
 import { Box, Container, List, ListItem, Typography, Divider, Link } from "@mui/material";
 import { Metadata, ResolvingMetadata } from "next";
 
 const siteHost = process.env.SITE_HOST;
-
-type Props = {
-  params: { id: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
 
 const trackedCountries = countries.filter((country: Country) => country.trackingStatus === 'tracked');
 const untrackedCountries = countries.filter((country: Country) => country.trackingStatus !== 'tracked');
@@ -15,7 +11,7 @@ const trackedCountriesPercentage = (trackedCountries.length / countries.length) 
 const text = `So far we have tracked ${trackedCountriesPercentage.toFixed(2)}% of European countries. The full list is available below.`;
 
 export async function generateMetadata(
-  { params, searchParams }: Props,
+  { params, searchParams }: MetadataProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   return {

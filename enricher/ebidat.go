@@ -99,6 +99,10 @@ func (se *ebidatEnricher) collectCastleNameAndLinks(htmlContent []byte) ([]castl
 			href = ebidatHost + href
 		}
 
+		if !strings.Contains(href, "https://") {
+			href = "https://" + href
+		}
+
 		data := se.extractDistrictCityAndState(s.Text())
 		castle := castle.Model{
 			Name:                  name,
@@ -267,14 +271,13 @@ func (se *ebidatEnricher) getNonce(htmlContent []byte, formName string) (bool, s
 }
 
 func (se *ebidatEnricher) EnrichCastle(ctx context.Context, c castle.Model) (castle.Model, error) {
-	dataPageLink := fmt.Sprintf("https://%s&m=h", c.CurrentEnrichmentLink)
-	dataHTML, err := se.fetchHTML(ctx, dataPageLink, se.httpClient)
+	dataHTML, err := se.fetchHTML(ctx, c.CurrentEnrichmentLink, se.httpClient)
 	if err != nil {
 		return castle.Model{}, err
 	}
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(dataHTML))
 	if err != nil {
-		return castle.Model{}, fmt.Errorf("error loading HTML from [%s]: %v", dataPageLink, err)
+		return castle.Model{}, fmt.Errorf("error loading HTML from [%s]: %v", c.CurrentEnrichmentLink, err)
 	}
 
 	c1 := &c
@@ -321,7 +324,11 @@ func (se ebidatEnricher) collectImage(doc *goquery.Document) string {
 		imageSrc, _ = s.Attr("src")
 		return false
 	})
-	return fmt.Sprintf("%s%s", ebidatHost, strings.ReplaceAll(imageSrc, "..", ""))
+	collectedImageLink := fmt.Sprintf("%s%s", ebidatHost, strings.ReplaceAll(imageSrc, "..", ""))
+	if !strings.Contains(collectedImageLink, "https://") {
+		return fmt.Sprintf("https://%s", collectedImageLink)
+	}
+	return collectedImageLink
 }
 
 func (se ebidatEnricher) collectCoordinates(doc *goquery.Document) string {

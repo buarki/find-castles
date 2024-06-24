@@ -1,6 +1,7 @@
 "use client";
 
 import { Country } from "@find-castles/lib/country";
+import { encodeCountryCastleListURL } from "@find-castles/lib/encode-decore-url";
 import { toTitleCase } from "@find-castles/lib/to-title-case";
 import { FormControl, InputLabel, Link, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import React from "react";
@@ -17,7 +18,7 @@ export function CountrySelector({ countries }: CountrySelectorProps) {
   };
 
   return (
-    <FormControl
+   <FormControl
       fullWidth
       sx={{
         display: 'flex',
@@ -39,7 +40,7 @@ export function CountrySelector({ countries }: CountrySelectorProps) {
         }
       </Select>
       <Link
-        href={`/${country.name}`}
+        href={`/castles/?country=${country.code}`}
         textAlign='center'
         sx={{
           bgcolor: 'primary.main',
@@ -51,4 +52,4 @@ export function CountrySelector({ countries }: CountrySelectorProps) {
       </Link>
     </FormControl>
   );
-}
+} 

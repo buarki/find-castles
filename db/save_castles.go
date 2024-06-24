@@ -71,7 +71,19 @@ func prepareObjectToSave(c castle.Model) bson.M {
 		}
 	}
 	if c.VisitingInfo != nil {
-		object["visitingInfo"] = c.VisitingInfo
+		object["visitingInfo"] = bson.M{
+			"workingHours": c.VisitingInfo.WorkingHours,
+			"facilities": bson.M{
+				"assistanceDogsAllowed": c.VisitingInfo.Facilities.AssistanceDogsAllowed,
+				"cafe":                  c.VisitingInfo.Facilities.Cafe,
+				"restrooms":             c.VisitingInfo.Facilities.Restrooms,
+				"giftshops":             c.VisitingInfo.Facilities.Giftshops,
+				"pinicArea":             c.VisitingInfo.Facilities.PinicArea,
+				"parking":               c.VisitingInfo.Facilities.Parking,
+				"exhibitions":           c.VisitingInfo.Facilities.Exhibitions,
+				"wheelchairSupport":     c.VisitingInfo.Facilities.WheelchairSupport,
+			},
+		}
 	}
 	return object
 }
