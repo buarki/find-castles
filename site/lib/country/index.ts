@@ -1,4 +1,4 @@
-export type CountryCode = 'at' | 'be' | 'bg' | 'hr' | 'cy' | 'cz' | 'dk' | 'ee' | 'fi' | 'fr' | 'de' | 'gr' | 'hu' | 'ie' | 'it' | 'lv' | 'lt' | 'lu' | 'mt' |'nl' | 'pl' | 'pt' | 'ro' | 'sk' | 'si' | 'es' | 'se' | 'gb'; 
+export type CountryCode = 'at' | 'be' | 'bg' | 'hr' | 'cy' | 'cz' | 'dk' | 'ee' | 'fi' | 'fr' | 'de' | 'gr' | 'hu' | 'ie' | 'it' | 'lv' | 'lt' | 'lu' | 'mt' |'nl' | 'pl' | 'pt' | 'ro' | 'sk' | 'si' | 'es' | 'se' | 'uk';
 
 export type TrackingStatus = 'tracked' | 'not-tracked';
 
@@ -37,5 +37,5 @@ export const countries = [
   { name: "Slovenia", trackingStatus: 'not-tracked', code: "si" },
   { name: "Spain", trackingStatus: 'not-tracked', code: "es" },
   { name: "Sweden", trackingStatus: 'not-tracked', code: "se" },
-  { name: "United Kingdom", trackingStatus: 'tracked', code: "gb" },
+  { name: "United Kingdom", trackingStatus: 'tracked', code: "uk" },
 ] as Country[];

@@ -670,7 +670,7 @@ func TestExtractPictureOfEBITAD(t *testing.T) {
 					</article>
 		`,
 	)
-	expectedImageLink := `www.ebidat.de/r30/vc_content/bilder/firma451/msvc_intern/925_18_20070926122153.jpg`
+	expectedImageLink := `https://www.ebidat.de/r30/vc_content/bilder/firma451/msvc_intern/925_18_20070926122153.jpg`
 	e := ebidatEnricher{}
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(content))
 	if err != nil {

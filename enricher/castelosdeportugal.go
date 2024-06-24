@@ -149,6 +149,7 @@ func (p *castelosDePortugalEnricher) extractCastleInfo(c castle.Model, rawHTMLPa
 		FoundationPeriod:      tableData["Construção"],
 		PropertyCondition:     p.parseCondition(tableData["Conservação"]),
 		PictureURL:            p.collectImage(doc),
+		Sources:               c.Sources,
 	}, nil
 }
 

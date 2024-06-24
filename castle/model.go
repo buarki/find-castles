@@ -15,19 +15,19 @@ type Contact struct {
 }
 
 type Facilities struct {
-	AssistanceDogsAllowed bool
-	Cafe                  bool
-	Restrooms             bool
-	Giftshops             bool
-	PinicArea             bool
-	Parking               bool
-	Exhibitions           bool
-	WheelchairSupport     bool
+	AssistanceDogsAllowed bool `json:"assistanceDogsAllowed"`
+	Cafe                  bool `json:"cafe"`
+	Restrooms             bool `json:"restrooms"`
+	Giftshops             bool `json:"giftshops"`
+	PinicArea             bool `json:"pinicArea"`
+	Parking               bool `json:"parking"`
+	Exhibitions           bool `json:"exhibitions"`
+	WheelchairSupport     bool `json:"wheelchairSupport"`
 }
 
 type VisitingInfo struct {
-	WorkingHours string
-	Facilities   *Facilities
+	WorkingHours string      `json:"workingHours"`
+	Facilities   *Facilities `json:"facilities"`
 }
 
 func (vi *VisitingInfo) Copy() *VisitingInfo {
@@ -57,7 +57,7 @@ type Model struct {
 	MatchingTags      []string          `json:"matchingTags"`
 	PictureURL        string            `json:"pictureLink"`
 	Contact           *Contact
-	VisitingInfo      *VisitingInfo
+	VisitingInfo      *VisitingInfo `json:"visitingInfo"`
 
 	CurrentEnrichmentLink string // current link being used on enrichment
 }
@@ -221,6 +221,10 @@ func (m Model) ReconcileWith(c Model) (Model, error) {
 			newCastle.VisitingInfo.Facilities.Restrooms = newCastle.VisitingInfo.Facilities.Restrooms && c.VisitingInfo.Facilities.Restrooms
 			newCastle.VisitingInfo.Facilities.WheelchairSupport = newCastle.VisitingInfo.Facilities.WheelchairSupport && c.VisitingInfo.Facilities.WheelchairSupport
 		}
+	}
+
+	if len(newCastle.PictureURL) < len(c.PictureURL) {
+		newCastle.PictureURL = c.PictureURL
 	}
 
 	return newCastle, nil

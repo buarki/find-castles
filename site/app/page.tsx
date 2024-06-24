@@ -1,5 +1,5 @@
 import { CountrySelector } from "@find-castles/components/country-selector/country-selector.component";
-import { Country } from "@find-castles/lib/country";
+import { Country, countries } from "@find-castles/lib/country";
 import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 import { Metadata } from "next";
 
@@ -8,20 +8,7 @@ export const metadata: Metadata = {
   description: "find castles",
 };
 
-const countries = [
-  {
-    code: 'pt',
-    name: 'portugal',
-  },
-  {
-    code: 'uk',
-    name: 'united kingdom',
-  },
-  {
-    code: 'ir',
-    name: 'ireland',
-  },
-] as Country[];
+const trackedCountries = countries.filter((country: Country) => country.trackingStatus === 'tracked');
 
 export default function Home() {
   return (
@@ -54,7 +41,7 @@ export default function Home() {
             <Typography variant="h1" color='primary.main'>Choose A Country</Typography>
             <Typography>Embark on a journey with Castle Explorer and uncover the secrets of these timeless treasures. Select the country to see the castles and start your adventure today!</Typography>
             
-            <CountrySelector countries={countries}/>
+            <CountrySelector countries={trackedCountries}/>
           </Box>
         </Container>
       </Box>
@@ -78,7 +65,7 @@ export default function Home() {
             <Typography variant="h1" color='primary.main'>Choose A Country</Typography>
             <Typography>Embark on a journey with Castle Explorer and uncover the secrets of these timeless treasures. Select the country to see the castles and start your adventure today!</Typography>
             
-            <CountrySelector countries={countries}/>
+            <CountrySelector countries={trackedCountries}/>
           </Box>
         </Container>
       </Box>
