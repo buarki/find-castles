@@ -261,6 +261,7 @@ func (be *medievalbritainEnricher) extractDataOfUKCastle(rawHTML []byte, c castl
 		Contact:               be.collectContactInfo(doc),
 		Sources:               []string{c.CurrentEnrichmentLink},
 		VisitingInfo:          be.collectVisitingInfo(doc),
+		PropertyCondition:     castle.Unknown,
 	}, nil
 }
 

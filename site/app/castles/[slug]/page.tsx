@@ -116,6 +116,7 @@ export default async function CastlePage({ params }: CastlePageProps) {
     sources,
     coordinates,
     country,
+    propertyCondition,
   } = foundCastle;
 
   return (
@@ -197,6 +198,13 @@ export default async function CastlePage({ params }: CastlePageProps) {
                 <Typography align="center">
                   {visitingInfo?.workingHours ?? ''}
                 </Typography>
+              </Box>
+            )}
+
+            {propertyCondition && (
+              <Box sx={{ mt: 3 }}>
+                <Typography variant="h6" align="center" gutterBottom>Property Status</Typography>
+                <Typography align="center">{propertyCondition}</Typography>
               </Box>
             )}
           </CardContent>
