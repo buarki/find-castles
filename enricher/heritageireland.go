@@ -121,6 +121,7 @@ func (ie *heritageirelandEnricher) extractCastleInfo(c castle.Model, castlePage 
 		Contact:               ie.collectContactInfo(doc),
 		Sources:               []string{c.CurrentEnrichmentLink},
 		VisitingInfo:          ie.collectVisitingInfo(doc),
+		PropertyCondition:     castle.Unknown,
 	}, nil
 }
 

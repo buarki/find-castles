@@ -34,4 +34,5 @@ export interface Castle {
   district?: string;
   visitingInfo?: VisitingInfo;
   webName: string;
+  propertyCondition: string;
 }
