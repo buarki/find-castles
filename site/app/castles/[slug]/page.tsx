@@ -47,14 +47,14 @@ export async function generateMetadata(
       description: `Discover ${foundCastle.name} castle on Find Castles`,
       url: `${siteHost}/${foundCastle.webName}`,
       type: "website",
-      // images: [
-      //   {
-      //     url: foundCastle.pictureURL,
-      //     width: 1200,
-      //     height: 630,
-      //     alt: "Find Castles",
-      //   },
-      // ],
+      images: [
+        {
+          url: `${siteHost}/castles/${foundCastle.webName}/opengraph-image?${Date.now()}`,
+          // width: 1200,
+          // height: 630,
+          // alt: "Find Castles",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
