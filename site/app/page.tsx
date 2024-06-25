@@ -1,11 +1,47 @@
 import { CountrySelector } from "@find-castles/components/country-selector/country-selector.component";
 import { Country, countries } from "@find-castles/lib/country";
-import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
-import { Metadata } from "next";
+import { MetadataProps } from "@find-castles/lib/metadata-props";
+import { Box, Container, Typography } from "@mui/material";
+import { Metadata, ResolvingMetadata } from "next";
 
-export const metadata: Metadata = {
-  title: "find castles",
-  description: "find castles",
+const siteHost = process.env.SITE_HOST;
+
+export async function generateMetadata(
+  { params, searchParams }: MetadataProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  return {
+    title: "Find Castles",
+    description: "Explore the tracked and untracked European countries for castle data. Help us expand our data sources by contributing to the project.",
+    keywords: ["castles", "heritage", "european castles", "data sources", "historical castles", "tracked countries", "untracked countries"],
+    applicationName: 'Find Castles',
+    robots: { index: true, follow: true },
+    authors: {
+      name: 'Aurelio Buarque',
+      url: 'https://buarki.com'
+    },
+    openGraph: {
+      title: "Find Castles",
+      description: "Explore the tracked and untracked European countries for castle data. Help us expand our data sources by contributing to the project.",
+      url: `${siteHost}`,
+      type: "website",
+      images: [
+        {
+          url: `${siteHost}/og.png`,
+          width: 1200,
+          height: 630,
+          alt: "Find Castles",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@buarki",
+      title: "Find Castles",
+      description: "Explore the tracked and untracked European countries for castle data. Help us expand our data sources by contributing to the project.",
+      images: `${siteHost}/og.png`,
+    }
+  };
 };
 
 const trackedCountries = countries.filter((country: Country) => country.trackingStatus === 'tracked');
