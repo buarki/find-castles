@@ -8,7 +8,6 @@ import axios from "axios";
 import { CastleCard } from "./castle-card.component";
 import { Castle } from "@find-castles/lib/db/model";
 import Link from "next/link";
-import { encodeCastleURL } from "@find-castles/lib/encode-decore-url";
 
 export type ClientSideCastlesListerProps = {
   countries: Country[];
@@ -85,7 +84,7 @@ export function ClientSideCastlesLister({ countries, currentCountry }: ClientSid
           >
           {castles.map((castle) => (
             <Grid item key={castle._id} xs={12} sm={6} md={4}>
-              <Link href={`/castles/${encodeCastleURL(castle.name, castle.country)}`}>
+              <Link href={`/castles/${castle.webName}`}>
                 <CastleCard castle={castle} />
               </Link>
             </Grid>

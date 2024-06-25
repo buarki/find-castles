@@ -42,10 +42,20 @@ func AddIndexes(ctx context.Context, collection *mongo.Collection) error {
 		},
 	}
 
+	webNameIndex := mongo.IndexModel{
+		Keys: bson.D{
+			{Key: "webName", Value: 1},
+		},
+		Options: &options.IndexOptions{
+			Unique: &isFalse,
+		},
+	}
+
 	indexes := []mongo.IndexModel{
 		nameAndCountry,
 		matchingTags,
 		countryIndex,
+		webNameIndex,
 	}
 
 	name, err := collection.Indexes().CreateMany(ctx, indexes)
