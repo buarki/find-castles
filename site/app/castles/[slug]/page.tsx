@@ -32,7 +32,7 @@ export async function generateMetadata(
   }
 
   return {
-    metadataBase: new URL(siteHost),
+    metadataBase: new URL('https://find-castles.vercel.app'),
     title: toTitleCase(foundCastle.name),
     description: `Discover ${foundCastle.name} castle on Find Castles`,
     keywords: [foundCastle.name, foundCastle.country, "castles", "heritage", "european castles", "data sources", "historical castles", "tracked countries", "untracked countries"],
