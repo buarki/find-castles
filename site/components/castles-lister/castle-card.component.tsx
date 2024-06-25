@@ -39,7 +39,6 @@ export function CastleCard({ castle }:CastleCardProps) {
         >
           <Typography variant="h6">{toTitleCase(name)}</Typography>
           <Typography variant="body2">{toTitleCase(city)}</Typography>
-          <Typography variant="body2">{visitingInfo ? visitingInfo.workingHours : ''}</Typography>
         </CardContent>
       </Box>
     </Card>
