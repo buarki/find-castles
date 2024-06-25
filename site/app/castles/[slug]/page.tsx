@@ -49,10 +49,10 @@ export async function generateMetadata(
       type: "website",
       images: [
         {
-          url: `${siteHost}/castles/${foundCastle.webName}/opengraph-image?${Date.now()}`,
-          // width: 1200,
-          // height: 630,
-          // alt: "Find Castles",
+          url: foundCastle.pictureURL,
+          width: 1200,
+          height: 630,
+          alt: "Find Castles",
         },
       ],
     },
@@ -61,7 +61,7 @@ export async function generateMetadata(
       site: "@buarki",
       title: toTitleCase(foundCastle.name),
       description: `Discover ${foundCastle.name} castle on Find Castles`,
-      // images: foundCastle.pictureURL,
+      images: foundCastle.pictureURL,
     }
   };
 };
