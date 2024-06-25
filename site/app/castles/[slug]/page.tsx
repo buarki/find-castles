@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, CardMedia, Container, Grid, IconButton, Link, Tooltip, Typography } from "@mui/material";
+import { Box, Card, CardContent, CardMedia, Container, Grid, IconButton, Link, Tooltip, Typography, List, ListItem, ListItemText, ListItemIcon } from "@mui/material";
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import PetsIcon from '@mui/icons-material/Pets';
@@ -9,13 +9,13 @@ import PicnicIcon from '@mui/icons-material/Deck';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import MuseumIcon from '@mui/icons-material/Museum';
 import AccessibleIcon from '@mui/icons-material/Accessible';
+import InfoIcon from '@mui/icons-material/Info';
 import { MetadataProps } from "@find-castles/lib/metadata-props";
 import { ResolvingMetadata, Metadata } from "next";
-import { getCastle } from "@find-castles/lib/db/getCastle";
-import { CountryCode } from "@find-castles/lib/country";
-import { decodeCastleURL } from "@find-castles/lib/encode-decore-url";
 import { toTitleCase } from "@find-castles/lib/to-title-case";
-import { Castle } from "@find-castles/lib/db/model";
+import { getCastles } from "@find-castles/lib/db/get-castles";
+import { getCastle } from "@find-castles/lib/db/get-castle";
+import { notFound } from "next/navigation";
 
 export const dynamicParams = true;
 
@@ -25,6 +25,12 @@ export async function generateMetadata(
   { params, searchParams }: MetadataProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const castleWebName = params.slug;
+  const foundCastle = await getCastle(castleWebName);
+  if (!foundCastle) {
+    notFound();
+  }
+
   return {
     title: "Castles - Find Castles",
     description: "Explore the tracked and untracked European countries for castle data. Help us expand our data sources by contributing to the project.",
@@ -87,12 +93,17 @@ type CastlePageProps = {
   },
 };
 
-export default async function CastlePage({ params }: CastlePageProps) {
-  const { countryCode, castleName } = decodeCastleURL(params.slug);
+export async function generateStaticParams() {
+  return (await getCastles({contryCodes: ['ie', 'pt', 'uk', 'sk']}))
+          .map((foundCastle) => ({ slug: foundCastle.webName, }));
+}
 
-  const foundCastle = await getCastle({ name: castleName, country: countryCode as CountryCode });
-  console.log({ foundCastle });
-  console.log({ wh: JSON.stringify(foundCastle.visitingInfo) });
+export default async function CastlePage({ params }: CastlePageProps) {
+  const webName = params.slug;
+  const foundCastle = await getCastle(webName);
+  if (!foundCastle) {
+    notFound();
+  }
 
   const {
     name,
@@ -104,11 +115,12 @@ export default async function CastlePage({ params }: CastlePageProps) {
     visitingInfo,
     sources,
     coordinates,
+    country,
   } = foundCastle;
 
   return (
     <Container>
-      <Box sx={{ my: 3, }}>
+      <Box sx={{ my: 3 }}>
         <Typography variant="h4" align="center" gutterBottom>
           {toTitleCase(name)} Castle
         </Typography>
@@ -118,7 +130,7 @@ export default async function CastlePage({ params }: CastlePageProps) {
             component="img"
             height="400"
             image={pictureURL}
-            alt={castleName}
+            alt={name}
           />
           <CardContent>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -131,7 +143,7 @@ export default async function CastlePage({ params }: CastlePageProps) {
                   ) : <Typography>{district}, {city}, {state}</Typography>
                 }
               </Typography>
-              <Typography>{countryCode}</Typography>
+              <Typography>{country}</Typography>
             </Box>
 
             <Typography variant="h6" align="center" gutterBottom>
@@ -157,44 +169,60 @@ export default async function CastlePage({ params }: CastlePageProps) {
               }
             </Grid>
 
-            <Box mt={2} display="flex" justifyContent="center">
-              {contact?.phone && (
-                <IconButton href={`tel:${contact.phone}`} aria-label="Phone">
-                  <PhoneIcon />
-                </IconButton>
-              )}
-              {contact?.email && (
-                <IconButton href={`mailto:${contact.email}`} aria-label="Email">
-                  <EmailIcon />
-                </IconButton>
-              )}
+            <Box mt={3}>
+              <Typography variant="h6" align="center" gutterBottom>
+                Contact
+              </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+                {contact?.phone ? (
+                  <IconButton href={`tel:${contact.phone}`} aria-label="Phone">
+                    <Tooltip title="Phone" arrow>
+                      <PhoneIcon />
+                    </Tooltip>
+                  </IconButton>
+                ) : <Typography>No Phone Info</Typography>}
+                {contact?.email ? (
+                  <IconButton href={`mailto:${contact.email}`} aria-label="Email">
+                    <Tooltip title="Email" arrow>
+                      <EmailIcon />
+                    </Tooltip>
+                  </IconButton>
+                ) : <Typography>No Email Info</Typography>}
+              </Box>
             </Box>
-          </CardContent>
-          {
-            visitingInfo?.workingHours && (
+
+            {visitingInfo?.workingHours && (
               <Box sx={{ mt: 3 }}>
                 <Typography variant="h6" align="center" gutterBottom>Working Hours</Typography>
-                <Typography align="center" >
+                <Typography align="center">
                   {visitingInfo?.workingHours ?? ''}
                 </Typography>
               </Box>
-            )
-          }
+            )}
+          </CardContent>
         </Card>
 
-
         <Box sx={{ mt: 3 }}>
-          <Typography variant="h4">Sources Of Information</Typography>
-          <Typography>You may want to visit the following links to get more detailed data.</Typography>
-          <ul>
-            {
-              sources.map((source: string, index: number) => (
-                <li key={index}>
-                  <a target="_blank" rel="noopener noreferrer" href={source}>{source}</a>
-                </li>
-              ))
-            }
-          </ul>
+          <Typography variant="h5" gutterBottom>Sources Of Information</Typography>
+          <Typography gutterBottom>You may want to visit the following links to get more detailed data.</Typography>
+          {sources && sources.length > 0 ? (
+            <List>
+              {sources.map((source: string, index: number) => (
+                <ListItem key={index} disableGutters>
+                  <ListItemIcon>
+                    <InfoIcon />
+                  </ListItemIcon>
+                  <ListItemText>
+                    <Link target="_blank" rel="noopener noreferrer" href={source}>
+                      {source}
+                    </Link>
+                  </ListItemText>
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <Typography>No Sources Available</Typography>
+          )}
         </Box>
       </Box>
     </Container>

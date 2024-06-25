@@ -2,7 +2,11 @@ package castle
 
 import (
 	"errors"
+	"fmt"
+	"regexp"
 	"strings"
+
+	"github.com/buarki/find-castles/toascii"
 )
 
 var (
@@ -68,6 +72,18 @@ func (m Model) FilteredName() string {
 		cleanedName = strings.ReplaceAll(cleanedName, keyword, "")
 	}
 	return cleanedName
+}
+
+func (m Model) WebName() (string, error) {
+	asciiStr, err := toascii.From(m.Name)
+	if err != nil {
+		return "", err
+	}
+	re := regexp.MustCompile(`[^\w]+`)
+	webName := re.ReplaceAllString(asciiStr, "-")
+	webName = strings.ToLower(webName)
+	webName = fmt.Sprintf("%s-%s", webName, m.Country)
+	return webName, nil
 }
 
 // Future plan: power it with AI

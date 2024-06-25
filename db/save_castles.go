@@ -19,8 +19,12 @@ func SaveCastles(ctx context.Context, collection *mongo.Collection, castles []ca
 			"country": strings.ToLower(c.Country.String()),
 			"name":    strings.ToLower(c.FilteredName()),
 		}
+		obj, err := prepareObjectToSave(c)
+		if err != nil {
+			return err
+		}
 		update := bson.M{
-			"$set": prepareObjectToSave(c),
+			"$set": obj,
 		}
 		operation := mongo.NewUpdateOneModel().SetFilter(filter).SetUpdate(update).SetUpsert(true)
 		operations = append(operations, operation)
@@ -38,7 +42,7 @@ func SaveCastles(ctx context.Context, collection *mongo.Collection, castles []ca
 	return nil
 }
 
-func prepareObjectToSave(c castle.Model) bson.M {
+func prepareObjectToSave(c castle.Model) (bson.M, error) {
 	object := bson.M{
 		"name":         strings.ToLower(c.FilteredName()),
 		"sources":      c.Sources,
@@ -85,5 +89,10 @@ func prepareObjectToSave(c castle.Model) bson.M {
 			},
 		}
 	}
-	return object
+	webName, err := c.WebName()
+	if err != nil {
+		return nil, err
+	}
+	object["webName"] = webName
+	return object, nil
 }

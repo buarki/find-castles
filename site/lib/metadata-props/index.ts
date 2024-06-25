@@ -1,4 +1,4 @@
 export type MetadataProps = {
-  params: { id: string }
+  params: { slug: string, }
   searchParams: { [key: string]: string | string[] | undefined }
 }

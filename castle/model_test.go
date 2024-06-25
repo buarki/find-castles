@@ -498,3 +498,46 @@ func TestReconcileWith(t *testing.T) {
 		})
 	}
 }
+
+func TestWebName(t *testing.T) {
+	testCases := []struct {
+		c       Model
+		webName string
+	}{
+		{
+			c:       Model{Country: Slovakia, Name: "zámok dechtice-hradišco"},
+			webName: "zamok-dechtice-hradisco-sk",
+		},
+		{
+			c:       Model{Country: Ireland, Name: "Roscrea, Gardens And Damer House/black Mills"},
+			webName: "roscrea-gardens-and-damer-house-black-mills-ie",
+		},
+		{
+			c:       Model{Country: Ireland, Name: "Parke’s"},
+			webName: "parke-s-ie",
+		},
+		{
+			c:       Model{Country: Slovakia, Name: "Bojnický Zámok/schloss Bojnice"},
+			webName: "bojnicky-zamok-schloss-bojnice-sk",
+		},
+		{
+			c:       Model{Country: Slovakia, Name: "Nitrianska Blatnica - jurko a púst"},
+			webName: "nitrianska-blatnica-jurko-a-pust-sk",
+		},
+	}
+
+	for _, tt := range testCases {
+		currentTT := tt
+		t.Run(currentTT.webName, func(t *testing.T) {
+			received, err := currentTT.c.WebName()
+
+			if err != nil {
+				t.Errorf("expected err nil, got %v", err)
+			}
+
+			if received != currentTT.webName {
+				t.Errorf("expected to have [%s], got [%s]", currentTT.webName, received)
+			}
+		})
+	}
+}
