@@ -24,7 +24,7 @@ export async function generateMetadata(
     openGraph: {
       title: "Castles - Find Castles",
       description: "Explore the tracked and untracked European countries for castle data. Help us expand our data sources by contributing to the project.",
-      url: `${siteHost}/data-sources`,
+      url: `${siteHost}/castles`,
       type: "website",
       images: [
         {

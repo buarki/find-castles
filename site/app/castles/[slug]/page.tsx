@@ -32,9 +32,9 @@ export async function generateMetadata(
   }
 
   return {
-    title: "Castles - Find Castles",
-    description: "Explore the tracked and untracked European countries for castle data. Help us expand our data sources by contributing to the project.",
-    keywords: ["castles", "heritage", "european castles", "data sources", "historical castles", "tracked countries", "untracked countries"],
+    title: foundCastle.name,
+    description: `Discover ${foundCastle.name} castle on Find Castles`,
+    keywords: [foundCastle.name, foundCastle.country, "castles", "heritage", "european castles", "data sources", "historical castles", "tracked countries", "untracked countries"],
     applicationName: 'Find Castles',
     robots: { index: true, follow: true },
     authors: {
@@ -42,13 +42,13 @@ export async function generateMetadata(
       url: 'https://buarki.com'
     },
     openGraph: {
-      title: "Castles - Find Castles",
-      description: "Explore the tracked and untracked European countries for castle data. Help us expand our data sources by contributing to the project.",
-      url: `${siteHost}/data-sources`,
+      title: foundCastle.name,
+      description: `Discover ${foundCastle.name} castle on Find Castles`,
+      url: `${siteHost}/${foundCastle.webName}`,
       type: "website",
       images: [
         {
-          url: `${siteHost}/og.png`,
+          url: foundCastle.pictureURL,
           width: 1200,
           height: 630,
           alt: "Find Castles",
@@ -58,9 +58,9 @@ export async function generateMetadata(
     twitter: {
       card: "summary_large_image",
       site: "@buarki",
-      title: "Castles - Find Castles",
-      description: "Explore the tracked and untracked European countries for castle data. Help us expand our data sources by contributing to the project.",
-      images: `${siteHost}/og.png`,
+      title: foundCastle.name,
+      description: `Discover ${foundCastle.name} castle on Find Castles`,
+      images: foundCastle.pictureURL,
     }
   };
 };
@@ -138,7 +138,7 @@ export default async function CastlePage({ params }: CastlePageProps) {
               <Typography variant="subtitle1" gutterBottom>
                 {
                   coordinates ? (
-                    <Link title="See it on Google Maps" href={`https://www.google.com/maps/?q=${coordinates}`}>
+                    <Link title="See it on Google Maps" target="_blank" href={`https://www.google.com/maps/?q=${coordinates}`}>
                       {district}, {city}, {state}
                     </Link>
                   ) : <Typography>{district}, {city}, {state}</Typography>

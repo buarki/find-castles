@@ -1,10 +1,45 @@
+import { MetadataProps } from "@find-castles/lib/metadata-props";
 import { Box, Container, Typography } from "@mui/material";
-import { Metadata } from "next";
+import { Metadata, ResolvingMetadata } from "next";
 
-export const metadata: Metadata = {
-  title: "About",
-  description: "find castles",
-  keywords: 'castles, europe, heritage, roman empire, mid ages, open data'
+const siteHost = process.env.SITE_HOST;
+
+export async function generateMetadata(
+  { params, searchParams }: MetadataProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  return {
+    title: "About - Find Castles",
+    description: `Understand more about Find Castles`,
+    keywords: ["castles", "heritage", "european castles", "data sources", "historical castles", "tracked countries", "untracked countries"],
+    applicationName: 'Find Castles',
+    robots: { index: true, follow: true },
+    authors: {
+      name: 'Aurelio Buarque',
+      url: 'https://buarki.com'
+    },
+    openGraph: {
+      title: "About - Find Castles",
+      description: `Understand more about Find Castles`,
+      url: `${siteHost}/about`,
+      type: "website",
+      images: [
+        {
+          url: `${siteHost}/og.png`,
+          width: 1200,
+          height: 630,
+          alt: "Find Castles",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@buarki",
+      title: "About - Find Castles",
+      description: `Understand more about Find Castles`,
+      images: `${siteHost}/og.png`,
+    }
+  };
 };
 
 export default function AboutPage() {
