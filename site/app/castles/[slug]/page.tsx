@@ -19,7 +19,7 @@ import { notFound } from "next/navigation";
 
 export const dynamicParams = true;
 
-const siteHost = process.env.SITE_HOST;
+const siteHost = process.env.SITE_HOST!;
 
 export async function generateMetadata(
   { params, searchParams }: MetadataProps,
@@ -32,6 +32,7 @@ export async function generateMetadata(
   }
 
   return {
+    metadataBase: new URL(siteHost),
     title: foundCastle.name,
     description: `Discover ${foundCastle.name} castle on Find Castles`,
     keywords: [foundCastle.name, foundCastle.country, "castles", "heritage", "european castles", "data sources", "historical castles", "tracked countries", "untracked countries"],
