@@ -4,6 +4,8 @@ import { toTitleCase } from '@find-castles/lib/to-title-case';
 import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 
+export const runtime = 'edge';
+
 export const size = {
   width: 1200,
   height: 630,
@@ -59,14 +61,6 @@ export default async function Image({ params }: { params: { slug: string } }) {
             <p style={{ fontSize: '2.5rem', marginLeft: '10px', margin: 0, }}>
               {countries.find((c) => c.code === country)?.name}
             </p>
-            {/* <img
-              alt={name}
-              style={{
-                width: '120',
-                height: '55',
-              }}
-              src={`https://media.istockphoto.com/id/1315619443/vector/vector-illustration-of-the-british-flag.jpg?s=612x612&w=0&k=20&c=dWvF_Kv8oXPDW-pWFTPjCFiNyWJ-bUqVuWFSnfzNP3k=`}
-              /> */}
           </div>
           <p style={{ fontSize: '2.5rem', margin: 0 }}>Find Castles</p>
         </div>
