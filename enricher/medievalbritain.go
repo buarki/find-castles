@@ -277,14 +277,46 @@ func (be *medievalbritainEnricher) collectCoordinates(doc *goquery.Document) str
 		`′`, `'`,
 		`″`, `"`,
 		`\n`, "",
+		` `, ",",
 	)
-	latitude := doc.Find(".geo-default .latitude").First()
-	longitude := doc.Find(".geo-default .longitude").First()
-	if latitude.Text() == "" || longitude.Text() == "" {
-		latitudeAndLongigude := doc.Find(".geo-default .geo-dec").First()
-		return replacer.Replace(latitudeAndLongigude.Text())
+
+	latitude := doc.Find(".geo-default .latitude").First().Text()
+	longitude := doc.Find(".geo-default .longitude").First().Text()
+
+	if latitude != "" && longitude != "" {
+		return fmt.Sprintf("%s,%s", replacer.Replace(latitude), replacer.Replace(longitude))
 	}
-	return fmt.Sprintf("%s,%s", replacer.Replace(latitude.Text()), replacer.Replace(longitude.Text()))
+
+	geoDec := doc.Find(".geo-default .geo-dec").First().Text()
+	if geoDec != "" {
+		return replacer.Replace(geoDec)
+	}
+
+	// fallback for when .geo-default is not present and it uses tools.wmflabs.org
+	targetReferenceHost := "tools.wmflabs.org"
+
+	latitudeLongitude := ""
+	doc.Find("a").Each(func(i int, s *goquery.Selection) {
+		href, exists := s.Attr("href")
+		if exists && strings.Contains(href, targetReferenceHost) {
+			latLng := strings.Split(s.Text(), " ")
+			latitudeLongitude = fmt.Sprintf("%s,%s", latLng[0], latLng[1])
+			return
+		}
+	})
+
+	// fallback for when .geo-default is not present and it uses https://goo.gl/maps/
+	targetReferenceHost = "https://goo.gl/maps/"
+
+	doc.Find("a").Each(func(i int, s *goquery.Selection) {
+		href, exists := s.Attr("href")
+		if exists && strings.Contains(href, targetReferenceHost) {
+			latitudeLongitude = strings.ReplaceAll(s.Text(), " ", "")
+			return
+		}
+	})
+
+	return latitudeLongitude
 }
 
 func (be *medievalbritainEnricher) collectContactInfo(doc *goquery.Document) *castle.Contact {

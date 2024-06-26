@@ -112,7 +112,7 @@ func TestCollectingLocalizationCoordinatesOfMedievalBritain(t *testing.T) {
 					title="Maps, aerial photos, and other data for this location">54.9904°N 2.0000°W</span>
 			</span>
 			`),
-			expectedCoordinates: "54.9904°N 2.0000°W",
+			expectedCoordinates: "54.9904°N,2.0000°W",
 		},
 		{
 			name: "latitude and longitude separated",
@@ -126,6 +126,34 @@ func TestCollectingLocalizationCoordinatesOfMedievalBritain(t *testing.T) {
 						class="longitude">00°36′15″W</span></span></span>
 			`),
 			expectedCoordinates: "51°29'0\"N,00°36'15\"W",
+		},
+		{
+			name: "without geo-default reference",
+			htmlChunk: []byte(`
+			<div class="elementor-widget-container">
+				<div class="elementor-text-editor elementor-clearfix">
+					<p>Carrickfergus, County Antrim, <a href="https://medievalbritain.com/category/locations/northern-ireland/">Northern
+							Ireland</a><br />(<a
+							href="https://tools.wmflabs.org/geohack/geohack.php?pagename=Carrickfergus_Castle&amp;params=54.713314_N_5.806446_W_region:GB_type:landmark"
+							target="_blank" rel="noopener">54.713314°N 5.806446°W</a>)</p>
+				</div>
+			</div>
+			`),
+			expectedCoordinates: "54.713314°N,5.806446°W",
+		},
+		{
+			name: "without geo-default and using google maps",
+			htmlChunk: []byte(`
+			<div class="elementor-widget-container">
+				<div class="elementor-text-editor elementor-clearfix">
+					<p>Essex, <a
+							href="https://medievalbritain.com/category/locations/england/south-east-england/">South
+							East England</a><br />(<a href="https://goo.gl/maps/n2MtQGQ5e3yKUoMP8"
+							target="_blank" rel="noopener">51.9925° N, 0.6014° E</a>)</p>
+				</div>
+			</div>
+			`),
+			expectedCoordinates: "51.9925°N,0.6014°E",
 		},
 	}
 	e := medievalbritainEnricher{}
