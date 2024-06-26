@@ -137,9 +137,9 @@ export default async function CastlePage({ params }: CastlePageProps) {
             "addressCountry": country,
           },
           "geo": coordinates ? {
-            "@type": "GeoCoordinates", // TODO handle during enrichment
-            "latitude": coordinates.split(" ")[0] ?? coordinates.split(",")[0],
-            "longitude": coordinates.split(" ")[1] ?? coordinates.split(",")[1],
+            "@type": "GeoCoordinates",
+            "latitude": coordinates.split(",")[0],
+            "longitude": coordinates.split(",")[1],
           } : undefined,
           "telephone": contact?.phone || undefined,
           "email": contact?.email || undefined,
