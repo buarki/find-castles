@@ -122,6 +122,37 @@ export default async function CastlePage({ params }: CastlePageProps) {
 
   return (
     <Container>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "TouristAttraction",
+          "name": `${toTitleCase(name)} Castle`,
+          "description": `Discover ${name} castle located in ${state}, ${country}.`,
+          "image": pictureURL,
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": city,
+            "addressRegion": state,
+            "addressCountry": country,
+          },
+          "geo": coordinates ? {
+            "@type": "GeoCoordinates", // TODO handle during enrichment
+            "latitude": coordinates.split(" ")[0] ?? coordinates.split(",")[0],
+            "longitude": coordinates.split(" ")[1] ?? coordinates.split(",")[1],
+          } : undefined,
+          "telephone": contact?.phone || undefined,
+          "email": contact?.email || undefined,
+          "openingHours": visitingInfo?.workingHours || undefined,
+          "amenityFeature": Object.entries(visitingInfo?.facilities ?? {}).map(([facilityName, facilityAvailability]) => ({
+            "@type": "LocationFeatureSpecification",
+            "name": facilityName,
+            "value": facilityAvailability,
+          })),
+          "url": `${siteHost}/${webName}`,
+          "sameAs": sources
+        }) }}
+      />
       <Box sx={{ my: 3 }}>
         <Typography variant="h4" align="center" gutterBottom>
           {toTitleCase(name)} Castle

@@ -56,10 +56,18 @@ export default async function CastlesPage({ searchParams }: CastlesPageProps) {
   const countryCode = searchParams.country as CountryCode;
   const availableCoutries = countries.filter((country: Country) => country.trackingStatus === 'tracked');
 
-  // const foundCastles = await getCastles({ contryCodes: ['uk'] });
-
   return (
     <Box sx={{ mt: 3, }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          "name": "Castles",
+          "description": "A collection of castles available on Find Castles.",
+          "numberOfItems": availableCoutries.length,
+        }) }}
+      />
       <Container>
         <Typography variant="h1" color='primary.main'>Castles</Typography>
         <ClientSideCastlesLister countries={availableCoutries} currentCountry={countryCode}/>
