@@ -4,13 +4,15 @@ import { Metadata, ResolvingMetadata } from "next";
 
 const siteHost = process.env.SITE_HOST;
 
+const description = `Understand more about Find Castles`;
+
 export async function generateMetadata(
   { params, searchParams }: MetadataProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   return {
     title: "About - Find Castles",
-    description: `Understand more about Find Castles`,
+    description: description,
     keywords: ["castles", "heritage", "european castles", "data sources", "historical castles", "tracked countries", "untracked countries"],
     applicationName: 'Find Castles',
     robots: { index: true, follow: true },
@@ -20,7 +22,7 @@ export async function generateMetadata(
     },
     openGraph: {
       title: "About - Find Castles",
-      description: `Understand more about Find Castles`,
+      description: description,
       url: `${siteHost}/about`,
       type: "website",
       images: [
@@ -36,7 +38,7 @@ export async function generateMetadata(
       card: "summary_large_image",
       site: "@buarki",
       title: "About - Find Castles",
-      description: `Understand more about Find Castles`,
+      description: description,
       images: `${siteHost}/og.png`,
     }
   };
@@ -45,6 +47,28 @@ export async function generateMetadata(
 export default function AboutPage() {
   return (
     <Box sx={{ bgcolor: 'secondary.main', minHeight: '100vh', py: 4 }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ProfilePage",
+          "dateCreated": "2023-06-26T00:34:00-00:00",
+          "dateModified": "2024-06-26T2:59:00-00:00",
+          "image": `${siteHost}/og.png`,
+          "mainEntity": {
+            "@type": "Person",
+            "name": "Find Castles",
+            "alternateName": "Find Castles",
+            "description": description,
+            "image": `${siteHost}/og.png`,
+            "sameAs": [
+              "https://twitter.com/buarki",
+              "https://www.linkedin.com/in/aurelio-buarque/",
+              "https://github.com/buarki",
+            ]
+          }
+        }) }}
+      />
       <Container maxWidth="md">
         <Typography variant="h1" gutterBottom>
           Why This Project Was Built? The Castles!
