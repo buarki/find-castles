@@ -271,13 +271,14 @@ func (se *ebidatEnricher) getNonce(htmlContent []byte, formName string) (bool, s
 }
 
 func (se *ebidatEnricher) EnrichCastle(ctx context.Context, c castle.Model) (castle.Model, error) {
-	dataHTML, err := se.fetchHTML(ctx, c.CurrentEnrichmentLink, se.httpClient)
+	enrichmentURL := fmt.Sprintf("%s&m=h", c.CurrentEnrichmentLink)
+	dataHTML, err := se.fetchHTML(ctx, enrichmentURL, se.httpClient)
 	if err != nil {
 		return castle.Model{}, err
 	}
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(dataHTML))
 	if err != nil {
-		return castle.Model{}, fmt.Errorf("error loading HTML from [%s]: %v", c.CurrentEnrichmentLink, err)
+		return castle.Model{}, fmt.Errorf("error loading HTML from [%s]: %v", enrichmentURL, err)
 	}
 
 	c1 := &c
