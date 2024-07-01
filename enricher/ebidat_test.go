@@ -715,3 +715,58 @@ func TestCollectingLocalizationCoordinates(t *testing.T) {
 		t.Errorf("expected to find [%s], got [%s]", expectedCoordinates, receivedCoordinates)
 	}
 }
+
+func TestCollectPeriod(t *testing.T) {
+	testCases := []struct {
+		htmlChunk      []byte
+		expectedPeriod string
+	}{
+		{
+			htmlChunk: []byte(`
+			<li class="daten">
+				<div class="gruppe">Datierung-Beginn:</div>
+				<div class="gruppenergebnis">10.Jh.</div>
+			</li>
+			`),
+			expectedPeriod: "10th",
+		},
+		{
+			htmlChunk: []byte(`
+			<li class="daten">
+				<div class="gruppe">Datierung-Beginn:</div>
+				<div class="gruppenergebnis">11.Jh.</div>
+			</li>
+			`),
+			expectedPeriod: "11th",
+		},
+		{
+			htmlChunk: []byte(`
+			<li class="daten">
+			<div class="gruppe">Datierung-Beginn:</div>
+			<div class="gruppenergebnis">2.H.13.Jh.</div>
+		</li>
+			`),
+			expectedPeriod: "13th",
+		},
+	}
+
+	e := &ebidatEnricher{}
+
+	for _, tt := range testCases {
+		currentTT := tt
+		t.Run(currentTT.expectedPeriod, func(t *testing.T) {
+			t.Helper()
+
+			doc, err := goquery.NewDocumentFromReader(bytes.NewReader(currentTT.htmlChunk))
+			if err != nil {
+				t.Errorf("expected to have err nil, got [%v]", err)
+			}
+
+			receiveedPeriod := e.collectPeriod(doc)
+
+			if receiveedPeriod != currentTT.expectedPeriod {
+				t.Errorf("expected to find period [%s], received [%s]", currentTT.expectedPeriod, receiveedPeriod)
+			}
+		})
+	}
+}

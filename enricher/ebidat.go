@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -285,8 +286,27 @@ func (se *ebidatEnricher) EnrichCastle(ctx context.Context, c castle.Model) (cas
 	c1.PropertyCondition = se.getPropertyConditions(doc)
 	c1.PictureURL = se.collectImage(doc)
 	c1.Coordinates = se.collectCoordinates(doc)
+	c1.FoundationPeriod = se.collectPeriod(doc)
 	c1.CleanFields()
 	return *c1, nil
+}
+
+func (se ebidatEnricher) collectPeriod(doc *goquery.Document) string {
+	var periodText string
+	// using "Datierung-Beginn:" as reference
+	doc.Find("li.daten").Each(func(i int, s *goquery.Selection) {
+		label := s.Find(".gruppe").Text()
+		if strings.Contains(label, "Datierung-Beginn:") {
+			periodText = s.Find(".gruppenergebnis").Text()
+		}
+	})
+	periodText = strings.TrimSpace(periodText)
+	re := regexp.MustCompile(`(\d{1,2})\.Jh\.`)
+	matches := re.FindStringSubmatch(periodText)
+	if len(matches) > 1 {
+		return matches[1] + "th"
+	}
+	return ""
 }
 
 func (se ebidatEnricher) getPropertyConditions(doc *goquery.Document) castle.PropertyCondition {
