@@ -65,7 +65,7 @@ export default function DataSourcesPage() {
           <List sx={{ pl: 2 }}>
             {trackedCountries.map((country: Country) => (
               <ListItem key={country.code} sx={{ pl: 0, py: 0.5 }}>
-                <Link underline="always" href={country.name.toLowerCase()} sx={{ color: 'inherit' }}>
+                <Link underline="always" href={`/castles?country=${country.code}`} sx={{ color: 'inherit' }}>
                   <Typography variant="body1">{country.name}</Typography>
                 </Link>
               </ListItem>
