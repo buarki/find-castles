@@ -254,7 +254,7 @@ export default async function CastlePage({ params }: CastlePageProps) {
                   </ListItemIcon>
                   <ListItemText>
                     <Link target="_blank" rel="noopener noreferrer" href={source}>
-                      {source}
+                      {new URL(source).hostname}
                     </Link>
                   </ListItemText>
                 </ListItem>
