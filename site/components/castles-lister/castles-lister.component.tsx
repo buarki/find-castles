@@ -3,11 +3,11 @@
 import { Country, CountryCode } from "@find-castles/lib/country";
 import { toTitleCase } from "@find-castles/lib/to-title-case";
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Grid, CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { CastleCard } from "./castle-card.component";
-import { Castle } from "@find-castles/lib/db/model";
 import Link from "next/link";
+import { useCastleFilters } from "@find-castles/hooks/use-castle-filters.hook";
+import { useFetchCastles } from "@find-castles/hooks/use-fetch-castles.hook";
 
 export type ClientSideCastlesListerProps = {
   countries: Country[];
@@ -17,41 +17,20 @@ export type ClientSideCastlesListerProps = {
 export function ClientSideCastlesLister({ countries, currentCountry }: ClientSideCastlesListerProps) {
   countries = [{ name: "Select", code: 'fake' as CountryCode } as Country, ...countries];
   const [country, setCountry] = useState<Country>(currentCountry ? countries.find((c) => c.code === currentCountry)! : countries[0]);
-  const [castles, setCastles] = useState<Castle[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [availableStates, setAvailableStates] = useState<string[]>([]);
-  const [availablePropertyConditions, setAvailablePropertyConditions] = useState<string[]>([]);
-  const [selectedState, setSelectedState] = useState<string | undefined>(undefined);
-  const [selectedPropertyCondition, setSelectedPropertyCondition] = useState<string | undefined>(undefined);
+  const { castles, loading, error } = useFetchCastles(country.code);
+  const {
+    availableStates,
+    availablePropertyConditions,
+    selectedState,
+    setSelectedState,
+    selectedPropertyCondition,
+    setSelectedPropertyCondition,
+    filteredCastles
+  } = useCastleFilters(castles);
 
-
-  const collectCastles = async (country: Country) => {
-    setCountry(country);
-
-    setLoading(true);
-    try {
-      const response = await axios.get(`/castles/api/?country=${country.code}`);
-      const fetchedCastles = response.data.data as Castle[];
-      setSelectedState(undefined);
-      setSelectedPropertyCondition(undefined);
-
-      setCastles(fetchedCastles);
-
-      const states = Array.from(new Set(fetchedCastles.map(castle => castle.state)));
-      const propertyConditions = Array.from(new Set(fetchedCastles.map(castle => castle.propertyCondition)));
-
-      setAvailableStates(states);
-      setAvailablePropertyConditions(propertyConditions);
-    } catch (error) {
-      console.error("Error fetching castles:", error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const handleChange = async (event: SelectChangeEvent<string>, _child: React.ReactNode) => {
+  const handleCountryChange = (event: SelectChangeEvent<string>, _child: React.ReactNode) => {
     const selectedCountry = countries.find((c) => c.code === event.target.value)!;
-    collectCastles(selectedCountry);
+    setCountry(selectedCountry);
   };
 
   const handleStateChange = (event: SelectChangeEvent<string>) => {
@@ -62,38 +41,16 @@ export function ClientSideCastlesLister({ countries, currentCountry }: ClientSid
     setSelectedPropertyCondition(event.target.value);
   };
 
-  const applyFilters = (castle: Castle) => {
-    let showCastle = true;
-
-    if (selectedState && castle.state !== selectedState) {
-      showCastle = false;
-    }
-
-    if (selectedPropertyCondition && castle.propertyCondition !== selectedPropertyCondition) {
-      showCastle = false;
-    }
-
-    return showCastle;
-  };
-
-  const filteredCastles = castles.filter(applyFilters);
-
-  useEffect(() => {
-    if (currentCountry) {
-      collectCastles(countries.find((c) => c.code === currentCountry)!);
-    }
-  }, [currentCountry]);
-
   return (
     <Box sx={{ my: 6 }}>
       <FormControl fullWidth sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <InputLabel id="demo-simple-select-label">Country</InputLabel>
+        <InputLabel id="country-select-label">Country</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          labelId="country-select-label"
+          id="country-select"
           value={country.code}
           label="Country"
-          onChange={handleChange}
+          onChange={handleCountryChange}
         >
           {countries.map((country: Country) => (
             <MenuItem key={country.code} value={country.code}>
@@ -111,10 +68,10 @@ export function ClientSideCastlesLister({ countries, currentCountry }: ClientSid
         <>
           {availableStates.length > 0 && (
             <FormControl fullWidth sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 3 }}>
-              <InputLabel id="state-label">State</InputLabel>
+              <InputLabel id="state-select-label">State</InputLabel>
               <Select
                 label="State"
-                labelId="state-label"
+                labelId="state-select-label"
                 id="state-select"
                 value={selectedState || ""}
                 onChange={handleStateChange}
@@ -129,10 +86,10 @@ export function ClientSideCastlesLister({ countries, currentCountry }: ClientSid
 
           {availablePropertyConditions.length > 0 && (
             <FormControl fullWidth sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 3 }}>
-              <InputLabel id="property-condition-label">Property Condition</InputLabel>
+              <InputLabel id="property-condition-select-label">Property Condition</InputLabel>
               <Select
                 label="Property Condition"
-                labelId="property-condition-label"
+                labelId="property-condition-select-label"
                 id="property-condition-select"
                 value={selectedPropertyCondition || ""}
                 onChange={handlePropertyConditionChange}
