@@ -3,7 +3,7 @@
 import { Country, CountryCode } from "@find-castles/lib/country";
 import { toTitleCase } from "@find-castles/lib/to-title-case";
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Grid, CircularProgress } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { CastleCard } from "./castle-card.component";
 import { Castle } from "@find-castles/lib/db/model";
@@ -24,13 +24,13 @@ export function ClientSideCastlesLister({ countries, currentCountry }: ClientSid
   const [selectedState, setSelectedState] = useState<string | undefined>(undefined);
   const [selectedPropertyCondition, setSelectedPropertyCondition] = useState<string | undefined>(undefined);
 
-  const handleChange = async (event: SelectChangeEvent<string>, _child: React.ReactNode) => {
-    const selectedCountry = countries.find((c) => c.code === event.target.value)!;
-    setCountry(selectedCountry);
+
+  const collectCastles = async (country: Country) => {
+    setCountry(country);
 
     setLoading(true);
     try {
-      const response = await axios.get(`/castles/api/?country=${selectedCountry.code}`);
+      const response = await axios.get(`/castles/api/?country=${country.code}`);
       const fetchedCastles = response.data.data as Castle[];
       setSelectedState(undefined);
       setSelectedPropertyCondition(undefined);
@@ -47,6 +47,11 @@ export function ClientSideCastlesLister({ countries, currentCountry }: ClientSid
     } finally {
       setLoading(false);
     }
+  }
+
+  const handleChange = async (event: SelectChangeEvent<string>, _child: React.ReactNode) => {
+    const selectedCountry = countries.find((c) => c.code === event.target.value)!;
+    collectCastles(selectedCountry);
   };
 
   const handleStateChange = (event: SelectChangeEvent<string>) => {
@@ -72,6 +77,12 @@ export function ClientSideCastlesLister({ countries, currentCountry }: ClientSid
   };
 
   const filteredCastles = castles.filter(applyFilters);
+
+  useEffect(() => {
+    if (currentCountry) {
+      collectCastles(countries.find((c) => c.code === currentCountry)!);
+    }
+  }, [currentCountry]);
 
   return (
     <Box sx={{ my: 6 }}>
