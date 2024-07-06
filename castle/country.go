@@ -7,6 +7,7 @@ const (
 	UK       Country = "uk"
 	Ireland  Country = "ie"
 	Slovakia Country = "sk"
+	Denmark  Country = "dk"
 )
 
 func (c Country) String() string {

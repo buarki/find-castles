@@ -148,9 +148,10 @@ func (be *medievalbritainEnricher) extractTheListOfCastlesFromPage(rawHTML []byt
 		title := s.Text()
 		link, _ := s.Attr("href")
 		castles = append(castles, castle.Model{
-			Name:                  strings.ReplaceAll(strings.ReplaceAll(title, "\t", ""), "\n", ""),
-			CurrentEnrichmentLink: link,
-			Country:               castle.UK,
+			Name:                    strings.ReplaceAll(strings.ReplaceAll(title, "\t", ""), "\n", ""),
+			CurrentEnrichmentLink:   link,
+			Country:                 castle.UK,
+			CurrentEnrichmentSource: MedievalBritain.String(),
 		})
 	})
 	return castles, nil

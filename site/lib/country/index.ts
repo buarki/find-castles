@@ -16,7 +16,7 @@ export const countries = [
   { name: "Croatia", trackingStatus: 'not-tracked', code: "hr" },
   { name: "Cyprus", trackingStatus: 'not-tracked', code: "cy" },
   { name: "Czech Republic", trackingStatus: 'not-tracked', code: "cz" },
-  { name: "Denmark", trackingStatus: 'not-tracked', code: "dk" },
+  { name: "Denmark", trackingStatus: 'tracked', code: "dk" },
   { name: "Estonia", trackingStatus: 'not-tracked', code: "ee" },
   { name: "Finland", trackingStatus: 'not-tracked', code: "fi" },
   { name: "France", trackingStatus: 'not-tracked', code: "fr" },

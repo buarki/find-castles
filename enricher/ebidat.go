@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -17,16 +18,56 @@ import (
 
 // TODO support the other countries available other than Slovakia
 
+type ebidatCountrySource struct {
+	country   castle.Country
+	sourceURL string
+}
+
 const (
 	ebidatHost   = "www.ebidat.de"
 	slovakSource = "https://" + ebidatHost + "/cgi-bin/ebidat.pl?a=a&te53=6"
+	danishSource = "https://" + ebidatHost + "/cgi-bin/ebidat.pl?a=a&te53=2"
 )
 
-type extractLocation struct {
-	state    string
-	city     string
-	district string
-}
+var (
+	countriesSources = []ebidatCountrySource{
+		{
+			country:   castle.Denmark,
+			sourceURL: danishSource,
+		},
+		{
+			country:   castle.Slovakia,
+			sourceURL: slovakSource,
+		},
+	}
+
+	stateCollector = map[castle.Country]func(doc *goquery.Document) string{
+		castle.Slovakia: func(doc *goquery.Document) string {
+			var state string
+			doc.Find("li.daten").Each(func(i int, s *goquery.Selection) {
+				if s.Find(".gruppe").Text() == "Bundesland:" {
+					state = s.Find(".gruppenergebnis").Text()
+				}
+			})
+			return state
+		},
+		castle.Denmark: func(doc *goquery.Document) string {
+			var state string
+			referencePoints := []string{
+				"Region:",
+				"Kreis:",
+				"Stadt / Gemeinde:", // fallback for when neither region or kreis is provided
+			}
+			doc.Find("li.daten").Each(func(i int, s *goquery.Selection) {
+				foundText := s.Find(".gruppe").Text()
+				if slices.Contains(referencePoints, foundText) {
+					state = s.Find(".gruppenergebnis").Text()
+				}
+			})
+			return state
+		},
+	}
+)
 
 type ebidatEnricher struct {
 	httpClient *http.Client
@@ -50,42 +91,49 @@ func (se *ebidatEnricher) CollectCastlesToEnrich(ctx context.Context) (chan cast
 		defer close(castlesToEnrichChan)
 		defer close(errChan)
 
+		countriesCounter := 0
 		for {
 			select {
 			case <-ctx.Done():
 				return
 			default:
-				hasMorePages := true
-				linkToCrawl := slovakSource
+				if countriesCounter >= len(countriesSources) {
+					return
+				}
 
+				countrySource := countriesSources[countriesCounter]
+
+				hasMorePages := true
+				linkToCrawl := countrySource.sourceURL
 				for hasMorePages {
 					htmlWithCastlesToCollect, err := se.fetchHTML(ctx, linkToCrawl, se.httpClient)
 					if err != nil {
 						errChan <- err
-						return
+						break
 					}
-					castles, err := se.collectCastleNameAndLinks(htmlWithCastlesToCollect)
+
+					castles, err := se.collectCastleNameAndLinks(htmlWithCastlesToCollect, countrySource.country)
 					if err != nil {
 						errChan <- err
-						return
+						break
 					}
+
 					for _, c := range castles {
 						castlesToEnrichChan <- c
 					}
+
 					hasMorePages, linkToCrawl = se.checkForNextPage(htmlWithCastlesToCollect)
-					if !hasMorePages {
-						return
-					}
 				}
+
+				countriesCounter++
 			}
 		}
-
 	}()
 
 	return castlesToEnrichChan, errChan
 }
 
-func (se *ebidatEnricher) collectCastleNameAndLinks(htmlContent []byte) ([]castle.Model, error) {
+func (se *ebidatEnricher) collectCastleNameAndLinks(htmlContent []byte, country castle.Country) ([]castle.Model, error) {
 	var castles []castle.Model
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(htmlContent))
 	if err != nil {
@@ -104,55 +152,17 @@ func (se *ebidatEnricher) collectCastleNameAndLinks(htmlContent []byte) ([]castl
 			href = "https://" + href
 		}
 
-		data := se.extractDistrictCityAndState(s.Text())
 		castle := castle.Model{
-			Name:                  name,
-			CurrentEnrichmentLink: href,
-			Country:               castle.Slovakia,
-			City:                  data.city,
-			State:                 data.state,
-			District:              data.district,
-			Sources:               []string{href},
+			Name:                    name,
+			CurrentEnrichmentLink:   href,
+			Country:                 country,
+			Sources:                 []string{href},
+			CurrentEnrichmentSource: EDBIDAT.String(),
 		}
 		castles = append(castles, castle)
 	})
 
 	return castles, nil
-}
-
-func (se *ebidatEnricher) extractDistrictCityAndState(rawLocation string) extractLocation {
-	mainPart := rawLocation[:strings.Index(rawLocation, "if")]
-	splited := strings.Split(mainPart, "\n")
-	var noEmptySpaces []string
-	for _, s := range splited {
-		s1 := strings.ReplaceAll(s, "\t", "")
-		if len(s1) > 0 {
-			noEmptySpaces = append(noEmptySpaces, s1)
-		}
-	}
-	if len(noEmptySpaces) == 0 {
-		return extractLocation{}
-	}
-	for i, j := 0, len(noEmptySpaces)-1; i < j; i, j = i+1, j-1 {
-		noEmptySpaces[i], noEmptySpaces[j] = noEmptySpaces[j], noEmptySpaces[i]
-	}
-	if len(noEmptySpaces) == 4 {
-		return extractLocation{
-			state:    noEmptySpaces[0],
-			city:     noEmptySpaces[1],
-			district: noEmptySpaces[2],
-		}
-	}
-	if len(noEmptySpaces) == 3 {
-		return extractLocation{
-			state:    noEmptySpaces[0],
-			city:     noEmptySpaces[1],
-			district: noEmptySpaces[2],
-		}
-	}
-	return extractLocation{
-		state: noEmptySpaces[0],
-	}
 }
 
 /*
@@ -287,8 +297,43 @@ func (se *ebidatEnricher) EnrichCastle(ctx context.Context, c castle.Model) (cas
 	c1.PictureURL = se.collectImage(doc)
 	c1.Coordinates = se.collectCoordinates(doc)
 	c1.FoundationPeriod = se.collectPeriod(doc)
+
+	c1.State = se.collectState(doc, c.Country)
+	c1.City = se.collectCity(doc)
+	c1.District = se.collectDistrict(doc)
+
 	c1.CleanFields()
 	return *c1, nil
+}
+
+func (se ebidatEnricher) collectCity(doc *goquery.Document) string {
+	var city string
+	doc.Find("li.daten").Each(func(i int, s *goquery.Selection) {
+		label := s.Find(".gruppe").Text()
+		if strings.Contains(label, "Stadt / Gemeinde:") {
+			city = s.Find(".gruppenergebnis").Text()
+		}
+	})
+	city = html.UnescapeString(city)
+	city = strings.TrimSpace(city)
+	return city
+}
+
+func (se ebidatEnricher) collectDistrict(doc *goquery.Document) string {
+	var city string
+	doc.Find("li.daten").Each(func(i int, s *goquery.Selection) {
+		label := s.Find(".gruppe").Text()
+		if strings.Contains(label, "Gemarkung / Ortsteil:") {
+			city = s.Find(".gruppenergebnis").Text()
+		}
+	})
+	city = html.UnescapeString(city)
+	city = strings.TrimSpace(city)
+	return city
+}
+
+func (se ebidatEnricher) collectState(doc *goquery.Document, country castle.Country) string {
+	return stateCollector[country](doc)
 }
 
 func (se ebidatEnricher) collectPeriod(doc *goquery.Document) string {

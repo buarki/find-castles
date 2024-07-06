@@ -11,7 +11,7 @@ import (
 )
 
 type EnchimentExecutor struct {
-	enrichers      map[castle.Country]enricher.Enricher
+	enrichers      map[enricher.Source]enricher.Enricher
 	collectingCPUs int
 	extractingCPUs int
 }
@@ -20,7 +20,7 @@ func New(
 	collectingCPUs,
 	extractingCPUs int,
 	httpClient *http.Client,
-	enrichers map[castle.Country]enricher.Enricher) *EnchimentExecutor {
+	enrichers map[enricher.Source]enricher.Enricher) *EnchimentExecutor {
 	return &EnchimentExecutor{
 		enrichers:      enrichers,
 		collectingCPUs: collectingCPUs,
@@ -83,7 +83,7 @@ func (ex *EnchimentExecutor) Enrich(ctx context.Context) (<-chan castle.Model, <
 					if !ok {
 						return
 					}
-					enrichedCastle, err := ex.enrichers[c.Country].EnrichCastle(ctx, c)
+					enrichedCastle, err := ex.enrichers[enricher.Source(c.CurrentEnrichmentSource)].EnrichCastle(ctx, c)
 					if err != nil {
 						errChan <- err
 					} else {

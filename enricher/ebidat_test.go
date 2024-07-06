@@ -412,10 +412,10 @@ func TestCollectCastleNameAndLinks(t *testing.T) {
 			`),
 			error: false,
 			c: castle.Model{
-				Name:                  "Biely Kamen",
-				District:              "Neštich",
-				City:                  "Pezinok",
-				State:                 "Bratislava",
+				Name: "Biely Kamen",
+				// District:              "Neštich",
+				// City:                  "Pezinok",
+				// State:                 "Bratislava",
 				Country:               castle.Slovakia,
 				CurrentEnrichmentLink: "",
 			},
@@ -424,7 +424,7 @@ func TestCollectCastleNameAndLinks(t *testing.T) {
 	e := &ebidatEnricher{}
 
 	for _, tt := range testCases {
-		foundCastle, err := e.collectCastleNameAndLinks(tt.html)
+		foundCastle, err := e.collectCastleNameAndLinks(tt.html, castle.Slovakia)
 		if !tt.error && err != nil {
 			t.Errorf("expected to have err nil, got [%v]", err)
 		}
@@ -442,70 +442,6 @@ func TestCollectCastleNameAndLinks(t *testing.T) {
 		}
 		if foundCastle[0].State != tt.c.State {
 			t.Errorf("expected to have State [%s], got [%s]", tt.c.State, foundCastle[0].State)
-		}
-	}
-}
-
-func TestExtractDistrictCityAndState(t *testing.T) {
-	e := &ebidatEnricher{}
-
-	testCases := []struct {
-		html string
-		c    castle.Model
-	}{
-		{
-			html: `
-			Biely Kamen
-			Neštich
-			Pezinok
-			Bratislava
-
-				if ('Bratislava' == 'Nordrhein-Westfalen') {
-					document.write('<br><span style="font-style:italic; font-weight: bold; width: 300px;">Erfassung gef&ouml;rdert durch die NRW-Stiftung</span>');
-				}
-				else if ('Bratislava' == 'Niedersachsen') {
-					document.write('<br><span style="font-style:italic; font-weight: bold; width: 400px;">Erfassung gef&ouml;rdert durch die VGH-Stiftung und <br>die Landschaften</span>');
-				}
-			`,
-			c: castle.Model{
-				State:    "Bratislava",
-				City:     "Pezinok",
-				District: "Neštich",
-			},
-		},
-		{
-			html: `
-			Budatínsky zámok
-			Žilina
-			Žilina
-
-			if ('Bratislava' == 'Nordrhein-Westfalen') {
-					document.write('<br><span style="font-style:italic; font-weight: bold; width: 300px;">Erfassung gef&ouml;rdert durch die NRW-Stiftung</span>');
-				}
-				else if ('Bratislava' == 'Niedersachsen') {
-					document.write('<br><span style="font-style:italic; font-weight: bold; width: 400px;">Erfassung gef&ouml;rdert durch die VGH-Stiftung und <br>die Landschaften</span>');
-				}
-			`,
-			c: castle.Model{
-				State:    "Žilina",
-				City:     "Žilina",
-				District: "Budatínsky zámok",
-			},
-		},
-	}
-
-	/*
-	 */
-	for _, tt := range testCases {
-		extracted := e.extractDistrictCityAndState(tt.html)
-		if extracted.district != tt.c.District {
-			t.Errorf("expected district to be [%s], got [%s]", tt.c.District, extracted.district)
-		}
-		if extracted.city != tt.c.City {
-			t.Errorf("expected district to be [%s], got [%s]", tt.c.City, extracted.city)
-		}
-		if extracted.state != tt.c.State {
-			t.Errorf("expected district to be [%s], got [%s]", tt.c.State, extracted.state)
 		}
 	}
 }
@@ -769,4 +705,176 @@ func TestCollectPeriod(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestEBIDATCollectState(t *testing.T) {
+	testCases := []struct {
+		htmlChunk []byte
+		expected  string
+		country   castle.Country
+		name      string
+	}{
+		{
+			name: "simple slovak case 1",
+			htmlChunk: []byte(`
+			<li class="daten">
+				<div class="gruppe">Bundesland:</div>
+				<div class="gruppenergebnis">Nitra</div>
+			</li>
+			`),
+			expected: "Nitra",
+			country:  castle.Slovakia,
+		},
+		{
+			name: "simple slovak case 2",
+			htmlChunk: []byte(`
+			<li class="daten">
+				<div class="gruppe">Bundesland:</div>
+				<div class="gruppenergebnis">Trenc�n</div>
+			</li>
+			`),
+			expected: "Trenc�n",
+			country:  castle.Slovakia,
+		},
+		{
+			name: "dasnish castle in which state is provided by Region reference key",
+			htmlChunk: []byte(`
+			<li class="daten">
+				<div class="gruppe">Region:</div>
+				<div class="gruppenergebnis">Lolland</div>
+			</li>
+			`),
+			expected: "Lolland",
+			country:  castle.Denmark,
+		},
+		{
+			name: "dasnish castle in which state is provided by Kreis reference key",
+			htmlChunk: []byte(`
+			<li class="daten">
+			<div class="gruppe">Kreis:</div>
+			<div class="gruppenergebnis">Lynge-Frederiksborg herred/Frederiksborg amt</div>
+		</li>
+			`),
+			expected: "Lynge-Frederiksborg herred/Frederiksborg amt",
+			country:  castle.Denmark,
+		},
+		{
+			name: "state name is not provided so city must be used",
+			htmlChunk: []byte(`
+			<li class="daten">
+				<div class="gruppe">Stadt / Gemeinde:</div>
+				<div class="gruppenergebnis">Helsing�r</div>
+			</li>
+			`),
+			expected: "Helsing�r",
+			country:  castle.Denmark,
+		},
+	}
+
+	e := &ebidatEnricher{}
+	for _, tt := range testCases {
+		currentTT := tt
+		t.Run(currentTT.name, func(t *testing.T) {
+			t.Helper()
+
+			doc, err := goquery.NewDocumentFromReader(bytes.NewReader(currentTT.htmlChunk))
+			if err != nil {
+				t.Errorf("expected to have err nil, got [%v]", err)
+			}
+
+			received := e.collectState(doc, currentTT.country)
+
+			if received != currentTT.expected {
+				t.Errorf("expected to have state [%s], got [%s]", currentTT.expected, received)
+			}
+		})
+	}
+}
+
+func TestEBIDATCollectCity(t *testing.T) {
+	testCases := []struct {
+		htmlChunk []byte
+		expected  string
+		name      string
+	}{
+		{
+			name: "simple danish case",
+			htmlChunk: []byte(`
+			<li class="daten">
+				<div class="gruppe">Stadt / Gemeinde:</div>
+				<div class="gruppenergebnis">Helsingor</div>
+			</li>
+			`),
+			expected: "Helsingor",
+		},
+		{
+			name: "simple slovak case",
+			htmlChunk: []byte(`
+			<li class="daten">
+				<div class="gruppe">Stadt / Gemeinde:</div>
+				<div class="gruppenergebnis">somenamehere</div>
+			</li>
+			`),
+			expected: "somenamehere",
+		},
+	}
+
+	e := &ebidatEnricher{}
+	for _, tt := range testCases {
+		currentTT := tt
+		t.Run(currentTT.name, func(t *testing.T) {
+			t.Helper()
+
+			doc, err := goquery.NewDocumentFromReader(bytes.NewReader(currentTT.htmlChunk))
+			if err != nil {
+				t.Errorf("expected to have err nil, got [%v]", err)
+			}
+
+			received := e.collectCity(doc)
+
+			if received != (currentTT.expected) {
+				t.Errorf("expected to have city [%s], got [%s]", currentTT.expected, received)
+			}
+		})
+	}
+
+}
+
+func TestEBIDATCollectDistrict(t *testing.T) {
+	testCases := []struct {
+		htmlChunk []byte
+		expected  string
+		name      string
+	}{
+		{
+			name: "simple danish case",
+			htmlChunk: []byte(`
+			<li class="daten">
+				<div class="gruppe">Gemarkung / Ortsteil:</div>
+				<div class="gruppenergebnis">Tårnborggård, Tårnborg</div>
+			</li>
+			`),
+			expected: "Tårnborggård, Tårnborg",
+		},
+	}
+
+	e := &ebidatEnricher{}
+	for _, tt := range testCases {
+		currentTT := tt
+		t.Run(currentTT.name, func(t *testing.T) {
+			t.Helper()
+
+			doc, err := goquery.NewDocumentFromReader(bytes.NewReader(currentTT.htmlChunk))
+			if err != nil {
+				t.Errorf("expected to have err nil, got [%v]", err)
+			}
+
+			received := e.collectDistrict(doc)
+
+			if received != (currentTT.expected) {
+				t.Errorf("expected to have district [%s], got [%s]", currentTT.expected, received)
+			}
+		})
+	}
+
 }

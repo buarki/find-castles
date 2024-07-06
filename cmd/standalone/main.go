@@ -8,7 +8,6 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/buarki/find-castles/castle"
 	"github.com/buarki/find-castles/enricher"
 	"github.com/buarki/find-castles/executor"
 	"github.com/buarki/find-castles/htmlfetcher"
@@ -21,11 +20,11 @@ func main() {
 		log.Fatal("missing PORT env var")
 	}
 	httpClient := httpclient.New()
-	enrichers := map[castle.Country]enricher.Enricher{
-		castle.Portugal: enricher.NewCastelosDePortugalEnricher(httpClient, htmlfetcher.Fetch),
-		castle.Slovakia: enricher.NewEbidatEnricher(httpClient, htmlfetcher.Fetch),
-		castle.Ireland:  enricher.NewHeritageIreland(httpClient, htmlfetcher.Fetch),
-		castle.UK:       enricher.NewMedievalBritainEnricher(httpClient, htmlfetcher.Fetch),
+	enrichers := map[enricher.Source]enricher.Enricher{
+		enricher.CastelosDePortugal: enricher.NewCastelosDePortugalEnricher(httpClient, htmlfetcher.Fetch),
+		enricher.EDBIDAT:            enricher.NewEbidatEnricher(httpClient, htmlfetcher.Fetch),
+		enricher.HeritageIreland:    enricher.NewHeritageIreland(httpClient, htmlfetcher.Fetch),
+		enricher.MedievalBritain:    enricher.NewMedievalBritainEnricher(httpClient, htmlfetcher.Fetch),
 	}
 	cpus := runtime.NumCPU()
 	castlesEnricher := executor.New(int(float64(cpus)*0.3), int(float64(cpus)*0.7), httpClient, enrichers)

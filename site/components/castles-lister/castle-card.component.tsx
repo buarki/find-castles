@@ -9,6 +9,7 @@ type CastleCardProps = {
 
 export function CastleCard({ castle }:CastleCardProps) {
   const { pictureURL, name, city, visitingInfo } = castle;
+  console.log({name,city});
   return (
     <Card
       sx={{
@@ -38,7 +39,7 @@ export function CastleCard({ castle }:CastleCardProps) {
           }}
         >
           <Typography variant="h6">{toTitleCase(name)}</Typography>
-          <Typography variant="body2">{toTitleCase(city)}</Typography>
+          { city && <Typography variant="body2">{toTitleCase(city)}</Typography> }
         </CardContent>
       </Box>
     </Card>

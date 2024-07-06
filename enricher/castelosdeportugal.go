@@ -76,10 +76,11 @@ func (p *castelosDePortugalEnricher) collectCastleNameAndLinks(rawHTML []byte) (
 		link, _ := s.Attr("href")
 		name := s.Text()
 		castles = append(castles, castle.Model{
-			Name:                  name,
-			Country:               castle.Portugal,
-			CurrentEnrichmentLink: fmt.Sprintf("%s/castelos/%s", castelosdeportugalHost, link),
-			Sources:               []string{fmt.Sprintf("%s/castelos/%s", castelosdeportugalHost, link)},
+			Name:                    name,
+			Country:                 castle.Portugal,
+			CurrentEnrichmentLink:   fmt.Sprintf("%s/castelos/%s", castelosdeportugalHost, link),
+			Sources:                 []string{fmt.Sprintf("%s/castelos/%s", castelosdeportugalHost, link)},
+			CurrentEnrichmentSource: CastelosDePortugal.String(),
 		})
 	})
 	return castles, nil
