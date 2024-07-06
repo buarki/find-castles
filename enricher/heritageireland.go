@@ -75,9 +75,10 @@ func (ie *heritageirelandEnricher) collectCastleNameAndLinks(rawHTML []byte) ([]
 		link, exists := s.Attr("href")
 		if exists {
 			castles = append(castles, castle.Model{
-				Name:                  name,
-				CurrentEnrichmentLink: link,
-				Country:               castle.Ireland,
+				Name:                    name,
+				CurrentEnrichmentLink:   link,
+				Country:                 castle.Ireland,
+				CurrentEnrichmentSource: HeritageIreland.String(),
 			})
 		}
 	})

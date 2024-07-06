@@ -27,5 +27,5 @@ func Fetch(ctx context.Context, url string, httpClient *http.Client) ([]byte, er
 	if err != nil {
 		return nil, fmt.Errorf("failed to read body content of GET [%s], got %v", url, err)
 	}
-	return rawBody, nil
+	return decode(rawBody)
 }

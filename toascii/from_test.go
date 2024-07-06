@@ -35,6 +35,18 @@ func TestFrom(t *testing.T) {
 			input:  "Loulé",
 			output: "Loule",
 		},
+		{
+			input:  "tårnborg",
+			output: "tarnborg",
+		},
+		{
+			input:  "Sorø",
+			output: "Soro",
+		},
+		{
+			input:  "helsingør",
+			output: "helsingor",
+		},
 	}
 
 	for _, tt := range testCases {

@@ -63,7 +63,8 @@ type Model struct {
 	Contact           *Contact
 	VisitingInfo      *VisitingInfo `json:"visitingInfo"`
 
-	CurrentEnrichmentLink string // current link being used on enrichment
+	CurrentEnrichmentLink   string // current link being used on enrichment
+	CurrentEnrichmentSource string
 }
 
 func (m Model) FilteredName() string {
