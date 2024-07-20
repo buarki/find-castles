@@ -98,14 +98,13 @@ enrichers := map[enricher.Source]enricher.Enricher{
 
 Those enrichers runs concurrently and controlled by the [executor package](./executor/executor.go), and as the links to collect castle data are received, they are passed to the next pipeline stage through a channel.
 
-**The second stage** visits the received links and scraps data from the HTML to collect the info we need. One concrete example can be seen by checking the the implementation of method EnrichCastle for the [Heritage Ireland](./enricher/heritageireland.go) data source.
+**The second stage** visits the received links and scrapes data from the HTML to collect the info we need. One concrete example can be seen by checking the the implementation of method EnrichCastle for the [Heritage Ireland](./enricher/heritageireland.go) data source.
 
-Once the castle struct is filled with collected date, it is send to third stage through a channel.
+Once the castle struct is filled with collected data, it is sent to third stage through a channel.
 
-**The third stage** receives the enriched castle, if the program detects that there is already info saved for that castle a reconciliation is performed based on the presence of some key and mandatory fields, like name, city and district.
+**The third stage** receives the enriched castle and if the program detects that there is already info saved for that castle a reconciliation is performed based on the presence of some key and mandatory fields, like name, city and district.
 
-Those reconcilated castles are then consolidated into a buffer of configurable size and once the buffer is full they are saved into MongoDB in a bulk operation to avoid multiple writes against the DB.
-
+Those reconciled data castles are then consolidated into a buffer of configurable size and once the buffer is full they are saved into MongoDB in a bulk operation to avoid multiple writes against the DB.
 
 ### Countries Supported Now
 
