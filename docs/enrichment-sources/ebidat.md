@@ -19,9 +19,9 @@ Link: https://www.ebidat.de/
 |Aspect|Status|Note|
 |--|--|--|
 |Easily accessible by machines|Partially|The data is embedded within HTML and can be extracted using web scraping techniques, but it's not as straightforward or reliable as accessing structured JSON, XML, or CSV. Any changes in the HTML structure could break the data collection process.|
-|Follow Good practices of web development|Partially|The HTML uses some structured elements (like section, div, a tags with appropriate classes). However, it relies heavily on inline styles and JavaScript for some functionality, which is not ideal for maintainability and separation of concerns. It also does not seem to use any microdata, RDFa, or JSON-LD, which are standards for embedding semantic metadata within HTML documents. Without these semantic annotations, the data is less discoverable and harder to link to other datasets.|
+|Follow Good practices of web development|No|The website has a very specific way of defining pages, routes and addresses in general in the page. Figuring out how it works was indeed complex task.|
 |Option to select data format|No|The data appears to be available only through HTML, which requires scraping for extraction. There is no option to access the data in other formats like JSON, XML, or CSV.|
-|Consistent format|Yes|The HTML structure for the castle entries seems consistent (e.g., each entry has a div with class burgenanreisser containing the name and location details), which allows for reliable scraping as long as the structure remains unchanged.|
+|Consistent format|Partially|The HTML structure for the castle entries seems consistent (e.g., each entry has a div with class burgenanreisser containing the name and location details), which allows for reliable scraping as long as the structure remains unchanged.|
 
 
 ## Extracting data
