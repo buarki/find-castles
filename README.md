@@ -61,7 +61,7 @@ make run_site
 
 Then you can access the site at [http://localhost:3000](http://localhost:3000).
 
-
+You can inspect the [Makefile](./Makefile) for more details and also to check which env vars are being injected into the process.
 
 ## What Is This Project?
 
