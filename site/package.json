@@ -16,7 +16,7 @@
     "@types/mongodb": "^4.0.7",
     "axios": "^1.7.2",
     "mongodb": "^6.7.0",
-    "next": "14.2.3",
+    "next": "14.2.10",
     "react": "^18",
     "react-dom": "^18"
   },
